@@ -1,14 +1,14 @@
 import './App.css';
 import Header from './components/layout/Header';
-import Holdings from './pages/holdings/Holdings';
 import Orders from './pages/orders/Orders';
+import Positions from './pages/positions/Positions';
 
 function App() {
   
   return (
     <>
       <Header />
-      <Holdings />
+      <Positions />
     </>
   )
 }
