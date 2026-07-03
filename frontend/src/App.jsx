@@ -1,10 +1,12 @@
-import './App.css'
+import './App.css';
+import Header from './components/layout/Header';
+import Orders from './pages/orders/Orders';
 
 function App() {
   
   return (
     <>
-      <h1>Tradeverse</h1>
+      <Orders />
     </>
   )
 }
