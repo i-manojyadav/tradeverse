@@ -1,6 +1,6 @@
 .navbar {
     width: 100%;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #303030;
     display: flex;
     align-items: center;
@@ -8,9 +8,12 @@
 }
 
 .navbar-left {
-    color: #059669;
     font-size: 25px;
     font-weight: 700;
+}
+
+.navbar-left p {
+    color: #059669;
 }
 
 .navbar-right {
@@ -19,11 +22,11 @@
     align-items: center;
 }
 
-.navbar-right a {
+.nav-link {
     color: #ffffff;
-    margin: 0 7px;
+    text-decoration: none;
 }
 
-.navbar-right a:hover {
+.active {
     color: #059669;
 }

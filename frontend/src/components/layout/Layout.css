@@ -6,6 +6,7 @@
 
 .layout-content {
     display: flex;
+    margin-top: 10px;
 }
 
 .layout-left {

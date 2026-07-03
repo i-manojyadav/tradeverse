@@ -6,14 +6,14 @@ function Navbar() {
 
     return (
         <div className='navbar'>
-            <div>
+            <div className='navbar-left'>
                 <p>Tradeverse</p>
             </div>
-            <div>
-                <NavLink to='/'>Dashboard</NavLink>
-                <NavLink to='/orders'>Orders</NavLink>
-                <NavLink to='/holdings'>Holdings</NavLink>
-                <NavLink to='/positions'>Positions</NavLink>
+            <div className='navbar-right'>
+                <NavLink to='/' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Dashboard</NavLink>
+                <NavLink to='/orders' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Orders</NavLink>
+                <NavLink to='/holdings' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Holdings</NavLink>
+                <NavLink to='/positions' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Positions</NavLink>
             </div>
         </div>
     )
