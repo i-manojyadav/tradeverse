@@ -5,14 +5,15 @@
 }
 
 .layout-content {
+    gap: 15px;
     display: flex;
     margin-top: 10px;
 }
 
 .layout-left {
-    width: 35%;
+    max-width: 35%;
 }
 
 .layout-right {
-    width: 65%;
+    max-width: 65%;
 }

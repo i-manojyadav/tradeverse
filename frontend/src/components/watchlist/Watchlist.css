@@ -1,0 +1,74 @@
+.watchlist {
+    width: 100%;
+    height: max-content;
+}
+
+.watchlist-search {
+    margin-bottom: 5px;
+}
+
+.watchlist-search .MuiInputBase-input {
+    color: #ffffff;
+}
+
+.watchlist-search .MuiInputLabel-root {
+    color: #ffffff;
+}
+
+.watchlist-search .MuiInputLabel-root.Mui-focused {
+    color: #ffffff;
+}
+
+.watchlist-search .MuiOutlinedInput-notchedOutline {
+    border-color: #303030 !important;
+    border-radius: 5px;
+}
+
+.watchlist-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.watchlist-nav {
+    gap: 10px;
+    margin: 5px 0;
+    padding: 5px 5px;
+    border: 1px solid #303030;
+    display: flex;
+    overflow: auto;
+    scrollbar-width: none;
+    align-items: center;
+}
+
+.watchlist-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.user-watchlist {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #202020;
+}
+
+.watchlist-items > div {
+    display: flex;
+    padding: 12px 5px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border-bottom: 1px solid #303030;
+}
+
+.watchlist-items > div:hover {
+    background-color: #202020;
+}
+
+.watchlist-items div p {
+    gap: 15px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}

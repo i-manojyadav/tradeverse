@@ -14,6 +14,7 @@ function Navbar() {
                 <NavLink to='/orders' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Orders</NavLink>
                 <NavLink to='/holdings' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Holdings</NavLink>
                 <NavLink to='/positions' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Positions</NavLink>
+                <NavLink to='account' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Account</NavLink>
             </div>
         </div>
     )
