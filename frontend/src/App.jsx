@@ -7,6 +7,11 @@ import Orders from './pages/orders/Orders';
 import Holdings from './pages/holdings/Holdings';
 import Positions from './pages/positions/Positions';
 
+import SignIn from './pages/auth/SignIn';
+import SignUp from './pages/auth/SignUp';
+
+import Chart from './components/chart/Chart';
+
 function App() {
   
   return (
@@ -16,6 +21,9 @@ function App() {
       <Route path='orders' element={<Orders />} />
       <Route path='holdings' element={<Holdings />} />
       <Route path='positions' element={<Positions />} />
+      <Route path='signin' element={<SignIn />} />
+      <Route path='signup' element={<SignUp />} />
+      <Route path='chart' element={<Chart />} />
       </Route>
     </Routes>
   )

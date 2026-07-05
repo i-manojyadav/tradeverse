@@ -30,3 +30,30 @@
 .active {
     color: #059669;
 }
+
+.ac-popup {
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    z-index: 999;
+    margin: 25px 10px;
+    width: fit-content;
+    padding: 10px 30px;
+    border-radius: 10px;
+    background-color: #202020;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sub-nav-link {
+    text-align: center;
+    color: #ffffff;
+    padding: 7px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.sub-nav-link:hover {
+    background-color: #059669;
+}

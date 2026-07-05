@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import './Watchlist.css';
 import { Box, TextField } from '@mui/material';
+import InsertChartIcon from '@mui/icons-material/InsertChart';
+import { NavLink } from 'react-router-dom';
+
 
 function Watchlist() {
 
@@ -58,7 +61,6 @@ function Watchlist() {
         },
     ]);
 
-
     const [ active, setActive ] = useState([]);
     const [ watchlistItems, setWatchlistItems ] = useState(watchlist[0].coins);
 
@@ -88,8 +90,9 @@ function Watchlist() {
 
                 <div className='watchlist-items'>
                     {watchlistItems.map((coin) => (
-                        <div>
-                            <p style={{color: Number(coin.change) > 0 ? "#059669" : "#FF0000"}}>{coin.name}</p>
+                        <div >
+                            <p style={{color: Number(coin.change) > 0 ? "#059669" : "#FF0000"}}>{coin.symbol}</p>
+                            <p className='watchlist-hover-items'><span><NavLink className='watchlist-items-chart' to='/chart' state={coin.symbol}><InsertChartIcon /></NavLink></span></p>
                             <p><span>{Number(Number(coin.ltp).toFixed(1)).toLocaleString()}</span> <span>{Number(Number(coin.change).toFixed(1)).toLocaleString()}</span></p>
                         </div>
                     ))}

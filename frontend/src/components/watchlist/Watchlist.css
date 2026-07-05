@@ -72,3 +72,11 @@
     flex-wrap: nowrap;
     flex-direction: row;
 }
+
+.watchlist-items-chart {
+    color: #ffffff;
+}
+
+.watchlist-items-chart:hover {
+    color: #059669;
+}

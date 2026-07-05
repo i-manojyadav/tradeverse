@@ -1,0 +1,34 @@
+.sign-in {
+    gap: 35px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 75px 35px;
+    border-radius: 10px;
+    background-color: #202020;
+}
+
+.sign-in form {
+    width: 65%;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-in form .MuiInputBase-input {
+    color: #ffffff;
+}
+
+.sign-in form .MuiInputLabel-root {
+    color: #ffffff;
+}
+
+.sign-in form .MuiInputLabel-root.Mui-focused {
+    color: #ffffff;
+}
+
+.sign-in form .MuiOutlinedInput-notchedOutline {
+    border-color: #303030 !important;
+    border-radius: 5px;
+}
