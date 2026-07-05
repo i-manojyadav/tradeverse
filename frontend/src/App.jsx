@@ -11,10 +11,12 @@ import SignIn from './pages/auth/SignIn';
 import SignUp from './pages/auth/SignUp';
 
 import Chart from './components/chart/Chart';
+import AuthProvider from './context/AuthContext';
 
 function App() {
   
   return (
+    <AuthProvider>
     <Routes>
       <Route path='/' element={<Layout />} >
       <Route index element={<Dashboard />} />
@@ -26,6 +28,7 @@ function App() {
       <Route path='chart' element={<Chart />} />
       </Route>
     </Routes>
+    </AuthProvider>
   )
 }
 

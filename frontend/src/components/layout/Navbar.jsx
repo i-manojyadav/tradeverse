@@ -1,10 +1,13 @@
 import './Navbar.css';
 import { NavLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 function Navbar() {
 
+    const { user } = useContext(AuthContext);
+    
     const [ isActive, setIsActive ] = useState(false);
 
     function handlePopup() {
@@ -12,6 +15,27 @@ function Navbar() {
             setIsActive(true);
         } else {
             setIsActive(false);
+        }
+    }
+
+    /** Handle User Sign Out */
+
+    async function handleSignOut() {
+        try {
+            const response = await fetch("http://localhost:3000/signout", {
+                method: "POST",
+                credentials: "include",
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(data.message);
+            } else {
+                console.log("Sign Out Failed");
+            }
+        } catch(err) {
+            console.log("Server side error", err);
         }
     }
 
@@ -32,6 +56,7 @@ function Navbar() {
                         <div className='ac-popup'>
                             <NavLink onClick={handlePopup} to='/signin' className='sub-nav-link'>Sign In</NavLink>
                             <NavLink onClick={handlePopup} to='/signup' className='sub-nav-link'>Sign Up</NavLink>
+                            <NavLink onClick={handleSignOut} className='sub-nav-link'>Sign Out</NavLink>
                         </div>
                     </div>
                 </div>

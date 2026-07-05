@@ -1,7 +1,11 @@
+import { useContext } from 'react';
 import './Dashboard.css';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { AuthContext } from '../../context/AuthContext';
 
 function Dashboard() {
+
+    const { user } = useContext(AuthContext);
 
     const data = [
         {symbol: "BTCUSDT", pnl: 2200},
@@ -14,7 +18,7 @@ function Dashboard() {
     return (
         <div className='dashboard'>
             <div className='dashbaord-greet'>
-                <h2>Hello, User</h2>
+                <h2>Hello, {user?.name || "User"}</h2>
             </div>
             <div className='dashboard-holdings'>
                 <div className='dashboard-holdings-value'>

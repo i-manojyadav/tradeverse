@@ -38,6 +38,7 @@
     border: 1px solid #303030;
     display: flex;
     overflow: auto;
+    cursor: pointer;
     scrollbar-width: none;
     align-items: center;
 }

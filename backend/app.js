@@ -1,15 +1,36 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
+import session from "express-session";
 import passport from "passport";
 import localStrategy from "passport-local";
 import passportLocalMongoose from "passport-local-mongoose";
 
 import User from "./models/user.js";
-import Wallet from "./models/wallet.js";
+
+import userRouter from "./routes/user.js";
 
 const app = express();
 
-app.use(express.urlencoded({extended: true}));
+const sessionOptions = {
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 7 * 24 * 3600 * 100,
+        maxAge: 7 * 24 * 3600 * 100,
+        httpOnly: true,
+    }
+}
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
+app.use(express.json());
+app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -34,26 +55,6 @@ async function main() {
 }
 
 
-/** Sign Up */
+// Routes
 
-app.post("/signup", async (req, res) => {
-    const { name, email, username, password } = req.body;
-    const newUser = new User({ name, email, username, password });
-    let registeredUser = await User.register(newUser, password);
-
-    // Create Wallet
-
-    const wallet = new Wallet({
-        user: registeredUser._id
-    });
-
-    await wallet.save();
-    res.redirect("localhost:5173/signin");
-});
-
-/** Sign In */
-
-app.post("/signin", passport.authenticate("local", {failureRedirect: "localhost:5173/signin"}), (req, res) => {
-    console.log(req.body);
-    res.redirect("localhost:5173/signin");
-});
+app.use("/", userRouter);

@@ -5,6 +5,8 @@ import React, { useEffect, useRef, memo, useState } from 'react';
 function Chart() {
 
     const { state } = useLocation();
+    const symbol = "BTCUSDT";
+
     const container = useRef();
     const widgetRef = useRef(null);
 
@@ -29,7 +31,7 @@ function Chart() {
             "locale": "en",
             "save_image": true,
             "style": "1",
-            "symbol": "BINANCE:${state}",
+            "symbol": "BINANCE:${state || symbol}",
             "theme": "dark",
             "timezone": "Etc/UTC",
             "backgroundColor": "#0F0F0F",
