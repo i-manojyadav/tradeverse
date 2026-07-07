@@ -33,7 +33,7 @@ function SignIn() {
 
             if (response.ok) {
                 setSignInInfo({ username: "", password: ""});
-                setUser(data.user);
+                setUser(data);
                 navigate("/");
             } else {
                 console.log("Something went wrong");

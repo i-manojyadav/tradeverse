@@ -1,10 +1,29 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { WatchlistContext } from "./WatchlistContext";
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
 
+    const { setWatchlist } = useContext(WatchlistContext);
+
     const [ user, setUser ] = useState(null);
+
+    useEffect(() => {
+        const isSignedIn = async () => {
+            const response = await fetch("http://localhost:3000/user", {
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data);
+                setWatchlist(data.watchlist);
+            }
+        }
+
+        isSignedIn();
+    }, []);
 
     return (
         <AuthContext.Provider

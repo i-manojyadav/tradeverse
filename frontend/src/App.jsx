@@ -12,10 +12,14 @@ import SignUp from './pages/auth/SignUp';
 
 import Chart from './components/chart/Chart';
 import AuthProvider from './context/AuthContext';
+import WatchlistProvider from './context/WatchlistContext';
+import CryptoAPIProvider from './context/CryptoAPIContext';
 
 function App() {
   
   return (
+    <CryptoAPIProvider>
+    <WatchlistProvider>
     <AuthProvider>
     <Routes>
       <Route path='/' element={<Layout />} >
@@ -29,6 +33,8 @@ function App() {
       </Route>
     </Routes>
     </AuthProvider>
+    </WatchlistProvider>
+    </CryptoAPIProvider>
   )
 }
 

@@ -18,7 +18,7 @@ function Dashboard() {
     return (
         <div className='dashboard'>
             <div className='dashbaord-greet'>
-                <h2>Hello, {user?.name || "User"}</h2>
+                <h2>Hello, {user?.user?.name || "User"}</h2>
             </div>
             <div className='dashboard-holdings'>
                 <div className='dashboard-holdings-value'>

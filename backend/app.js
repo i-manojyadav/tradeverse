@@ -8,7 +8,8 @@ import passportLocalMongoose from "passport-local-mongoose";
 
 import User from "./models/user.js";
 
-import userRouter from "./routes/user.js";
+import userRoute from "./routes/user.js";
+import watchlistRoute from "./routes/watchlist.js";
 
 const app = express();
 
@@ -18,7 +19,7 @@ const sessionOptions = {
     saveUninitialized: false,
     cookie: {
         expires: 7 * 24 * 3600 * 100,
-        maxAge: 7 * 24 * 3600 * 100,
+        maxAge: new Date(Date.now() + 7 * 24 * 3600 * 100),
         httpOnly: true,
     }
 }
@@ -57,4 +58,5 @@ async function main() {
 
 // Routes
 
-app.use("/", userRouter);
+app.use("/", userRoute);
+app.use("/", watchlistRoute);

@@ -55,7 +55,6 @@ function Chart() {
 
     return (
         <div className='chart'>
-            <h2>Chart</h2>
             <div className='chart-container'>
                 <div className="tradingview-widget-container" ref={widgetRef} style={{height: "100%", width: "100%" }}>
                 <div className="tradingview-widget-container__widget" style={{ height: "100%", width: "100%" }}></div>
