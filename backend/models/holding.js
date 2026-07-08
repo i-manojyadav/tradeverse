@@ -7,7 +7,6 @@ const holdingSchema = new Schema ({
         required: true,
     },
     quantity: {
-        min: 1,
         type: Number,
         required: true,
     },
@@ -16,7 +15,6 @@ const holdingSchema = new Schema ({
         required: true,
     },
     investment: {
-        min: 1,
         type: Number,
         required: true,
     },

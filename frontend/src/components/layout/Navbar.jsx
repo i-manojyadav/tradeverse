@@ -3,10 +3,12 @@ import { NavLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { WalletContext } from '../../context/WalletContext';
 
 function Navbar() {
 
     const { user } = useContext(AuthContext);
+    const { wallet } = useContext(WalletContext);
     
     const [ isActive, setIsActive ] = useState(false);
 
@@ -54,6 +56,7 @@ function Navbar() {
                     <NavLink onClick={handlePopup} className='acc-popup sub-nav-link' >Account</NavLink>
                     <div style={{ display: isActive ? "inline-block" : "none"}} >
                         <div className='ac-popup'>
+                            <p><span>Funds:</span> <span>{wallet[0]?.funds}</span></p>
                             <NavLink onClick={handlePopup} to='/signin' className='sub-nav-link'>Sign In</NavLink>
                             <NavLink onClick={handlePopup} to='/signup' className='sub-nav-link'>Sign Up</NavLink>
                             <NavLink onClick={handleSignOut} className='sub-nav-link'>Sign Out</NavLink>

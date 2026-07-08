@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './ExecutedOrders.css';
 import OrdersTable from './OrdersTable';
+import { OrdersContext } from '../../context/OrdersContext';
 
 function ExecutedOrders() {
 
-    const [ executedOrders, setExecutedOrders ] = useState([
-        {
-            time: "15:23:26",
-            type: "buy",
-            instrument: "HDFC Bank",
-            product: "CNC",
-            quantity: "15",
-            ltp: "800",
-            price: "790",
-            status: "open",
-        },
-    ]);
+    const { orders } = useContext(OrdersContext);
+    const [ executedOrders, setExecutedOrders ] = useState([]);
+
+    useEffect(() => {
+
+        if (orders.length === 0) return;
+
+        const exeOrders = orders.filter((order) => {
+            return order.status === "EXECUTED";
+        });
+
+        setExecutedOrders(exeOrders);
+        
+    }, [orders]);
 
     return (
         <div>

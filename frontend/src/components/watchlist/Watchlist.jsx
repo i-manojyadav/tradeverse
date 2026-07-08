@@ -3,6 +3,7 @@ import './Watchlist.css';
 import { Box, TextField } from '@mui/material';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import { NavLink } from 'react-router-dom';
 import { WatchlistContext } from '../../context/WatchlistContext';
 
@@ -171,8 +172,8 @@ function Watchlist() {
                     {watchlistCoins.map((coin) => (
                         <div>
                             <p style={{color: Number(coin.priceChange) > 0 ? "#059669" : "#FF0000"}}>{coin.symbol}</p>
-                            <p className='watchlist-hover-items'><span><NavLink className='watchlist-items-chart' to='/chart' state={coin.symbol}><InsertChartIcon /></NavLink></span></p>
-                            <p><span>{Number(Number(coin.lastPrice).toFixed(1)).toLocaleString()}</span> <span>{Number(Number(coin.priceChange).toFixed(1)).toLocaleString()}</span></p>
+                            <p className='watchlist-hover-items'><span><NavLink className='watchlist-chart' to='/chart' state={coin.symbol} ><InsertChartIcon /></NavLink> <NavLink className='watchlist-order' to='/order' state={{ symbol: coin.symbol }}><SwapHorizontalCircleIcon /></NavLink></span></p>
+                            <p><span style={{color: Number(coin.priceChange) > 0 ? "#059669" : "#FF0000"}}>{Number(Number(coin.lastPrice).toFixed(1)).toLocaleString()}</span> <span>{Number(Number(coin.priceChange).toFixed(1)).toLocaleString()}</span></p>
                         </div>
                     ))}
                 </div>

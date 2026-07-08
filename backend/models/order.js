@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
-const transactionSchema = new Schema({
+
+const orderSchema = new Schema ({
     symbol: {
         type: String,
         required: true,
@@ -24,8 +25,10 @@ const transactionSchema = new Schema({
         type: Number,
         required: true,
     },
-    fund: {
+    status: {
         type: String,
+        enum: ["PENDING", "EXECUTED"],
+        default: "PENDING",
         required: true,
     },
     createdAt: {
@@ -34,11 +37,11 @@ const transactionSchema = new Schema({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
     },
 });
 
 
-const Transaction = mongoose.model("Transaction", transactionSchema);
+const Order = mongoose.model("Order", orderSchema);
 
-export default Transaction;
+export default Order;

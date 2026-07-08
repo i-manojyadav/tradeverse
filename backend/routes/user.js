@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import User from "../models/user.js";
 import Wallet from "../models/wallet.js";
+import Order from "../models/order.js";
 import Watchlist from "../models/watchlist.js";
 import { isSignedIn } from "../middleware.js";
 
@@ -16,6 +17,8 @@ router.get("/user", async (req, res) => {
         });
     }
 
+    const userWallet = await Wallet.find({user: req.user._id}).select("funds");
+    const userOrders = await Order.find({user: req.user._id});
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title symbols _id");
 
     res.json({
@@ -25,6 +28,8 @@ router.get("/user", async (req, res) => {
             email: req.user.email,
             username: req.user.email,
         },
+        wallet: userWallet,
+        orders: userOrders,
         watchlist: userWatchlist,
     });
 });
@@ -67,6 +72,8 @@ router.post("/signin", async (req, res, next) => {
         req.logIn(user, async (err) => {
             if(err) return next(err);
 
+            const userWallet = await Wallet.find({user: user._id}).select("funds");
+            const userOrders = await Order.find({user: user._id});
             const userWatchlist = await Watchlist.find({user: user._id}).select("title symbols _id");
 
             return res.json({
@@ -76,6 +83,8 @@ router.post("/signin", async (req, res, next) => {
                     email: user.email,
                     username: user.username,
                 },
+                wallet: userWallet,
+                orders: userOrders,
                 watchlist: userWatchlist,
             });
         });

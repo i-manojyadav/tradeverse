@@ -10,6 +10,7 @@ import User from "./models/user.js";
 
 import userRoute from "./routes/user.js";
 import watchlistRoute from "./routes/watchlist.js";
+import orderRoute from "./routes/order.js";
 
 const app = express();
 
@@ -60,3 +61,4 @@ async function main() {
 
 app.use("/", userRoute);
 app.use("/", watchlistRoute);
+app.use("/", orderRoute);

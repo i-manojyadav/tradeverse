@@ -180,10 +180,18 @@
     justify-self: end;
 }
 
-.watchlist-items-chart {
+.watchlist-chart {
     color: #ffffff;
 }
 
-.watchlist-items-chart:hover {
+.watchlist-chart:hover {
+    color: #059669;
+}
+
+.watchlist-order {
+    color: #ffffff;
+}
+
+.watchlist-order:hover {
     color: #059669;
 }

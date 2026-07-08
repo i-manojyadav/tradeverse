@@ -11,7 +11,6 @@ const positionSchema = new Schema({
         required: true,
     },
     quantity: {
-        min: 1,
         type: Number,
         required: true,
     },

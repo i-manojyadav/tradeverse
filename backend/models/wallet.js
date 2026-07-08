@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
 const walletSchema = new Schema({
-    fund: {
+    funds: {
         type: Number,
         default: 10000000,
         required: true,

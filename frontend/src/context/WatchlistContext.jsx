@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
 
 export const WatchlistContext = createContext();
 

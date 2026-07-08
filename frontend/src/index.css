@@ -6,22 +6,85 @@ body {
 }
 
 h1 {
-  color: #ffffff;
-  margin: 0;
+  font-size: 35px;
+  margin: 5px 0;
+  color: #f0f0f0;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-family: "Mulish", sans-serif;
 }
 
 h2 {
-  color: #ffffff;
-  margin: 0;
+  font-size: 22px;
+  margin: 5px 0;
+  color: #f0f0f0;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-family: "Mulish", sans-serif;
 }
 
 h3 {
-  color: #ffffff;
-  margin: 0;
+  font-size: 20px;
+  margin: 5px 0;
+  color: #f0f0f0;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-family: "Mulish", sans-serif;
 }
 
 p {
   margin: 0;
-  padding: 0;
-  color: #ffffff;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #c4c4c4;
+}
+
+
+/* BUTTON */
+
+button {
+  border: none;
+  border-radius: 100px;
+}
+
+
+/* STATS */
+
+.stats {
+  gap: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+
+/* TABS */
+
+.tabs {
+  gap: 5px;
+  display: flex;
+  width: fit-content;
+  padding: 7px 7px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  background-color: #111111;
+  border: 1px solid #232323;
+}
+
+.tabs > button {
+  margin: 0;
+  font-size: 15px;
+  color: #f0f0f0;
+  padding: 15px 17px;
+  letter-spacing: 0.12em;
+  background-color: transparent;
+}
+
+.active-tab-btn {
+  margin: 0;
+  font-size: 15px;
+  color: #f0f0f0;
+  padding: 15px 17px;
+  box-sizing: 0 8px 25px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #10b981, #059669);
 }

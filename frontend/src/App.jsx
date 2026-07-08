@@ -14,6 +14,9 @@ import Chart from './components/chart/Chart';
 import AuthProvider from './context/AuthContext';
 import WatchlistProvider from './context/WatchlistContext';
 import CryptoAPIProvider from './context/CryptoAPIContext';
+import WalletProvider from './context/WalletContext';
+import OrderPanel from './components/orderPanel/OrderPanel';
+import OrdersProvider from './context/OrdersContext';
 
 function App() {
   
@@ -21,6 +24,8 @@ function App() {
     <CryptoAPIProvider>
     <WatchlistProvider>
     <AuthProvider>
+    <WalletProvider>
+    <OrdersProvider>
     <Routes>
       <Route path='/' element={<Layout />} >
       <Route index element={<Dashboard />} />
@@ -30,8 +35,11 @@ function App() {
       <Route path='signin' element={<SignIn />} />
       <Route path='signup' element={<SignUp />} />
       <Route path='chart' element={<Chart />} />
+      <Route path='order' element={<OrderPanel />} />
       </Route>
     </Routes>
+    </OrdersProvider>
+    </WalletProvider>
     </AuthProvider>
     </WatchlistProvider>
     </CryptoAPIProvider>

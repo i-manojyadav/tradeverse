@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import './Dashboard.css';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AuthContext } from '../../context/AuthContext';
+import OrderPanel from '../../components/orderPanel/OrderPanel';
 
 function Dashboard() {
 

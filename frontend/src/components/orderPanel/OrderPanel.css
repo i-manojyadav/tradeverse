@@ -1,0 +1,76 @@
+.order-panel {
+    padding: 0;
+    border-radius: 10px;
+    border: 1px solid #3a3a3a;
+    background-color: #111111;
+}
+
+.order-panel form {
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-panel form > div {
+    padding: 0 25px;
+}
+
+.order-asset {
+    padding: 20px 25px !important;
+    border-radius: 10px 10px 0 0;
+    background-color: #000000;
+}
+
+.order-asset-title {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.order-asset-price {
+    font-size: 15px;
+}
+
+.order-type {
+    gap: 15px;
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+}
+
+.order-type .MuiRadio-root {
+    color: #ffffff;
+}
+
+.order-type .MuiRadio-root.Mui-checked {
+    color: #ffffff;
+}
+
+.order-type .MuiFormControlLabel-label {
+    color: #ffffff;
+}
+
+.order-value {
+    gap: 15px;
+    display: flex;
+}
+
+.order-value .MuiInputBase-input {
+    color: #ffffff;
+}
+
+.order-value .MuiInputLabel-root {
+    color: #ffffff;
+}
+
+.order-value .MuiInputLabel-root.Mui-focused {
+    color: #ffffff;
+}
+
+.order-value .MuiOutlinedInput-notchedOutline {
+    border-color: #303030 !important;
+    border-radius: 5px;
+}
+
+.order-btn {
+    padding: 15px 25px !important;
+}
