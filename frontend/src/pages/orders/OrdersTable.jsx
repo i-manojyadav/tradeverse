@@ -8,6 +8,7 @@ function OrdersTable({ ordersData }) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Time</TableCell>
+                        <TableCell>Side</TableCell>
                         <TableCell>Type</TableCell>
                         <TableCell>Instrument</TableCell>
                         <TableCell>Qty</TableCell>
@@ -21,6 +22,7 @@ function OrdersTable({ ordersData }) {
                         <TableRow key={idx}>
                             <TableCell sx={{color: "white",}} >{new Date(order.createdAt).toLocaleTimeString()}</TableCell>
                             <TableCell>{order.side}</TableCell>
+                            <TableCell>{order.type}</TableCell>
                             <TableCell>{order.symbol}</TableCell>
                             <TableCell>{order.quantity}</TableCell>
                             <TableCell>{order.ltp}</TableCell>

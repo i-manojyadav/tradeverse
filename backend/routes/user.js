@@ -3,6 +3,8 @@ import passport from "passport";
 import User from "../models/user.js";
 import Wallet from "../models/wallet.js";
 import Order from "../models/order.js";
+import Holding from "../models/holding.js";
+import Position from "../models/position.js";
 import Watchlist from "../models/watchlist.js";
 import { isSignedIn } from "../middleware.js";
 
@@ -19,6 +21,8 @@ router.get("/user", async (req, res) => {
 
     const userWallet = await Wallet.find({user: req.user._id}).select("funds");
     const userOrders = await Order.find({user: req.user._id});
+    const userHoldings = await Holding.find({user: req.user._id});
+    const userPositions = await Position.find({user: req.user._id});
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title symbols _id");
 
     res.json({
@@ -30,6 +34,8 @@ router.get("/user", async (req, res) => {
         },
         wallet: userWallet,
         orders: userOrders,
+        holdings: userHoldings,
+        positions: userPositions,
         watchlist: userWatchlist,
     });
 });
@@ -74,6 +80,8 @@ router.post("/signin", async (req, res, next) => {
 
             const userWallet = await Wallet.find({user: user._id}).select("funds");
             const userOrders = await Order.find({user: user._id});
+            const userHoldings = await Holding.find({user: user._id});
+            const userPositions = await Position.find({user: user._id});
             const userWatchlist = await Watchlist.find({user: user._id}).select("title symbols _id");
 
             return res.json({
@@ -85,6 +93,8 @@ router.post("/signin", async (req, res, next) => {
                 },
                 wallet: userWallet,
                 orders: userOrders,
+                holdings: userHoldings,
+                positions: userPositions,
                 watchlist: userWatchlist,
             });
         });

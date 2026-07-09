@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import CryptoData from "../services/cryptoAPI";
 
 export const CryptoAPIContext = createContext();
@@ -7,7 +7,7 @@ export default function CryptoAPIProvider({ children }) {
 
     const [ coins, setCoins ] = useState([]);
 
-    useState(() => {
+    useEffect(() => {
         const fetchData = async () => {
             const data = await CryptoData();
             setCoins(data);

@@ -18,6 +18,10 @@ const positionSchema = new Schema({
         type: Number,
         required: true,
     },
+    executedAt: {
+        type: Date,
+        required: true,
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",

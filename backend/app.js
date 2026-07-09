@@ -12,6 +12,8 @@ import userRoute from "./routes/user.js";
 import watchlistRoute from "./routes/watchlist.js";
 import orderRoute from "./routes/order.js";
 
+import orderMatch from "./services/orderMatcher.js";
+
 const app = express();
 
 const sessionOptions = {
@@ -62,3 +64,4 @@ async function main() {
 app.use("/", userRoute);
 app.use("/", watchlistRoute);
 app.use("/", orderRoute);
+orderMatch();

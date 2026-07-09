@@ -14,15 +14,18 @@ const holdingSchema = new Schema ({
         type: Number,
         required: true,
     },
-    investment: {
-        type: Number,
+    executedAt: {
+        type: Date,
+        required: true,
+    },
+    updatedAt: {
+        type: Date,
         required: true,
     },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",
     }
-
 });
 
 
