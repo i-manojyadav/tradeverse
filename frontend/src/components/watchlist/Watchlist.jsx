@@ -171,9 +171,9 @@ function Watchlist() {
                 <div className='watchlist-items'>
                     {watchlistCoins.map((coin) => (
                         <div>
-                            <p style={{color: Number(coin.priceChange) > 0 ? "#059669" : "#FF0000"}}>{coin.symbol}</p>
+                            <p style={{color: Number(coin.priceChange) > 0 ? "#008000" : "#FF0000"}}>{coin.symbol}</p>
                             <p className='watchlist-hover-items'><span><NavLink className='watchlist-chart' to='/chart' state={coin.symbol} ><InsertChartIcon /></NavLink> <NavLink className='watchlist-order' to='/order' state={{ symbol: coin.symbol }}><SwapHorizontalCircleIcon /></NavLink></span></p>
-                            <p><span style={{color: Number(coin.priceChange) > 0 ? "#059669" : "#FF0000"}}>{Number(Number(coin.lastPrice).toFixed(1)).toLocaleString()}</span> <span>{Number(Number(coin.priceChange).toFixed(1)).toLocaleString()}</span></p>
+                            <p><span style={{color: Number(coin.priceChange) > 0 ? "#008000" : "#FF0000"}}>{Number(Number(coin.lastPrice).toFixed(1)).toLocaleString()}</span> <span>{Number(Number(coin.priceChange).toFixed(1)).toLocaleString()}</span></p>
                         </div>
                     ))}
                 </div>

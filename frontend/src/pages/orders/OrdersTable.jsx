@@ -3,8 +3,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 
 function OrdersTable({ ordersData }) {
     return (
-        <TableContainer>
-            <Table className='orders-table'>
+        <TableContainer className='MUI-table'>
+            <Table>
                 <TableHead>
                     <TableRow>
                         <TableCell>Time</TableCell>
@@ -12,7 +12,6 @@ function OrdersTable({ ordersData }) {
                         <TableCell>Type</TableCell>
                         <TableCell>Instrument</TableCell>
                         <TableCell>Qty</TableCell>
-                        <TableCell>LTP</TableCell>
                         <TableCell>Price</TableCell>
                         <TableCell>Status</TableCell>
                     </TableRow>
@@ -25,7 +24,6 @@ function OrdersTable({ ordersData }) {
                             <TableCell>{order.type}</TableCell>
                             <TableCell>{order.symbol}</TableCell>
                             <TableCell>{order.quantity}</TableCell>
-                            <TableCell>{order.ltp}</TableCell>
                             <TableCell>{order.price}</TableCell>
                             <TableCell>{order.status}</TableCell>
                         </TableRow>

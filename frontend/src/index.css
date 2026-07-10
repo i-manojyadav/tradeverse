@@ -1,3 +1,8 @@
+* {
+  box-sizing: border-box;
+  font-family: "Mulish", sans-serif;
+}
+
 body {
   padding: 0 5%;
   box-sizing: border-box;
@@ -87,4 +92,36 @@ button {
   padding: 15px 17px;
   box-sizing: 0 8px 25px rgba(16, 185, 129, 0.3);
   background: linear-gradient(135deg, #10b981, #059669);
+}
+
+
+/* MUI Table */
+
+.MUI-table .MuiTable-root {
+  border-radius: 5px;
+  background-color: #111111;
+  font-family: "Mulish", sans-serif !important;
+}
+
+.MUI-table .MuiTableHead-root {
+  text-transform: uppercase;
+  background-color: #000000;
+  border: 1px solid #232323;
+  font-family: "Mulish", sans-serif !important;
+}
+
+.MUI-table .MuiTableHead-root .MuiTableCell-root {
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+
+.MUI-table .MuiTableRow-root {
+  border-bottom: 1px solid #232323;
+  font-family: "Mulish", sans-serif !important;
+}
+
+.MUI-table .MuiTableCell-root {
+  border: none;
+  color: #c4c4c4;
+  font-family: "Mulish", sans-serif !important;
 }

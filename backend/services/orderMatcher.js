@@ -46,7 +46,7 @@ const orderMatch = async () => {
                         side: order.side,
                         symbol: order.symbol,
                         quantity: order.quantity,
-                        average: order.price,
+                        averageBuy: order.price,
                         executedAt: new Date(),
                         user: order.user,
                     });
@@ -54,16 +54,27 @@ const orderMatch = async () => {
                     await position.save();
 
                 } else if (order.type === "LONGTERM") {
-                    const holding = new Holding({
-                        symbol: order.symbol,
-                        quantity: order.quantity,
-                        average: order.price,
-                        executedAt: new Date(),
-                        updatedAt: new Date(),
-                        user: order.user,
-                    });
 
-                    await holding.save();
+                    const holding = await Holding.findOne({ user: order.user, symbol: order.symbol});
+
+                    if (holding) {
+                        const totalQuantity = holding.quantity + order.quantity;
+                        holding.averageBuy = ((holding.averageBuy * holding.quantity) + (order.price * order.quantity)) / totalQuantity;
+
+                        holding.quantity = totalQuantity;
+
+                        await holding.save();
+
+                    } else {
+                        await Holding.create({
+                            symbol: order.symbol,
+                            quantity: order.quantity,
+                            averageBuy: order.price,
+                            executedAt: new Date(),
+                            updatedAt: new Date(),
+                            user: order.user,
+                        });
+                    }
                 }
             }
         } else if (order.side === "SELL") {
@@ -76,7 +87,7 @@ const orderMatch = async () => {
                         side: order.side,
                         symbol: order.symbol,
                         quantity: order.quantity,
-                        average: order.price,
+                        averageBuy: order.price,
                         executedAt: new Date(),
                         user: order.user,
                     });

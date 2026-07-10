@@ -17,6 +17,7 @@ import CryptoAPIProvider from './context/CryptoAPIContext';
 import WalletProvider from './context/WalletContext';
 import OrderPanel from './components/orderPanel/OrderPanel';
 import OrdersProvider from './context/OrdersContext';
+import HoldingsProvider from './context/HoldingsContext';
 
 function App() {
   
@@ -26,6 +27,7 @@ function App() {
     <AuthProvider>
     <WalletProvider>
     <OrdersProvider>
+    <HoldingsProvider>
     <Routes>
       <Route path='/' element={<Layout />} >
       <Route index element={<Dashboard />} />
@@ -38,6 +40,7 @@ function App() {
       <Route path='order' element={<OrderPanel />} />
       </Route>
     </Routes>
+    </HoldingsProvider>
     </OrdersProvider>
     </WalletProvider>
     </AuthProvider>

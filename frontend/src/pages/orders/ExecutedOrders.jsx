@@ -22,7 +22,6 @@ function ExecutedOrders() {
 
     return (
         <div>
-            <h3>Executed Orders</h3>
             { executedOrders.length && <OrdersTable ordersData={executedOrders} /> }
         </div>
     )

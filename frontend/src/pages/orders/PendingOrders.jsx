@@ -22,7 +22,6 @@ function PendingOrders() {
 
     return (
         <div className='pending-orders'>
-            <h2>Pending Orders</h2>
             { pendingOrders.length && <OrdersTable ordersData={pendingOrders} /> }
         </div>
     )

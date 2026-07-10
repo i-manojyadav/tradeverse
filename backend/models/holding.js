@@ -10,7 +10,7 @@ const holdingSchema = new Schema ({
         type: Number,
         required: true,
     },
-    average: {
+    averageBuy: {
         type: Number,
         required: true,
     },
