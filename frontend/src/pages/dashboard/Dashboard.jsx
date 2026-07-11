@@ -1,57 +1,59 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './Dashboard.css';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AuthContext } from '../../context/AuthContext';
 import OrderPanel from '../../components/orderPanel/OrderPanel';
+import { HoldingsContext } from '../../context/HoldingsContext';
+import { CryptoAPIContext } from '../../context/CryptoAPIContext';
 
 function Dashboard() {
 
     const { user } = useContext(AuthContext);
+    const { coins } = useContext(CryptoAPIContext);
+    const { enrichedHoldings, holdingsStats } = useContext(HoldingsContext);
 
-    const data = [
-        {symbol: "BTCUSDT", pnl: 2200},
-        {symbol: "ETHUSDT", pnl: 1700},
-        {symbol: "LTCUSDT", pnl: 105},
-        {symbol: "DOGUSDT", pnl: 1200},
-        {symbol: "SOLUSDT", pnl: 692},
-    ]
+    const [ chartData, setChartData ] = useState([]);
+
+    useEffect(() => {
+        
+        const data = enrichedHoldings.map((holding) => {
+            return {
+                symbol: holding.symbol,
+                pnl: holding.pnl,
+            }
+        });
+
+        setChartData(data);
+
+    }, [coins]);
+
 
     return (
         <div className='dashboard'>
             <div className='dashbaord-greet'>
-                <h2>Hello, {user?.user?.name || "User"}</h2>
+                <p>Hi, {user?.user?.name || "User"}</p>
             </div>
             <div className='dashboard-holdings'>
-                <div className='dashboard-holdings-value'>
-                    <div className='dashboard-pnl-value'>
-                        <p>25L</p>
-                        <p>P&L</p>
-                    </div>
-                    <div className='dashboard-investments-value'>
-                        <p><span>Investment</span> <span>50L</span></p>
-                        <p><span>Current Value</span> <span>75L</span></p>
-                    </div>
-                </div>
-                <div className='dashboard-holdings-chart'>
-                    <BarChart
-                        className='dashboard-holding-value-chart'
-                        dataset={data}
-                        xAxis={[
-                            {
-                                scaleType: "band",
-                                dataKey: "symbol"
-                            },
-                        ]}
-                        series={[
-                            {
-                                dataKey: "pnl",
-                                label: "Profit & Loss"
-                            }
-                        ]}
-                        height={300}
-                    >
-                    </BarChart>
-                </div>
+                <h3>Holdings</h3>
+                <BarChart
+                    className='dashboard-chart'
+                    dataset={chartData}
+                    xAxis={[
+                        {
+                            scaleType: "band",
+                            dataKey: "symbol"
+                        },
+                    ]}
+                    series={[
+                        {
+                            dataKey: "pnl",
+                            label: "Profit & Loss",
+                            color: "#b1ffa7",
+                        }
+                    ]}
+                    height={300}
+                >
+                </BarChart>
             </div>
         </div>
     )

@@ -7,38 +7,30 @@
 
 .dashbaord-greet {
     width: 100%;
+    border-bottom: 1px solid #232323;
+}
+
+.dashbaord-greet p {
+    padding: 10px 0;
+    font-size: 22px;
+    color: #f0f0f0;
+    text-transform: capitalize;
 }
 
 .dashboard-holdings {
-    gap: 25px;
-    display: flex;
-    flex-direction: column;
-}
-
-.dashboard-holdings-value {
-    width: 100%;
-    display: flex;
-}
-
-.dashboard-pnl-value {
-    width: 50%;
-    text-align: left;
-}
-
-.dashboard-pnl-value p:nth-of-type(1) {
-    font-size: 35px;
-    font-weight: 700;
-}
-
-.dashboard-investments-value {
-    width: 50%;
-}
-
-.dashboard-investments-chart {
     width: 100%;
 }
 
-.dashboard-holding-value-chart {
-    stroke: #ffffff;
+.dashboard-chart {
+    stroke: #f0f0f0;
     font-weight: 500;
+    font-family: "Mulish", sans-serif !important;
+}
+
+.dashboard-chart .MuiChartsLegend-label {
+    color: #f0f0f0;
+}
+
+.dashboard-chart .MuiChartsAxis-tickLabel {
+    font-family: "Mulish", sans-serif !important;
 }
