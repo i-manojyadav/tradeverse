@@ -41,7 +41,7 @@ export default function HoldingsProvider({ children }) {
                 invested: Number(holding.averageBuy) * Number(holding.quantity),
                 currentValue: Number(coin.lastPrice) * Number(holding.quantity),
                 pnl: (Number(coin.lastPrice) - Number(holding.averageBuy)) * Number(holding.quantity),
-                roi: (((Number(coin.lastPrice) - Number(holding.averageBuy)) * Number(holding.quantity)) / (Number(holding.averageBuy) * Number(holding.quantity))) * 100,
+                roi: ((Number(coin.lastPrice) - Number(holding.averageBuy)) / Number(holding.averageBuy)) * 100,
             }
 
         }).filter(Boolean);
@@ -51,7 +51,7 @@ export default function HoldingsProvider({ children }) {
     }, [coins]);
 
 
-    /** Holding Stats */
+    /** Holdings Stats */
     useEffect(() => {
 
         const invested = enrichedHoldings.reduce((sum, coin) => {

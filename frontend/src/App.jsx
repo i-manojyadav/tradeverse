@@ -18,6 +18,7 @@ import WalletProvider from './context/WalletContext';
 import OrderPanel from './components/orderPanel/OrderPanel';
 import OrdersProvider from './context/OrdersContext';
 import HoldingsProvider from './context/HoldingsContext';
+import PositionsProvider from './context/PositionsContext';
 
 function App() {
   
@@ -28,6 +29,7 @@ function App() {
     <WalletProvider>
     <OrdersProvider>
     <HoldingsProvider>
+    <PositionsProvider>
     <Routes>
       <Route path='/' element={<Layout />} >
       <Route index element={<Dashboard />} />
@@ -40,6 +42,7 @@ function App() {
       <Route path='order' element={<OrderPanel />} />
       </Route>
     </Routes>
+    </PositionsProvider>
     </HoldingsProvider>
     </OrdersProvider>
     </WalletProvider>

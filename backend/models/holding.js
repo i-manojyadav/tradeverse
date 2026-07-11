@@ -8,10 +8,12 @@ const holdingSchema = new Schema ({
     },
     quantity: {
         type: Number,
+        min: 0,
         required: true,
     },
     averageBuy: {
         type: Number,
+        min: 0,
         required: true,
     },
     executedAt: {

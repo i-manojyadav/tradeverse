@@ -1,3 +1,6 @@
-.positions-table .MuiTableCell-root {
-    color: #ffffff;
+.positions {
+    gap: 25px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }

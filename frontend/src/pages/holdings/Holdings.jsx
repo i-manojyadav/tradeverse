@@ -10,7 +10,7 @@ function Holdings() {
 
     return (
         <div className='holdings'>
-            <div className='holding-stat stats'>
+            <div className='stats'>
                 <StatCard title={"Invested"} value={holdingsStats.invested} subTitle={"Capital deployed"} />
                 <StatCard title={"Current"} value={holdingsStats.currentValue} subTitle={"Current value"} />
                 <StatCard title={"Profit & Loss"} value={holdingsStats.pnl} subTitle={"Unrealized"} isPnL={true} roi={holdingsStats.roi} />

@@ -2,20 +2,28 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
 const positionSchema = new Schema({
-    side: {
-        type: String,
-        required: true,
-    },
     symbol: {
         type: String,
         required: true,
     },
-    quantity: {
-        type: Number,
+    type: {
+        type: String,
+        enum: ["INTRADAY", "LONGTERM"],
         required: true,
     },
-    averageBuy: {
+    side: {
+        type: String,
+        enum: ["BUY", "SELL"],
+        required: true,
+    },
+    quantity: {
         type: Number,
+        min: 0,
+        required: true,
+    },
+    averagePrice: {
+        type: Number,
+        min: 0,
         required: true,
     },
     executedAt: {
