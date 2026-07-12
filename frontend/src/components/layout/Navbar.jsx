@@ -53,10 +53,10 @@ function Navbar() {
                 <NavLink to='/holdings' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Holdings</NavLink>
                 <NavLink to='/positions' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Positions</NavLink>
                 <div>
-                    <NavLink onClick={handlePopup} className='acc-popup sub-nav-link' >Account</NavLink>
+                    <NavLink onClick={handlePopup} className='sub-nav-link' >Account</NavLink>
                     <div style={{ display: isActive ? "inline-block" : "none"}} >
                         <div className='ac-popup'>
-                            <p><span>Funds:</span> <span>{wallet[0]?.funds}</span></p>
+                            <NavLink onClick={handlePopup} to='/account' className='sub-nav-link'>Account</NavLink>
                             <NavLink onClick={handlePopup} to='/signin' className='sub-nav-link'>Sign In</NavLink>
                             <NavLink onClick={handlePopup} to='/signup' className='sub-nav-link'>Sign Up</NavLink>
                             <NavLink onClick={handleSignOut} className='sub-nav-link'>Sign Out</NavLink>

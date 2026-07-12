@@ -33,6 +33,10 @@
     color: #059669;
 }
 
+.navbar-user {
+    color: #ffffff;
+}
+
 .ac-popup {
     gap: 5px;
     display: flex;

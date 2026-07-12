@@ -6,6 +6,7 @@ import Order from "../models/order.js";
 import Holding from "../models/holding.js";
 import Position from "../models/position.js";
 import Watchlist from "../models/watchlist.js";
+import Transaction from "../models/transaction.js";
 import { isSignedIn } from "../middleware.js";
 
 const router = express.Router();
@@ -19,11 +20,12 @@ router.get("/user", async (req, res) => {
         });
     }
 
-    const userWallet = await Wallet.find({user: req.user._id}).select("funds");
-    const userOrders = await Order.find({user: req.user._id});
+    const userWallet = await Wallet.findOne({user: req.user._id}).select("funds");
+    const userOrders = await Order.find({user: req.user._id}).sort({ createdAt: -1 });
     const userHoldings = await Holding.find({user: req.user._id});
     const userPositions = await Position.find({user: req.user._id});
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title symbols _id");
+    const userTransactions = await Transaction.find({user: req.user._id}).sort({ createdAt: -1 });
 
     res.json({
         message: "Signed in",
@@ -37,6 +39,7 @@ router.get("/user", async (req, res) => {
         holdings: userHoldings,
         positions: userPositions,
         watchlist: userWatchlist,
+        transactions: userTransactions,
     });
 });
 
@@ -78,11 +81,12 @@ router.post("/signin", async (req, res, next) => {
         req.logIn(user, async (err) => {
             if(err) return next(err);
 
-            const userWallet = await Wallet.find({user: user._id}).select("funds");
-            const userOrders = await Order.find({user: user._id});
+            const userWallet = await Wallet.findOne({user: user._id}).select("funds");
+            const userOrders = await Order.find({user: user._id}).sort({ createdAt: -1 });
             const userHoldings = await Holding.find({user: user._id});
             const userPositions = await Position.find({user: user._id});
             const userWatchlist = await Watchlist.find({user: user._id}).select("title symbols _id");
+            const userTransactions = await Transaction.find({user: user._id}).sort({ createdAt: -1 });
 
             return res.json({
                 message: "User Signed In",
@@ -96,6 +100,7 @@ router.post("/signin", async (req, res, next) => {
                 holdings: userHoldings,
                 positions: userPositions,
                 watchlist: userWatchlist,
+                transactions: userPositions,
             });
         });
     }) (req, res, next);

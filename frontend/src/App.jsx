@@ -19,6 +19,7 @@ import OrderPanel from './components/orderPanel/OrderPanel';
 import OrdersProvider from './context/OrdersContext';
 import HoldingsProvider from './context/HoldingsContext';
 import PositionsProvider from './context/PositionsContext';
+import Account from './pages/account/Account';
 
 function App() {
   
@@ -40,6 +41,9 @@ function App() {
       <Route path='signup' element={<SignUp />} />
       <Route path='chart' element={<Chart />} />
       <Route path='order' element={<OrderPanel />} />
+
+      <Route path='account' element={<Account />}>
+      </Route>
       </Route>
     </Routes>
     </PositionsProvider>

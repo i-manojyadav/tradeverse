@@ -1,0 +1,21 @@
+.profile {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 15px;
+    border-radius: 10px;
+    background-color: #111111;
+}
+
+.user-name {
+    color: #ffffff;
+    text-transform: capitalize;
+}
+
+.user-email {
+    color: #ffffff;
+}
+
+.user-username {
+    color: #ffffff;
+}

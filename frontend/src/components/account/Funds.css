@@ -1,0 +1,15 @@
+.funds {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 15px;
+    border-radius: 10px;
+    background-color: #111111;
+}
+
+.available-funds {
+    font-size: 28px;
+    font-weight: 900;
+}
