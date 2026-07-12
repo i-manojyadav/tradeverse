@@ -1,8 +1,10 @@
 import CryptoData from "./cryptoAPI.js";
 import mongoose from "mongoose";
+import Wallet from "../models/wallet.js";
 import Order from "../models/order.js";
 import Holding from "../models/holding.js";
 import Position from "../models/position.js";
+import Transaction from "../models/transaction.js";
 
 
 
@@ -40,6 +42,7 @@ const orderMatch = async () => {
             if (order.price >= coin.askPrice) {
                 order.status = "EXECUTED";
                 await order.save();
+                createTransaction(order);
 
                 if (order.type === "INTRADAY") {
 
@@ -113,6 +116,7 @@ const orderMatch = async () => {
             if (order.price <= coin.bidPrice) {
                 order.status = "EXECUTED";
                 await order.save();
+                createTransaction(order);
 
                 if (order.type === "INTRADAY") {
 
@@ -180,6 +184,73 @@ const orderMatch = async () => {
             }
         }
     }
+
+}
+
+
+/** Create Transaction */
+const createTransaction = async (order) => {
+
+    const transaction = await new Transaction ({
+        symbol: order.symbol,
+        type: order.type,
+        side: order.side,
+        quantity: order.quantity,
+        averagePrice: order.price,
+        amount: order.price * order.quantity,
+        order: order._id,
+        user: order.user,
+    });
+
+
+    /** Update Wallet Funds */
+    const wallet = await Wallet.findOne({ user: order.user });
+
+    if (order.type === "INTRADAY") {
+
+        const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+
+        if (!position || position.side === order.side) {
+            wallet.funds -= transaction.amount;
+            transaction.walletEffect = "DEBIT";
+            
+        } else {
+            wallet.funds += transaction.amount;
+            transaction.walletEffect = "CREDIT";
+        }
+
+        await wallet.save();
+
+    } else if (order.type ==="LONGTERM") {
+
+        const holding = await Holding.findOne({ user: order.user, symbol: order.symbol });
+        
+        if (order.side === "BUY") {
+            wallet.funds -= transaction.amount;
+            transaction.walletEffect = "DEBIT";
+
+        } else if (order.side === "SELL") {
+            if (!holding) {
+                console.log("Can not sell. No holding found");
+                return;
+
+            }
+
+            if (holding.quantity > order.quantity) {
+                console.log("Insufficient quantity.");
+                return;
+            }
+
+            wallet.funds += transaction.amount;
+            transaction.walletEffect = "CREDIT";
+            
+        }
+
+        await wallet.save();
+
+    }
+
+    await transaction.save();
 
 }
 

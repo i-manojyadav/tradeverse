@@ -10,7 +10,7 @@ function ExecutedOrders() {
 
     useEffect(() => {
 
-        if (orders.length === 0) return;
+        if (!orders) return;
 
         const exeOrders = orders.filter((order) => {
             return order.status === "EXECUTED";

@@ -20,17 +20,26 @@ const transactionSchema = new Schema({
         type: Number,
         required: true,
     },
-    price: {
+    averagePrice: {
         type: Number,
         required: true,
     },
-    fund: {
+    amount: {
+        type: Number,
+        required: true,
+    },
+    walletEffect: {
         type: String,
+        enum: ["CREDIT", "DEBIT"],
         required: true,
     },
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    order: {
+        type: Schema.Types.ObjectId,
+        ref: "Order"
     },
     user: {
         type: Schema.Types.ObjectId,
