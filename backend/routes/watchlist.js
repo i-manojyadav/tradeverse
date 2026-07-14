@@ -18,7 +18,7 @@ router.post("/watchlist/create", isSignedIn, async (req, res) => {
 });
 
 
-// Add Symbol
+// Add Coin
 router.post("/watchlist/:id/add", async (req, res) => {
     const { id } = req.params;
     const { coinSymbol } = req.body;
@@ -43,6 +43,21 @@ router.post("/watchlist/:id/add", async (req, res) => {
             watchlist: userWatchlist,
         });
     }
+});
+
+
+// Remove Coin
+router.post("/watchlist/:id/remove", async (req, res) => {
+    const { id } = req.params;
+    const { coin } = req.body;
+
+    await Watchlist.findByIdAndUpdate(id, {$pull: {coins: {symbol: coin}}});
+    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
+
+    res.status(200).json({
+        message: "Coin removed",
+        watchlist: userWatchlist,
+    });
 });
 
 

@@ -147,6 +147,34 @@ function Watchlist() {
         }
     }
 
+    /** Handle Coin Remove */
+    const handleCoinRemove = async (coin) => {
+        console.log(coin);
+
+        try {
+            const response = await fetch(`http://localhost:3000/watchlist/${activeWatchlist._id}/remove`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({coin}),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(data.message);
+                setWatchlist(data.watchlist);
+            } else {
+                console.log("Something went wrong");
+            }
+
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
 
     return (
         <div className='watchlist'>
@@ -188,6 +216,7 @@ function Watchlist() {
                             <p className='watchlist-action'>
                                 <NavLink className='nav' to='/chart' state={coin.symbol} ><i className="fa-solid fa-chart-line"></i></NavLink>
                                 <NavLink style={{ color: "#059669"}} className='nav' to='/order' state={{ symbol: coin.symbol }}><i className="fa-solid fa-bolt"></i></NavLink>
+                                <i onClick={() => handleCoinRemove(coin.symbol)} className="fa-solid fa-x"></i>
                             </p>
                         </div>
                     ))}

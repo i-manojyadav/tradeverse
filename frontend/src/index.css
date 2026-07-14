@@ -154,3 +154,14 @@ button {
   color: #a2a2a2;
   font-family: "Mulish", sans-serif !important;
 }
+
+
+/* ICONS */
+
+.fa-x {
+  color: #6b6b70;
+}
+
+.fa-x:hover {
+  color: #ff0000;
+}
