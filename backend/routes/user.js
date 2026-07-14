@@ -24,7 +24,7 @@ router.get("/user", async (req, res) => {
     const userOrders = await Order.find({user: req.user._id}).sort({ createdAt: -1 });
     const userHoldings = await Holding.find({user: req.user._id});
     const userPositions = await Position.find({user: req.user._id});
-    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title symbols _id");
+    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
     const userTransactions = await Transaction.find({user: req.user._id}).sort({ createdAt: -1 });
 
     res.json({
@@ -85,7 +85,7 @@ router.post("/signin", async (req, res, next) => {
             const userOrders = await Order.find({user: user._id}).sort({ createdAt: -1 });
             const userHoldings = await Holding.find({user: user._id});
             const userPositions = await Position.find({user: user._id});
-            const userWatchlist = await Watchlist.find({user: user._id}).select("title symbols _id");
+            const userWatchlist = await Watchlist.find({user: user._id}).select("title coins _id");
             const userTransactions = await Transaction.find({user: user._id}).sort({ createdAt: -1 });
 
             return res.json({

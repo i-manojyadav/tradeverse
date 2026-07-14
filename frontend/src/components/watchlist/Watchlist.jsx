@@ -1,9 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import './Watchlist.css';
 import { Box, TextField } from '@mui/material';
-import InsertChartIcon from '@mui/icons-material/InsertChart';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import { NavLink } from 'react-router-dom';
 import { WatchlistContext } from '../../context/WatchlistContext';
 
@@ -19,17 +16,28 @@ function Watchlist() {
 
     const [ filteredCoins, setFilteredCoins ] = useState([]);
     const [ watchlistTitle, setWatchlistTitle ] = useState({title: ""});
-    const [ active, setActive ] = useState([]);
+
     const [ createActive, setCreateActive ] = useState(false);
     const [ searchActive, setSearchActive ] = useState(false);
-    const [ currentWatchlist, setCurrentWatchlist ] = useState([]);
+    const [ searchSecActive, setSearchSecActive ] = useState(false);
+
+    const [ activeWatchlist, setActiveWatchlist ] = useState([]);
     const [ watchlistCoins, setWatchlistCoins ] = useState([]);
 
 
+    /** Search Section Toggle */
+    function searchSecToggle() {
+        if (searchSecActive === false) {
+            setSearchSecActive(true);
+        } else {
+            setSearchSecActive(false);
+        }
+    }
+
     /** Set Current Watchlist */
     useEffect(() => {
-        if (watchlist.length > 0) {
-            setCurrentWatchlist(watchlist[0]);
+        if (watchlist?.length > 0) {
+            setActiveWatchlist(watchlist[0]);
         }
     }, [watchlist]);
 
@@ -51,11 +59,11 @@ function Watchlist() {
     }
 
     /** Handle Coin Add (Backend) */
-    const handleAddCoin = async (symbol) => {
+    const handleCoinAdd = async (symbol) => {
         const coinSymbol = symbol.toUpperCase();
 
         try {
-        const response = await fetch(`http://localhost:3000/watchlist/${currentWatchlist._id}/add`, {
+        const response = await fetch(`http://localhost:3000/watchlist/${activeWatchlist._id}/add`, {
 
             method: "POST",
             headers: {
@@ -70,9 +78,11 @@ function Watchlist() {
         if (response.ok) {
             setWatchlist(data.watchlist);
             console.log(data.message);
+            searchSecToggle();
             inputRef.current.value = "";
         } else {
             console.log("Something went wrong");
+            console.log(data.message);
         }
 
         } catch(err) {
@@ -83,21 +93,17 @@ function Watchlist() {
     /** Insert Live Coin's Price in Watchlist */
     useEffect(() => {
 
-        if (currentWatchlist.length === 0) return;
+        if (activeWatchlist.length === 0) return;
 
-        const curWatchlist = watchlist.filter((list) => {
-            return list._id === currentWatchlist._id;
-        });
-
-        const coinPrice = curWatchlist[0].symbols.flatMap((symbol) => {
-            return coins.filter((coin) => {
-                return symbol === coin.symbol;
+        const listCoins = activeWatchlist.coins.flatMap((coin) => {
+            return coins.filter((c) => {
+                return coin.symbol === c.symbol;
             });
         });
 
-        setWatchlistCoins(coinPrice);
+        setWatchlistCoins(listCoins);
 
-    }, [currentWatchlist, watchlist, coins]);
+    }, [ activeWatchlist, watchlist, coins]);
 
     /** Create Watchlist (Active) */
     function createWatchlist() {
@@ -130,6 +136,7 @@ function Watchlist() {
 
         if (response.ok) {
             console.log("Watchlist Created");
+            setWatchlist(data.watchlist);
             setWatchlistTitle({title: ""});
         } else {
             console.log(data.message);
@@ -143,39 +150,49 @@ function Watchlist() {
 
     return (
         <div className='watchlist'>
-            <div className='watchlist-search'>
-                <TextField inputRef={inputRef} sx={{width: "100%"}} name='coin' onChange={handleSearch} id="outlined-basic" label="Search coins..." variant="outlined" />
+            <div className='watchlist-search' style={{ display: searchSecActive ? "block" : "none"}}>
+                <TextField className='input' type='search' inputRef={inputRef} name='coin' onChange={handleSearch} id="outlined-basic" label="Search coins..." variant="outlined" />
             </div>
 
             <div className='coin-search' style={{ display: searchActive ? "block" : "none"}}>
                 {filteredCoins.map((coin) => (
-                    <p className='coin-item'><span>{coin.symbol}</span> <span onClick={() => { handleAddCoin(coin.symbol); setSearchActive(false) }}><AddBoxOutlinedIcon /></span></p>
+                    <p className='coin-item'><span>{coin.symbol}</span> <span onClick={() => { handleCoinAdd(coin.symbol); setSearchActive(false) }}><i className="fa-solid fa-plus"></i></span></p>
                 ))}
             </div>
 
             <div className='create-watchlist' style={{display: createActive ? "block" : "none"}}>
                 <form onSubmit={handleCreateWatchlist}>
-                <TextField required sx={{width: "100%"}} name='title' value={watchlistTitle.title} onChange={handleChange} id="outlined-basic" label="Watchlist title" variant="outlined" />
-                <button>Create</button>
+                <TextField className='input' required name='title' value={watchlistTitle.title} onChange={handleChange} id="outlined-basic" label="Watchlist title" variant="outlined" />
+                <button><i className="fa-solid fa-plus"></i> Create</button>
                 </form>
             </div>
 
             <div className='watchlist-content'>
                 <div className='watchlist-nav'>
-                    {watchlist.map((list, idx) => (
-                        <div className={currentWatchlist._id === list._id ? "current-watchlist" : "user-watchlist"} onClick={() => setCurrentWatchlist(list)} key={idx}><span>{list.title}</span></div>
+                    {watchlist?.map((list, idx) => (
+                        <div className={activeWatchlist._id === list._id ? "current-watchlist" : "user-watchlist"} onClick={() => setActiveWatchlist(list)} key={idx}><span>{list.title}</span></div>
                     ))}
-                    <button onClick={() => createWatchlist()}>Add +</button>
+                    <button onClick={() => createWatchlist()}><i className="fa-solid fa-plus"></i> Watchlist</button>
                 </div>
 
                 <div className='watchlist-items'>
-                    {watchlistCoins.map((coin) => (
+                    { watchlistCoins && watchlistCoins.map((coin) => (
                         <div>
-                            <p style={{color: Number(coin.priceChange) > 0 ? "#008000" : "#FF0000"}}>{coin.symbol}</p>
-                            <p className='watchlist-hover-items'><span><NavLink className='watchlist-chart' to='/chart' state={coin.symbol} ><InsertChartIcon /></NavLink> <NavLink className='watchlist-order' to='/order' state={{ symbol: coin.symbol }}><SwapHorizontalCircleIcon /></NavLink></span></p>
-                            <p><span style={{color: Number(coin.priceChange) > 0 ? "#008000" : "#FF0000"}}>{Number(Number(coin.lastPrice).toFixed(1)).toLocaleString()}</span> <span>{Number(Number(coin.priceChange).toFixed(1)).toLocaleString()}</span></p>
+                            <p className='watchlist-price'>
+                                <span style={{ color: "#ffffff"}}>{coin.symbol}</span>
+                                <span>
+                                    <span style={{ color: "#c4c4c4"}}>{Number(Number(coin.lastPrice).toFixed(1)).toLocaleString()}</span>
+                                    <span style={{ color: coin.priceChange > 0 ? "#008000" : "#ff0000"}}>{Number(Number(coin.priceChangePercent).toFixed(1)).toLocaleString()}%</span>
+                                </span>
+                            </p>
+                            <p className='watchlist-action'>
+                                <NavLink className='nav' to='/chart' state={coin.symbol} ><i className="fa-solid fa-chart-line"></i></NavLink>
+                                <NavLink style={{ color: "#059669"}} className='nav' to='/order' state={{ symbol: coin.symbol }}><i className="fa-solid fa-bolt"></i></NavLink>
+                            </p>
                         </div>
                     ))}
+                    {watchlistCoins.length === 0 ? <p style={{ textAlign: "center", color: "#c4c4c4", padding: "25px 0"}}>No coins yet. <br></br> Tap "Add Symbol" below to get started.</p> : ""}
+                    <button onClick={() => searchSecToggle()} className='add-symbol-btn'><i className="fa-solid fa-plus"></i> Add Symbol</button>
                 </div>
             </div>
         </div>

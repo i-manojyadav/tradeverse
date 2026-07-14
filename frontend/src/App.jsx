@@ -25,12 +25,12 @@ function App() {
   
   return (
     <CryptoAPIProvider>
-    <WatchlistProvider>
     <AuthProvider>
     <WalletProvider>
     <OrdersProvider>
     <HoldingsProvider>
     <PositionsProvider>
+    <WatchlistProvider>
     <Routes>
       <Route path='/' element={<Layout />} >
       <Route index element={<Dashboard />} />
@@ -46,12 +46,12 @@ function App() {
       </Route>
       </Route>
     </Routes>
+    </WatchlistProvider>
     </PositionsProvider>
     </HoldingsProvider>
     </OrdersProvider>
     </WalletProvider>
     </AuthProvider>
-    </WatchlistProvider>
     </CryptoAPIProvider>
   )
 }

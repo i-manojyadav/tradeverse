@@ -5,8 +5,6 @@ export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
 
-    const { setWatchlist } = useContext(WatchlistContext);
-
     const [ user, setUser ] = useState(null);
 
     useEffect(() => {
@@ -18,7 +16,6 @@ export default function AuthProvider({ children }) {
             if (response.ok) {
                 const data = await response.json();
                 setUser(data);
-                setWatchlist(data.watchlist);
             }
         }
 

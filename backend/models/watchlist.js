@@ -7,11 +7,17 @@ const watchlistSchema = new Schema({
         trim: true,
         required: true,
     },
-    symbols: [{
-        type: String,
-        trim: true,
-        uppercase: true,
-    }],
+    coins: [
+        {
+            symbol: {
+                type: String,
+                required: true,
+            },
+            alertPrice: {
+                type: Number,
+            },
+        }
+    ],
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",

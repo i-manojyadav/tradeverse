@@ -5,7 +5,15 @@ export const WatchlistContext = createContext();
 
 export default function WatchlistProvider({ children }) {
 
+    const { user } = useContext(AuthContext);
     const [ watchlist, setWatchlist ] = useState([]);
+
+
+    useEffect(() => {
+        if (user === null) return;
+        setWatchlist(user.watchlist);
+    }, [user]);
+
     
     return (
         <WatchlistContext.Provider

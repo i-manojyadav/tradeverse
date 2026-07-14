@@ -10,8 +10,10 @@ router.post("/watchlist/create", isSignedIn, async (req, res) => {
     const newWatchlist = new Watchlist(req.body);
     newWatchlist.user = req.user._id;
     await newWatchlist.save();
+    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
     res.status(201).json({
         message: "Watchlist Created",
+        watchlist: userWatchlist,
     });
 });
 
@@ -21,16 +23,26 @@ router.post("/watchlist/:id/add", async (req, res) => {
     const { id } = req.params;
     const { coinSymbol } = req.body;
 
-    const curWatchlist = await Watchlist.findByIdAndUpdate(id, { $addToSet: {symbols: coinSymbol}})
+    const watchlist = await Watchlist.findOne({ _id: id, "coins.symbol": coinSymbol});
 
-    await curWatchlist.save();
+    if (watchlist) {
+        const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
 
-    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title symbols _id");
+        res.status(400).json({
+            message: "Coin already exists in watchlist.",
+            watchlist: userWatchlist,
+        });
 
-    res.status(201).json({
-        message: "Symbol added",
-        watchlist: userWatchlist,
-    });
+    } else {
+        const curWatchlist = await Watchlist.findByIdAndUpdate(id, { $addToSet: { coins: { symbol: coinSymbol }}});
+        await curWatchlist.save();
+        const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
+
+        res.status(201).json({
+            message: "Coin added.",
+            watchlist: userWatchlist,
+        });
+    }
 });
 
 

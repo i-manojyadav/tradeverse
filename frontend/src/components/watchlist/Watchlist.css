@@ -7,44 +7,40 @@
     margin-bottom: 5px;
 }
 
-.watchlist-search .MuiInputBase-input {
-    color: #ffffff;
-}
-
-.watchlist-search .MuiInputLabel-root {
-    color: #ffffff;
-}
-
-.watchlist-search .MuiInputLabel-root.Mui-focused {
-    color: #ffffff;
-}
-
-.watchlist-search .MuiOutlinedInput-notchedOutline {
-    border-color: #303030 !important;
-    border-radius: 5px;
-}
-
 /* Search Coins */
+
+.add-symbol-btn {
+    display: block;
+    margin: 10px auto;
+    color: #6b6b70;
+    padding: 10px 25px;
+    border-radius: 100px;
+    border: 2px solid #232323;
+    background-color: transparent;
+}
+
+.add-symbol-btn:hover {
+    background-color: #111111;
+}
+
 .coin-search {
     height: 350px;
+    margin: 10px 0;
     overflow-y: scroll;
-    padding: 25px 10px;
+    padding: 15px 15px;
     border-radius: 10px;
-    background-color: #202020;
+    scrollbar-width: none;
+    background-color: #111111;
 }
 
 .coin-item {
     display: flex;
+    font-size: 15px;
     align-items: center;
     justify-content: space-between;
     padding: 10px 5px;
     margin-bottom: 5px;
-    border-radius: 5px;
-    border-bottom: 1px solid #303030;
-}
-
-.coin-item:hover {
-    background-color: #000000;
+    border-bottom: 1px solid #232323;
 }
 
 
@@ -61,35 +57,19 @@
     justify-content: space-between;
 }
 
-.create-watchlist form .MuiInputBase-input {
-    color: #ffffff;
-}
-
-.create-watchlist form .MuiInputLabel-root {
-    color: #ffffff;
-}
-
-.create-watchlist form .MuiInputLabel-root.Mui-focused {
-    color: #ffffff;
-}
-
-.create-watchlist form .MuiOutlinedInput-notchedOutline {
-    border-color: #303030 !important;
-    border-radius: 5px;
-}
-
-
 .create-watchlist form > button {
     border: none;
     color: #ffffff;
     padding: 15px 15px;
-    border-radius: 5px;
-    background-color: #202020;
+    white-space: nowrap;
+    border-radius: 100px;
+    background-color: #059669;
 }
 
 .create-watchlist form > button:hover {
-    color: #000000;
-    background-color: #ffffff;
+    color: #c4c4c4;
+    border: 2px solid #232323;
+    background-color: #111111;
 }
 
 /* Watchlist Content */
@@ -103,28 +83,28 @@
 
 .watchlist-nav {
     gap: 10px;
-    margin: 5px 0;
-    padding: 5px 5px;
-    border: 1px solid #303030;
     display: flex;
     overflow: auto;
     cursor: pointer;
+    margin-bottom: 10px;
     scrollbar-width: none;
     align-items: center;
 }
 
 .watchlist-nav button {
-    border: none;
+    font-size: 14px;
     color: #ffffff;
-    padding: 12px;
-    border-radius: 5px;
+    padding: 8px 15px;
     white-space: nowrap;
-    background-color: #202020;
+    border-radius: 100px;
+    border: 2px solid transparent;
+    background-color: #059669;
 }
 
 .watchlist-nav button:hover {
-    color: #000000;
-    background-color: #ffffff;
+    color: #c4c4c4;
+    border: 2px solid #232323;
+    background-color: #111111;
 }
 
 .watchlist-nav::-webkit-scrollbar {
@@ -132,66 +112,59 @@
 }
 
 .user-watchlist {
-    padding: 10px;
-    color: #ffffff;
-    border-radius: 5px;
+    font-size: 14px;
+    color: #696969;
+    padding: 8px 15px;
     white-space: nowrap;
-    background-color: #202020;
+    border-radius: 100px;
+    border: 2px solid #232323;
 }
 
 .current-watchlist {
-    padding: 10px;
+    font-size: 14px;
     color: #ffffff;
-    border-radius: 5px;
+    padding: 8px 15px;
     white-space: nowrap;
+    border-radius: 100px;
+    border: 2px solid #232323;
     background-color: #059669;
 }
 
 .watchlist-items > div {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    padding: 12px 5px;
+    display: flex;
+    padding: 12px 10px;
     align-items: center;
     margin-bottom: 5px;
-    border-radius: 5px;
-    border-bottom: 1px solid #303030;
+    justify-content: space-between;
+    border-bottom: 1px solid #232323;
 }
 
-.watchlist-items > div:hover {
-    background-color: #202020;
+.watchlist-price {
+    display: flex;
+    flex-direction: column;
 }
 
-.watchlist-items div p {
+.watchlist-price > span:nth-of-type(1) {
+    font-size: 15px;
+}
+
+.watchlist-price > span:nth-of-type(2) {
+    gap: 10px;
+    font-size: 13px;
+    display: flex;
+}
+
+.watchlist-action {
     gap: 15px;
     display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
+    align-items: center;
+    color: #6b6b70;
 }
 
-.watchlist-items div p:nth-of-type(1) {
-    justify-self: start;
+.nav {
+    color: #6b6b70;
 }
 
-.watchlist-items div p:nth-of-type(2) {
-    justify-self: center;
-}
-
-.watchlist-items div p:nth-of-type(3) {
-    justify-self: end;
-}
-
-.watchlist-chart {
+.nav:hover {
     color: #c4c4c4;
-}
-
-.watchlist-chart:hover {
-    color: #059669;
-}
-
-.watchlist-order {
-    color: #c4c4c4;
-}
-
-.watchlist-order:hover {
-    color: #059669;
 }
