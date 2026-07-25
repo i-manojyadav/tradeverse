@@ -8,11 +8,13 @@ function OrdersTable({ ordersData }) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Time</TableCell>
-                        <TableCell>Side</TableCell>
+                        <TableCell>Symbol</TableCell>
+                        <TableCell>Mode</TableCell>
                         <TableCell>Type</TableCell>
-                        <TableCell>Instrument</TableCell>
+                        <TableCell>Side</TableCell>
                         <TableCell>Qty</TableCell>
                         <TableCell>Price</TableCell>
+                        <TableCell>Lev.</TableCell>
                         <TableCell>Status</TableCell>
                     </TableRow>
                 </TableHead>
@@ -20,11 +22,13 @@ function OrdersTable({ ordersData }) {
                     {ordersData.map((order, idx) => (
                         <TableRow key={idx}>
                             <TableCell sx={{color: "white",}} >{new Date(order.createdAt).toLocaleTimeString()}</TableCell>
-                            <TableCell>{order.side}</TableCell>
-                            <TableCell>{order.type}</TableCell>
                             <TableCell>{order.symbol}</TableCell>
+                            <TableCell>{order.mode}</TableCell>
+                            <TableCell>{order.type.replace("_", " ")}</TableCell>
+                            <TableCell>{order.side}</TableCell>
                             <TableCell>{order.quantity}</TableCell>
-                            <TableCell>{order.price}</TableCell>
+                            <TableCell>{order.entryPrice}</TableCell>
+                            <TableCell>{order.leverage}X</TableCell>
                             <TableCell>{order.status}</TableCell>
                         </TableRow>
                     ))}

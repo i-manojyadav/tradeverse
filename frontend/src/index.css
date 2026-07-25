@@ -104,6 +104,7 @@ button {
 }
 
 .MUI-table .MuiTableHead-root {
+  white-space: nowrap;
   text-transform: uppercase;
   background-color: #000000;
   border: 1px solid #232323;
@@ -146,13 +147,17 @@ button {
 
 .input .MuiInputLabel-root {
   color: #a2a2a2;
-  font-size: 14px !important;
+  font-size: 16px !important;
   font-family: "Mulish", sans-serif !important;
 }
 
 .input .MuiInputLabel-root.Mui-focused {
   color: #a2a2a2;
   font-family: "Mulish", sans-serif !important;
+}
+
+.input .MuiOutlinedInput-notchedOutline {
+  border-color: #303030;
 }
 
 

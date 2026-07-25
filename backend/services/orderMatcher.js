@@ -31,6 +31,8 @@ setInterval(fetchData, 5000);
 const orderMatch = async () => {
     const orders = await Order.find({status: "PENDING"});
 
+    await handleStopLossOrders();
+
     for (const order of orders) {
         const coin = coins.find((c) => {
             return c.symbol.toUpperCase() === order.symbol.toUpperCase();
@@ -38,13 +40,21 @@ const orderMatch = async () => {
 
         if (!coin) continue;
 
+        if (order.type === "STOP_LOSS") {
+            continue;
+        }
+
         if (order.side === "BUY") {
-            if (order.price >= coin.askPrice) {
+            if (order.entryPrice >= coin.askPrice) {
                 order.status = "EXECUTED";
                 await order.save();
                 createTransaction(order);
 
-                if (order.type === "INTRADAY") {
+                if (order.mode === "TRADE" && order.leverage > 1) {
+                    await createSLOrder(order);
+                }
+
+                if (order.mode === "TRADE") {
 
                     const position = await Position.findOne({ user: order.user, symbol: order.symbol });
 
@@ -52,7 +62,7 @@ const orderMatch = async () => {
 
                         if (position.side === "BUY") {
                             const newQty = position.quantity + order.quantity;
-                            position.averagePrice = ((position.averagePrice * position.quantity) + (order.price * order.quantity)) / newQty;
+                            position.averagePrice = ((position.averagePrice * position.quantity) + (order.entryPrice * order.quantity)) / newQty;
                             position.quantity = newQty;
                             await position.save();
 
@@ -64,11 +74,11 @@ const orderMatch = async () => {
                                 await position.save();
 
                             } else if (newQty === 0) {
-                                await Position.deleteOne({_id: position._id});
+                                await Position.deleteOne({ _id: position._id });
                             } else {
                                 position.side = order.side;
                                 position.quantity = Math.abs(newQty);
-                                position.averagePrice = order.price;
+                                position.averagePrice = order.entryPrice;
                                 await position.save();
                             }
                         }
@@ -77,22 +87,25 @@ const orderMatch = async () => {
 
                         await Position.create({
                             symbol: order.symbol,
-                            type: order.type,
+                            mode: order.mode,
                             side: order.side,
                             quantity: order.quantity,
-                            averagePrice: order.price,
+                            averagePrice: order.entryPrice,
+                            leverage: order.leverage,
+                            marginUsed: (order.entryPrice * order.quantity) / order.leverage,
+                            liquidationPrice: order.liquidationPrice,
                             executedAt: new Date(),
                             user: order.user,
                         });
                     }
 
-                } else if (order.type === "LONGTERM") {
+                } else if (order.mode === "INVEST") {
 
                     const holding = await Holding.findOne({ user: order.user, symbol: order.symbol});
 
                     if (holding) {
                         const newQty = holding.quantity + order.quantity;
-                        holding.averageBuy = ((holding.averageBuy * holding.quantity) + (order.price * order.quantity)) / newQty;
+                        holding.averageBuy = ((holding.averageBuy * holding.quantity) + (order.entryPrice * order.quantity)) / newQty;
                         holding.quantity = newQty;
                         await holding.save();
 
@@ -101,7 +114,7 @@ const orderMatch = async () => {
                         await Holding.create({
                             symbol: order.symbol,
                             quantity: order.quantity,
-                            averageBuy: order.price,
+                            averageBuy: order.entryPrice,
                             executedAt: new Date(),
                             updatedAt: new Date(),
                             user: order.user,
@@ -113,12 +126,16 @@ const orderMatch = async () => {
 
         } else if (order.side === "SELL") {
 
-            if (order.price <= coin.bidPrice) {
+            if (order.entryPrice <= coin.bidPrice) {
                 order.status = "EXECUTED";
                 await order.save();
                 createTransaction(order);
 
-                if (order.type === "INTRADAY") {
+                if (order.mode === "TRADE" && order.leverage > 1) {
+                    await createSLOrder(order);
+                }
+
+                if (order.mode === "TRADE") {
 
                     const position = await Position.findOne({ user: order.user, symbol: order.symbol });
 
@@ -126,7 +143,7 @@ const orderMatch = async () => {
 
                         if (position.side === "SELL") {
                             const newQty = position.quantity + order.quantity;
-                            position.averagePrice = ((position.averagePrice * position.quantity) + (order.price * order.quantity)) / newQty;
+                            position.averagePrice = ((position.averagePrice * position.quantity) + (order.entryPrice * order.quantity)) / newQty;
                             position.quantity = newQty;
                             await position.save();
 
@@ -142,7 +159,7 @@ const orderMatch = async () => {
                             } else {
                                 position.side = order.side;
                                 position.quantity = Math.abs(newQty);
-                                position.averagePrice = order.price;
+                                position.averagePrice = order.entryPrice;
 
                                 await position.save();
                             }
@@ -152,16 +169,19 @@ const orderMatch = async () => {
 
                         await Position.create({
                             symbol: order.symbol,
-                            type: order.type,
+                            mode: order.mode,
                             side: order.side,
                             quantity: order.quantity,
-                            averagePrice: order.price,
+                            averagePrice: order.entryPrice,
+                            leverage: order.leverage,
+                            marginUsed: (order.entryPrice * order.quantity) / order.leverage,
+                            liquidationPrice: order.liquidationPrice,
                             executedAt: new Date(),
                             user: order.user,
                         });
                     }
 
-                } else if (order.type === "LONGTERM") {
+                } else if (order.mode === "INVEST") {
 
                     const holding = await Holding.findOne({ user: order.user, symbol: order.symbol });
 
@@ -193,40 +213,44 @@ const createTransaction = async (order) => {
 
     const transaction = await new Transaction ({
         symbol: order.symbol,
+        mode: order.mode,
         type: order.type,
         side: order.side,
         quantity: order.quantity,
-        averagePrice: order.price,
-        amount: order.price * order.quantity,
+        averagePrice: order.entryPrice,
+        amount: order.entryPrice * order.quantity,
         order: order._id,
         user: order.user,
     });
+
+    const orderValue = order.entryPrice * order.quantity;
+    const marginUsed = orderValue / order.leverage;
 
 
     /** Update Wallet Funds */
     const wallet = await Wallet.findOne({ user: order.user });
 
-    if (order.type === "INTRADAY") {
+    if (order.mode === "TRADE") {
 
         const position = await Position.findOne({ user: order.user, symbol: order.symbol });
 
         if (!position || position.side === order.side) {
-            wallet.funds -= transaction.amount;
+            wallet.funds -= marginUsed;
             transaction.walletEffect = "DEBIT";
             
         } else {
-            wallet.funds += transaction.amount;
+            wallet.funds += marginUsed;
             transaction.walletEffect = "CREDIT";
         }
 
         await wallet.save();
 
-    } else if (order.type ==="LONGTERM") {
+    } else if (order.mode ==="INVEST") {
 
         const holding = await Holding.findOne({ user: order.user, symbol: order.symbol });
         
         if (order.side === "BUY") {
-            wallet.funds -= transaction.amount;
+            wallet.funds -= orderValue;
             transaction.walletEffect = "DEBIT";
 
         } else if (order.side === "SELL") {
@@ -241,7 +265,7 @@ const createTransaction = async (order) => {
                 return;
             }
 
-            wallet.funds += transaction.amount;
+            wallet.funds += orderValue;
             transaction.walletEffect = "CREDIT";
             
         }
@@ -252,6 +276,81 @@ const createTransaction = async (order) => {
 
     await transaction.save();
 
+}
+
+
+/** Create StopLoss Order */
+
+const createSLOrder = async (order) => {
+
+    const orderSide = order.side === "BUY" ? "SELL" : order.side === "SELL" ? "BUY" : "";
+
+    const stopLossOrder = new Order({
+        type: "STOP_LOSS",
+        symbol: order.symbol,
+        mode: order.mode,
+        side: orderSide,
+        quantity: order.quantity,
+        entryPrice: order.entryPrice,
+        leverage: order.leverage,
+        liquidationPrice: order.liquidationPrice,
+        stopLoss: order.stopLoss,
+        status: "PENDING",
+        createdAt: new Date(),
+        user: order.user,
+    });
+
+    await stopLossOrder.save();
+}
+
+/** Handle StopLoss Orders */
+
+const handleStopLossOrders = async () => {
+    const orders = await Order.find({type: "STOP_LOSS", status: "PENDING"});
+
+    if (!orders) return;
+
+    for (const order of orders) {
+        const coin = coins.find((c) => {
+            return c.symbol.toUpperCase() === order.symbol.toUpperCase();
+        });
+
+        if (!coin) continue;
+
+        if (order.side === "BUY") {
+            if (order.liquidationPrice <= coin.lastPrice) {
+                order.status = "EXECUTED";
+
+                if (order.mode === "TRADE") {
+                    const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+
+                    if (position) {
+                        await Position.deleteOne({ _id: position._id });
+
+                        await order.save();
+                        await createTransaction(order);
+                    }
+                }
+            }
+
+        } else if (order.side === "SELL") {
+            if (order.liquidationPrice >= coin.lastPrice) {
+                order.status = "EXECUTED";
+
+                if (order.mode === "TRADE") {
+
+                    const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+                    
+                    if (position) {
+                        await Position.deleteOne({ _id: position._id });
+
+                        await order.save();
+                        await createTransaction(order);
+                    }
+                }
+            }
+        }
+    }
 }
 
 

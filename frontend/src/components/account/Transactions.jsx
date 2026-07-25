@@ -15,6 +15,7 @@ function Transactions() {
                         <TableRow>
                             <TableCell>Date</TableCell>
                             <TableCell>Symbol</TableCell>
+                            <TableCell>Mode</TableCell>
                             <TableCell>Type</TableCell>
                             <TableCell>Side</TableCell>
                             <TableCell>Qty</TableCell>
@@ -28,7 +29,8 @@ function Transactions() {
                             <TableRow>
                                 <TableCell>{new Date(transaction.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell>{transaction.symbol}</TableCell>
-                                <TableCell>{transaction.type}</TableCell>
+                                <TableCell>{transaction.mode}</TableCell>
+                                <TableCell>{transaction.type.replace("_", " ")}</TableCell>
                                 <TableCell>{transaction.side}</TableCell>
                                 <TableCell>{transaction.quantity}</TableCell>
                                 <TableCell>{transaction.averagePrice}</TableCell>

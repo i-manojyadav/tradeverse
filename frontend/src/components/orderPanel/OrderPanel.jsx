@@ -2,20 +2,17 @@ import './OrderPanel.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import FormHelperText from '@mui/material/FormHelperText';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Slider from '@mui/material/Slider';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { CryptoAPIContext } from '../../context/CryptoAPIContext';
 import { useEffect } from 'react';
 import { OrdersContext } from '../../context/OrdersContext';
+import { PositionsContext } from '../../context/PositionsContext';
+import { HoldingsContext } from '../../context/HoldingsContext';
 
 
 function OrderPanel() {
@@ -25,14 +22,18 @@ function OrderPanel() {
 
     const { setOrders } = useContext(OrdersContext);
     const { coins } = useContext(CryptoAPIContext);
-    const [ coin, setCoin ] = useState([]);
+    const { enrichedPositions } = useContext(PositionsContext);
+    const { enrichedHoldings } = useContext(HoldingsContext);
 
+    const [ coin, setCoin ] = useState([]);
+    const [ sellOrder, setSellOrder ] = useState([]);
     const [ orderData, setOrderData ] = useState({
         symbol: "",
         side: "",
-        type: "",
+        mode: "",
         quantity: "",
-        price: "",
+        entryPrice: "",
+        leverage: "1",
     });
 
 
@@ -55,6 +56,10 @@ function OrderPanel() {
 
         orderData.symbol = coin[0]?.symbol;
 
+        if (orderData.mode === "INVEST") {
+            orderData.leverage = "1";
+        }
+
         try {
             const response = await fetch("http://localhost:3000/orders", {
                 method: "POST",
@@ -73,9 +78,9 @@ function OrderPanel() {
                 setOrderData({
                     symbol: "",
                     side: "",
-                    type: "",
+                    mode: "",
                     quantity: "",
-                    price: "",
+                    entryPrice: "",
                 });
             } else {
                 console.log("Something went wrong");
@@ -89,35 +94,41 @@ function OrderPanel() {
     return (
         <div className='order-panel'>
             <form onSubmit={handleSubmit}>
-                <div className='order-asset' style={{ backgroundColor: orderData.side === "BUY" ? "#16a34a" : orderData.side === "SELL" ? "#dc2626" : ""}}>
+                <div className='order-asset'>
                     <p className='order-asset-title'>{coin[0]?.symbol}</p>
                     <p className='order-asset-price'>{Number(Number(coin[0]?.lastPrice).toFixed(1)).toLocaleString()}</p>
                 </div>
                 <div className='order-type'>
-                    <FormControl error={!orderData.side} required>
-                        <FormLabel sx={{ color: "#ffffff"}}>Side</FormLabel>
-                        <RadioGroup name="side" value={orderData.side} onChange={handleChange} row>
-                        <FormControlLabel value="BUY" control={<Radio />} label="Buy" />
-                        <FormControlLabel value="SELL" control={<Radio />} label="Sell" />
-                        </RadioGroup>
-                        {!orderData.side && <FormHelperText>Please select Buy or Sell</FormHelperText>}
-                    </FormControl>
-
-                    <FormControl error={!orderData.type} required>
-                        <FormLabel sx={{ color: "#ffffff"}}>Type</FormLabel>
-                        <RadioGroup name="type" value={orderData.type} onChange={handleChange} row>
-                        <FormControlLabel value="INTRADAY" control={<Radio />} label="Intraday" />
-                        <FormControlLabel value="LONGTERM" control={<Radio />} label="Longterm" />
-                        </RadioGroup>
-                        {!orderData.type && <FormHelperText>Please select Intraday or Longterm</FormHelperText>}
-                    </FormControl>
+                    <button type='button' onClick={() => { setOrderData({ ...orderData, mode: "TRADE" }) }} className={orderData.mode === "TRADE" ? "active-order-type" : ""}>Trade</button>
+                    <button type='button' onClick={() => { setOrderData({ ...orderData, mode: "INVEST"}) }}className={orderData.mode === "INVEST" ? "active-order-type" : ""}>Invest</button>
+                </div>
+                <div className='trade-side'>
+                    <button type='button' onClick={() => setOrderData({ ...orderData, side: "BUY"})} className={orderData.side === "BUY" ? "trade-buy-btn" : ""}>Buy</button>
+                    <button type='button' onClick={() => setOrderData({ ...orderData, side: "SELL"})} className={orderData.side === "SELL" ? "trade-sell-btn" : ""}>Sell</button>
                 </div>
                 <div className='order-value'>
-                    <TextField name='quantity' value={orderData.quantity} onChange={handleChange} type='number' required id="outlined-basic" label="Quantity" variant="outlined" />
-                    <TextField name='price' value={orderData.price} onChange={handleChange} type='number' required id="outlined-basic" label="Price" variant="outlined" />
+                    <TextField className='input' name='quantity' value={orderData.quantity} onChange={handleChange} type='number' required id="outlined-basic" label="Quantity" variant="outlined" />
+                    <TextField className='input' name='entryPrice' value={orderData.entryPrice} onChange={handleChange} type='number' required id="outlined-basic" label="Entry Price" variant="outlined" />
+                </div>
+                { orderData.mode === "TRADE" && <div className='order-leverage'>
+                    <Slider name='leverage' onChange={handleChange} min={1} max={100} defaultValue={1} aria-label="Default" valueLabelDisplay="on" />
+                </div> }
+                <div className='order-info'>
+                    <p>
+                        <span>Margin Required: </span>
+                        <span>{Number(((Number(orderData.quantity) * Number(orderData.entryPrice)) / Number(orderData.leverage)).toFixed(1)).toLocaleString() || 0}</span>
+                    </p>
+
+                    { orderData.mode === "TRADE" && <p>
+                        <span>Liquidation Price: </span>
+                        <span>
+                            {orderData.side === "BUY" ? `${Number(Number(Number(orderData.entryPrice) * (1 - 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` :
+                            orderData.side === "SELL" ? `${Number(Number(Number(orderData.entryPrice) * (1 + 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` : "0"}
+                        </span>
+                    </p> }
                 </div>
                 <div className='order-btn'>
-                    <Button type='submit' variant="contained" color="success">Place Order</Button>
+                    <Button type='submit' style={{ display: (orderData.mode === "" || orderData.side === "")  ? "none" : ""}} variant="contained" color={orderData.side === "BUY" ? "success" : orderData.side === "SELL" ? "error" : "success"}>{`${orderData.side} ${coin[0]?.symbol}`}</Button>
                 </div>
             </form>
         </div>

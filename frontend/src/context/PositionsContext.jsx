@@ -34,28 +34,40 @@ export default function PositionsProvider({ children }) {
             if (!coin) return null;
 
             if (position.side === "BUY") {
+
+                const marginUsed = (Number(position.averagePrice) * Number(position.quantity)) / Number(position.leverage);
+                const pnl = (Number(coin.lastPrice) - Number(position.averagePrice)) * Number(position.quantity);
+
                 return {
                     symbol: position.symbol,
                     side: position.side,
                     quantity: position.quantity,
                     averagePrice: position.averagePrice,
+                    leverage: position.leverage,
                     ltp: coin.lastPrice,
-                    invested: Number(position.averagePrice) * Number(position.quantity),
-                    currentValue: Number(coin.lastPrice) * Number(position.quantity),
-                    pnl: (Number(coin.lastPrice) - Number(position.averagePrice)) * Number(position.quantity),
-                    roi: ((Number(coin.lastPrice) - Number(position.averagePrice)) / Number(position.averagePrice)) * 100,
+                    marginUsed: marginUsed,
+                    positionValue: Number(coin.lastPrice) * Number(position.quantity),
+                    pnl: pnl,
+                    roi: (pnl / marginUsed) * 100,
+                    liquidationPrice: position.liquidationPrice,
                 }
             } else if (position.side === "SELL") {
+
+                const marginUsed = (Number(position.averagePrice) * Number(position.quantity)) / Number(position.leverage);
+                const pnl = (Number(position.averagePrice) - Number(coin.lastPrice)) * Number(position.quantity);
+
                 return {
                     symbol: position.symbol,
                     side: position.side,
                     quantity: position.quantity,
                     averagePrice: position.averagePrice,
+                    leverage: position.leverage,
                     ltp: coin.lastPrice,
-                    invested: Number(position.averagePrice) * Number(position.quantity),
-                    currentValue: Number(coin.lastPrice) * Number(position.quantity),
-                    pnl: (Number(position.averagePrice) - Number(coin.lastPrice)) * Number(position.quantity),
-                    roi: ((Number(position.averagePrice) - Number(coin.lastPrice)) / Number(position.averagePrice)) * 100,
+                    marginUsed: marginUsed,
+                    positionValue: Number(coin.lastPrice) * Number(position.quantity),
+                    pnl: pnl,
+                    roi: (pnl / marginUsed) * 100,
+                    liquidationPrice: position.liquidationPrice,
                 }
             }
         }).filter(Boolean);
@@ -68,30 +80,28 @@ export default function PositionsProvider({ children }) {
     /** Positions Stats */
     useEffect(() => {
 
-        const invested = enrichedPositions.reduce((sum, coin) => {
-            return sum + Number(coin.invested);
+        const marginUsed = enrichedPositions.reduce((sum, coin) => {
+            return sum + Number(coin.marginUsed);
         }, 0);
 
-        const currentValue = enrichedPositions.reduce((sum, coin) => {
-            return sum + Number(coin.currentValue);
+        const positionValue = enrichedPositions.reduce((sum, coin) => {
+            return sum + Number(coin.positionValue);
         }, 0);
 
         const pnl = enrichedPositions.reduce((sum, coin) => {
             return sum + Number(coin.pnl);
         }, 0);
 
-        const roi = enrichedPositions.reduce((sum, coin) => {
-            return sum + Number(coin.roi);
-        }, 0);
+        const roi = (pnl / marginUsed) * 100 || 0;
 
         setPositionsStats({
-            invested: invested,
-            currentValue: currentValue,
+            marginUsed: marginUsed,
+            positionValue: positionValue,
             pnl: pnl,
             roi: roi,
         });
 
-    }, [coins]);
+    }, [enrichedPositions]);
 
 
     return (

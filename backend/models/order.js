@@ -7,9 +7,15 @@ const orderSchema = new Schema ({
         type: String,
         required: true,
     },
+    mode: {
+        type: String,
+        enum: ["TRADE", "INVEST"],
+        required: true,
+    },
     type: {
         type: String,
-        enum: ["INTRADAY", "LONGTERM"],
+        default: "LIMIT",
+        enum: ["LIMIT", "STOP_LOSS"],
         required: true,
     },
     side: {
@@ -21,13 +27,27 @@ const orderSchema = new Schema ({
         type: Number,
         required: true,
     },
-    price: {
+    entryPrice: {
         type: Number,
         required: true,
     },
+    leverage: {
+        type: Number,
+        min: 1,
+        max: 100,
+        default: 1,
+        required: true,
+    },
+    liquidationPrice: {
+        type: Number,
+        required: true,
+    },
+    stopLoss: {
+        type: Number,
+    },
     status: {
         type: String,
-        enum: ["PENDING", "EXECUTED"],
+        enum: ["PENDING", "EXECUTED", "CANCELLED"],
         default: "PENDING",
         required: true,
     },

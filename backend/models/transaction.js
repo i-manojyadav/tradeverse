@@ -6,9 +6,14 @@ const transactionSchema = new Schema({
         type: String,
         required: true,
     },
+    mode: {
+        type: String,
+        enum: ["TRADE", "INVEST"],
+        required: true,
+    },
     type: {
         type: String,
-        enum: ["INTRADAY", "LONGTERM"],
+        enum: ["LIMIT", "STOP_LOSS"],
         required: true,
     },
     side: {

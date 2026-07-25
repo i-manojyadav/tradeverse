@@ -11,9 +11,9 @@ function Positions() {
     return(
         <div className='positions'>
             <div className='stats'>
-                <StatCard title={"Invested"} value={positionsStats.invested} subTitle={"Capital Deployed"} />
-                <StatCard title={"Current"} value={positionsStats.currentValue} subTitle={"Current value"} />
-                <StatCard title={"Pofit & Loss"} value={positionsStats.pnl} subTitle={"Unrealized"} isPnL={true} roi={positionsStats.roi} />
+                <StatCard title={"Margin Used"} value={positionsStats.marginUsed} subTitle={"Capital Deployed"} />
+                <StatCard title={"Position Value"} value={positionsStats.positionValue} subTitle={"Current Exposure"} />
+                <StatCard title={"Pofit & Loss"} value={positionsStats.pnl} subTitle={"Unrealized PnL"} isPnL={true} roi={positionsStats.roi} />
 
                 <StatCardMobile invested={5500} current={7500} pnl={2000} roi={2} />
             </div>
@@ -25,11 +25,13 @@ function Positions() {
                             <TableRow>
                                 <TableCell>Symbol</TableCell>
                                 <TableCell>Side</TableCell>
-                                <TableCell>Quantity</TableCell>
-                                <TableCell>Avg. Price</TableCell>
+                                <TableCell>Qty</TableCell>
+                                <TableCell>Avg.</TableCell>
+                                <TableCell>Lev.</TableCell>
                                 <TableCell>LTP</TableCell>
                                 <TableCell>P&L</TableCell>
-                                <TableCell>ROI (%)</TableCell>
+                                <TableCell>ROI %</TableCell>
+                                <TableCell>Liq. Price</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -39,9 +41,11 @@ function Positions() {
                                     <TableCell>{position.side}</TableCell>
                                     <TableCell>{position.quantity}</TableCell>
                                     <TableCell>{Number(Number(position.averagePrice).toFixed(1)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(position.leverage).toFixed(1)).toLocaleString()}X</TableCell>
                                     <TableCell>{Number(Number(position.ltp).toFixed(1)).toLocaleString()}</TableCell>
                                     <TableCell style={{color: position.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(position.pnl).toFixed(1)).toLocaleString()}</TableCell>
                                     <TableCell>{Number(Number(position.roi).toFixed(1)).toLocaleString()}%</TableCell>
+                                    <TableCell>{Number(Number(position.liquidationPrice).toFixed(1)).toLocaleString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -6,9 +6,9 @@ const positionSchema = new Schema({
         type: String,
         required: true,
     },
-    type: {
+    mode: {
         type: String,
-        enum: ["INTRADAY", "LONGTERM"],
+        enum: ["TRADE", "INVEST"],
         required: true,
     },
     side: {
@@ -24,6 +24,20 @@ const positionSchema = new Schema({
     averagePrice: {
         type: Number,
         min: 0,
+        required: true,
+    },
+    leverage: {
+        type: Number,
+        min: 1,
+        max: 100,
+        required: true,
+    },
+    marginUsed: {
+        type: Number,
+        required: true,
+    },
+    liquidationPrice: {
+        type: Number,
         required: true,
     },
     executedAt: {

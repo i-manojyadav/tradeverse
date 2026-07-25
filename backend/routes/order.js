@@ -9,10 +9,17 @@ const router = express.Router();
 
 router.post("/orders", isSignedIn, async (req, res) => {
     const order = new Order(req.body);
+    if (order.mode === "TRADE" && order.side === "BUY") {
+        order.liquidationPrice = order.entryPrice * (1 - 1 / order.leverage);
+    } else if (order.mode === "TRADE" && order.side === "SELL") {
+        order.liquidationPrice = order.entryPrice * (1 + 1 / order.leverage);
+    } else {
+        order.liquidationPrice = 0;
+    }
     order.user = req.user._id;
     await order.save();
 
-    const userOrders = await Order.find({user: req.user._id});
+    const userOrders = await Order.find({user: req.user._id}).sort({ createdAt: -1 });
     res.status(201).json({
         message: "Order placed",
         orders: userOrders,
