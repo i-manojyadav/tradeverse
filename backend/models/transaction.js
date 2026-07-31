@@ -29,6 +29,13 @@ const transactionSchema = new Schema({
         type: Number,
         required: true,
     },
+    leverage: {
+        type: Number,
+        min: 1,
+        max: 100,
+        default: 1,
+        required: true,
+    },
     amount: {
         type: Number,
         required: true,

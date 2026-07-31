@@ -27,7 +27,7 @@ const orderSchema = new Schema ({
         type: Number,
         required: true,
     },
-    entryPrice: {
+    price: {
         type: Number,
         required: true,
     },
@@ -44,6 +44,7 @@ const orderSchema = new Schema ({
     },
     stopLoss: {
         type: Number,
+        default: null,
     },
     status: {
         type: String,
@@ -54,6 +55,11 @@ const orderSchema = new Schema ({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    parentOrder: {
+        type: Schema.Types.ObjectId,
+        ref: "Order",
+        default: null,
     },
     user: {
         type: Schema.Types.ObjectId,

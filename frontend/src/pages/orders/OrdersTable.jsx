@@ -27,7 +27,7 @@ function OrdersTable({ ordersData }) {
                             <TableCell>{order.type.replace("_", " ")}</TableCell>
                             <TableCell>{order.side}</TableCell>
                             <TableCell>{order.quantity}</TableCell>
-                            <TableCell>{order.entryPrice}</TableCell>
+                            <TableCell>{Number(Number(order.price).toFixed(2)).toLocaleString()}</TableCell>
                             <TableCell>{order.leverage}X</TableCell>
                             <TableCell>{order.status}</TableCell>
                         </TableRow>

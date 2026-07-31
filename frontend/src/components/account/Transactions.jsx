@@ -19,7 +19,7 @@ function Transactions() {
                             <TableCell>Type</TableCell>
                             <TableCell>Side</TableCell>
                             <TableCell>Qty</TableCell>
-                            <TableCell>Avg. Price</TableCell>
+                            <TableCell>Price</TableCell>
                             <TableCell>Amount</TableCell>
                             <TableCell>Cr/Dr</TableCell>
                         </TableRow>
@@ -29,12 +29,12 @@ function Transactions() {
                             <TableRow>
                                 <TableCell>{new Date(transaction.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell>{transaction.symbol}</TableCell>
-                                <TableCell>{transaction.mode}</TableCell>
+                                <TableCell>{`${transaction.mode} (${transaction.leverage}X)`}</TableCell>
                                 <TableCell>{transaction.type.replace("_", " ")}</TableCell>
                                 <TableCell>{transaction.side}</TableCell>
-                                <TableCell>{transaction.quantity}</TableCell>
-                                <TableCell>{transaction.averagePrice}</TableCell>
-                                <TableCell>{transaction.amount}</TableCell>
+                                <TableCell>{Number(transaction.quantity).toLocaleString()}</TableCell>
+                                <TableCell>{Number(transaction.averagePrice).toLocaleString()}</TableCell>
+                                <TableCell>{Number(transaction.amount).toLocaleString()}</TableCell>
                                 <TableCell>{transaction.walletEffect}</TableCell>
                             </TableRow>
                         ))}

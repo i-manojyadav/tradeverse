@@ -49,6 +49,7 @@ export default function PositionsProvider({ children }) {
                     positionValue: Number(coin.lastPrice) * Number(position.quantity),
                     pnl: pnl,
                     roi: (pnl / marginUsed) * 100,
+                    stopLoss: Number(position.stopLoss),
                     liquidationPrice: position.liquidationPrice,
                 }
             } else if (position.side === "SELL") {
@@ -67,6 +68,7 @@ export default function PositionsProvider({ children }) {
                     positionValue: Number(coin.lastPrice) * Number(position.quantity),
                     pnl: pnl,
                     roi: (pnl / marginUsed) * 100,
+                    stopLoss: Number(position.stopLoss),
                     liquidationPrice: position.liquidationPrice,
                 }
             }

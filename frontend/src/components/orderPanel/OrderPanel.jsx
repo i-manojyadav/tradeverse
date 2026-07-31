@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
 import Slider from '@mui/material/Slider';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -26,15 +27,28 @@ function OrderPanel() {
     const { enrichedHoldings } = useContext(HoldingsContext);
 
     const [ coin, setCoin ] = useState([]);
-    const [ sellOrder, setSellOrder ] = useState([]);
+    const [ orderAlert, setOrderAlert ] = useState(false);
     const [ orderData, setOrderData ] = useState({
         symbol: "",
         side: "",
         mode: "",
         quantity: "",
-        entryPrice: "",
+        price: "",
+        stopLoss: "",
         leverage: "1",
     });
+    const [ activeSL, setActiveSL ] = useState(false);
+
+
+    /** SL Toggle */
+    function slToggle() {
+        if (activeSL === false) {
+            setActiveSL(true);
+        } else {
+            setActiveSL(false);
+            orderData.stopLoss = 0;
+        }
+    }
 
 
     /** Fetch Live Price */
@@ -56,9 +70,27 @@ function OrderPanel() {
 
         orderData.symbol = coin[0]?.symbol;
 
+        const liqPriceBuy = Number(orderData.price) * (1 - 1 / Number(orderData.leverage));
+        const liqPriceSell = Number(orderData.price) * (1 + 1 / Number(orderData.leverage));
+
+        if (activeSL === true && orderData.side === "BUY") {
+            if (Number(orderData.stopLoss) >= Number(orderData.price) || Number(orderData.stopLoss) <= liqPriceBuy ) {
+                setOrderAlert(true);
+                return;
+            }
+
+        } else if (activeSL === true && orderData.side === "SELL") {
+            if (Number(orderData.stopLoss) <= Number(orderData.price) || Number(orderData.stopLoss) >= liqPriceSell) {
+                setOrderAlert(true);
+                return;
+            }
+        }
+
         if (orderData.mode === "INVEST") {
             orderData.leverage = "1";
         }
+
+        console.log(orderData);
 
         try {
             const response = await fetch("http://localhost:3000/orders", {
@@ -80,10 +112,11 @@ function OrderPanel() {
                     side: "",
                     mode: "",
                     quantity: "",
-                    entryPrice: "",
+                    price: "",
+                    stopLoss: "",
                 });
             } else {
-                console.log("Something went wrong");
+                console.log("Something went wrong", response.message);
             }
 
         } catch(err) {
@@ -108,7 +141,19 @@ function OrderPanel() {
                 </div>
                 <div className='order-value'>
                     <TextField className='input' name='quantity' value={orderData.quantity} onChange={handleChange} type='number' required id="outlined-basic" label="Quantity" variant="outlined" />
-                    <TextField className='input' name='entryPrice' value={orderData.entryPrice} onChange={handleChange} type='number' required id="outlined-basic" label="Entry Price" variant="outlined" />
+                    <TextField className='input' name='price' value={orderData.price} onChange={handleChange} type='number' required id="outlined-basic" label="Price" variant="outlined" />
+                </div>
+                <div className='order-StopLoss' style={{ display: orderData.mode === "INVEST" ? "none" : "block"}}>
+                    <p>
+                        <span>Stop Loss:</span>
+                        <span><Switch checked={activeSL} onChange={() => slToggle()} /></span>
+                    </p>
+                    {activeSL && <div>
+                        <TextField className='input' name='stopLoss' value={orderData.stopLoss} onChange={handleChange} type='number' required id='outlined-basic' label="Stop Loss" variant='outlined' />
+                    </div>}
+                </div>
+                <div className='order-alert' style={{ display: orderAlert ? "block" : "none"}}>
+                    <p>Stop Loss should be between <b>Entry & Liquidation Price</b></p>
                 </div>
                 { orderData.mode === "TRADE" && <div className='order-leverage'>
                     <Slider name='leverage' onChange={handleChange} min={1} max={100} defaultValue={1} aria-label="Default" valueLabelDisplay="on" />
@@ -116,14 +161,14 @@ function OrderPanel() {
                 <div className='order-info'>
                     <p>
                         <span>Margin Required: </span>
-                        <span>{Number(((Number(orderData.quantity) * Number(orderData.entryPrice)) / Number(orderData.leverage)).toFixed(1)).toLocaleString() || 0}</span>
+                        <span>{Number(((Number(orderData.quantity) * Number(orderData.price)) / Number(orderData.leverage)).toFixed(1)).toLocaleString() || 0}</span>
                     </p>
 
                     { orderData.mode === "TRADE" && <p>
                         <span>Liquidation Price: </span>
                         <span>
-                            {orderData.side === "BUY" ? `${Number(Number(Number(orderData.entryPrice) * (1 - 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` :
-                            orderData.side === "SELL" ? `${Number(Number(Number(orderData.entryPrice) * (1 + 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` : "0"}
+                            {orderData.side === "BUY" ? `${Number(Number(Number(orderData.price) * (1 - 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` :
+                            orderData.side === "SELL" ? `${Number(Number(Number(orderData.price) * (1 + 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` : "0"}
                         </span>
                     </p> }
                 </div>

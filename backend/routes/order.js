@@ -10,12 +10,33 @@ const router = express.Router();
 router.post("/orders", isSignedIn, async (req, res) => {
     const order = new Order(req.body);
     if (order.mode === "TRADE" && order.side === "BUY") {
-        order.liquidationPrice = order.entryPrice * (1 - 1 / order.leverage);
+        order.liquidationPrice = order.price * (1 - 1 / order.leverage);
     } else if (order.mode === "TRADE" && order.side === "SELL") {
-        order.liquidationPrice = order.entryPrice * (1 + 1 / order.leverage);
+        order.liquidationPrice = order.price * (1 + 1 / order.leverage);
     } else {
         order.liquidationPrice = 0;
     }
+
+    /** Validate Stop Loss */
+    const liqPriceBuy = order.price * (1 - 1 / order.leverage);
+    const liqPriceSell = order.price * (1 + 1 / order.leverage);
+
+    if (order.side === "BUY") {
+        if (order.stopLoss && (order.stopLoss >= order.price || order.stopLoss <= liqPriceBuy)) {
+            res.status(400).json({
+                message: "Invalid Stop Loss Price"
+            });
+            return;
+        }
+    } else if (order.side === "SELL") {
+        if (order.stopLoss && (order.stopLoss <= order.price || order.stopLoss >= liqPriceSell)) {
+            res.status(400).json({
+                message: "Invalid Stop Loss Price"
+            });
+            return;
+        }
+    }
+
     order.user = req.user._id;
     await order.save();
 

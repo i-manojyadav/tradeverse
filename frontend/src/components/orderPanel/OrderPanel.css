@@ -95,6 +95,21 @@
     border-radius: 5px;
 }
 
+.order-StopLoss > p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.order-StopLoss .MuiOutlinedInput-notchedOutline {
+    border-radius: 5px;
+}
+
+.order-leverage {
+    margin-top: 20px;
+}
+
 .order-btn {
     padding: 15px 25px !important;
 }
