@@ -46,13 +46,16 @@ function SignIn() {
 
     return (
         <div className='sign-in'>
-            <h2>Sign In</h2>
+            <div>
+                <h2>Welcome back</h2>
+                <p>Sign In to your account</p>
+            </div>
             <form onSubmit={handleSubmit}>
-                 <TextField required name='username' value={signInInfo.username} onChange={handleChange} id="outlined-required" label="Username" variant="outlined" />
-                 <TextField required name='password' value={signInInfo.password} onChange={handleChange} id="outlined-password-input" label="Password" type="password" autoComplete="current-password" />
+                 <TextField className='input' required name='username' value={signInInfo.username} onChange={handleChange} id="outlined-required" label="Username" variant="outlined" />
+                 <TextField className='input' required name='password' value={signInInfo.password} onChange={handleChange} id="outlined-password-input" label="Password" type="password" autoComplete="current-password" />
                  <Button variant="contained" type='submit' color="success">Sign In</Button>
             </form>
-            <a style={{color: "#ffffff"}}>Forget Password?</a>
+            <a href='/signup'>Create your account</a>
         </div>
     )
 }

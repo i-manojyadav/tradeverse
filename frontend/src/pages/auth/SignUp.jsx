@@ -51,14 +51,18 @@ function SignUp() {
 
     return (
         <div className='sign-up'>
-            <h2>Sign Up</h2>
+            <div>
+                <h2>Welcome!</h2>
+                <p>Let's create your account</p>
+            </div>
             <form onSubmit={handleSubmit}>
-                <TextField required name='name' value={formData.name} onChange={handleChange} id="outlined-required" label="Name" variant="outlined" />
-                <TextField required name='email' value={formData.email} onChange={handleChange} id="outlined-required" label="Email" variant="outlined" />
-                <TextField required name='username' value={formData.username} onChange={handleChange} id="outlined-required" label="Username" variant="outlined" />
-                <TextField required name='password' value={formData.password} onChange={handleChange} id="outlined-password-input" label="Password" type="password" autoComplete="current-password" />
+                <TextField className='input' required name='name' value={formData.name} onChange={handleChange} id="outlined-required" label="Name" variant="outlined" />
+                <TextField className='input' required name='email' value={formData.email} onChange={handleChange} id="outlined-required" label="Email" variant="outlined" />
+                <TextField className='input' required name='username' value={formData.username} onChange={handleChange} id="outlined-required" label="Username" variant="outlined" />
+                <TextField className='input' required name='password' value={formData.password} onChange={handleChange} id="outlined-password-input" label="Password" type="password" autoComplete="current-password" />
                 <Button variant="contained" type='submit' color="success">Sign Up</Button>
             </form>
+            <a href='/signIn'>Sign In</a>
         </div>
     )
 }
