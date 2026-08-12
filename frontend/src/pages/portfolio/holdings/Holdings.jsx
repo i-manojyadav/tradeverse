@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import './Holdings.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
-import { HoldingsContext } from '../../context/HoldingsContext';
-import { StatCard, StatCardMobile } from '../../components/ui/StatCard';
+import { HoldingsContext } from '../../../context/HoldingsContext';
+import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 
 function Holdings() {
 
@@ -15,7 +15,7 @@ function Holdings() {
                 <StatCard title={"Current"} value={holdingsStats.currentValue} subTitle={"Current value"} />
                 <StatCard title={"Profit & Loss"} value={holdingsStats.pnl} subTitle={"Unrealized"} isPnL={true} roi={holdingsStats.roi} />
 
-                <StatCardMobile invested={holdingsStats.invested} current={holdingsStats.currentValue} pnl={holdingsStats.pnl} roi={holdingsStats.roi} />
+                <StatCardMobile invested={holdingsStats.invested} current={holdingsStats.currentValue} pnl={holdingsStats.pnl} roi={holdingsStats.roi} isPosition={false} />
             </div>
             
             <div className='holding-items'>

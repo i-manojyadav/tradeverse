@@ -4,6 +4,11 @@
     flex-direction: column;
 }
 
+.layout-header {
+    display: flex;
+    justify-content: center;
+}
+
 .layout-content {
     gap: 15px;
     display: flex;
@@ -16,4 +21,21 @@
 
 .layout-right {
     max-width: 65%;
+}
+
+
+@media (max-width: 768px) {
+
+    .layout-content {
+        margin-bottom: 25%;
+    }
+    
+    .layout-left {
+        display: none;
+    }
+
+    .layout-right {
+        max-width: 100%;
+        width: 100% !important;
+    }
 }

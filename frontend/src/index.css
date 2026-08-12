@@ -80,7 +80,7 @@ button {
   margin: 0;
   font-size: 15px;
   color: #f0f0f0;
-  padding: 15px 17px;
+  padding: 12px 12px;
   letter-spacing: 0.12em;
   background-color: transparent;
 }
@@ -89,7 +89,7 @@ button {
   margin: 0;
   font-size: 15px;
   color: #f0f0f0;
-  padding: 15px 17px;
+  padding: 12px 15px;
   box-sizing: 0 8px 25px rgba(16, 185, 129, 0.3);
   background: linear-gradient(135deg, #10b981, #059669);
 }
@@ -169,4 +169,12 @@ button {
 
 .fa-x:hover {
   color: #ff0000;
+}
+
+
+
+@media (max-width: 768px) {
+  body {
+    padding: 0 1%;
+  }
 }

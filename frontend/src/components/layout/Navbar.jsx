@@ -48,12 +48,13 @@ function Navbar() {
                 <p>Tradeverse</p>
             </div>
             <div className='navbar-right'>
-                <NavLink to='/' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Dashboard</NavLink>
-                <NavLink to='/orders' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Orders</NavLink>
-                <NavLink to='/holdings' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Holdings</NavLink>
-                <NavLink to='/positions' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Positions</NavLink>
+                <NavLink to='/' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span></NavLink>
+                <span className='wList'><NavLink to='/watchlist' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><i class="fa-solid fa-bookmark"></i> <span>Watchlist</span></NavLink></span>
+                <NavLink to='/chart' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><i class="fa-solid fa-chart-line"></i> <span>Chart</span></NavLink>
+                <NavLink to='/orders' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><i class="fa-solid fa-list-check"></i> <span>Orders</span></NavLink>
+                <NavLink to='/portfolio' className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><i class="fa-solid fa-suitcase"></i> <span>Portfolio</span></NavLink>
                 <div>
-                    <NavLink onClick={handlePopup} className='sub-nav-link' >Account</NavLink>
+                    <NavLink onClick={handlePopup} className='sub-nav-link' ><i class="fa-solid fa-circle-user"></i> <span>Account</span></NavLink>
                     <div style={{ display: isActive ? "inline-block" : "none"}} >
                         <div className='ac-popup'>
                             <NavLink onClick={handlePopup} to='/account' className='sub-nav-link'>Account</NavLink>

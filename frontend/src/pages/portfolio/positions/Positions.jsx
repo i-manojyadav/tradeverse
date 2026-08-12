@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import './Positions.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
-import { StatCard, StatCardMobile } from '../../components/ui/StatCard';
-import { PositionsContext } from '../../context/PositionsContext';
+import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
+import { PositionsContext } from '../../../context/PositionsContext';
 
 function Positions() {
 
@@ -15,7 +15,7 @@ function Positions() {
                 <StatCard title={"Position Value"} value={positionsStats.positionValue} subTitle={"Current Exposure"} />
                 <StatCard title={"Pofit & Loss"} value={positionsStats.pnl} subTitle={"Unrealized PnL"} isPnL={true} roi={positionsStats.roi} />
 
-                <StatCardMobile invested={5500} current={7500} pnl={2000} roi={2} />
+                <StatCardMobile invested={positionsStats.marginUsed} current={positionsStats.positionValue} pnl={positionsStats.pnl} roi={positionsStats.roi} isPosition={true} />
             </div>
 
             <div className='position-items'>
