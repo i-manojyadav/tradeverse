@@ -13,7 +13,7 @@ const transactionSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ["LIMIT", "STOP_LOSS"],
+        enum: ["LIMIT", "TARGET", "STOP_LOSS"],
         required: true,
     },
     side: {

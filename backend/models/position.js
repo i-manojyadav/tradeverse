@@ -40,6 +40,10 @@ const positionSchema = new Schema({
         type: Number,
         required: true,
     },
+    target: {
+        type: Number,
+        default: null,
+    },
     stopLoss: {
         type: Number,
         default: null,

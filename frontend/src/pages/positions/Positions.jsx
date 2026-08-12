@@ -27,10 +27,9 @@ function Positions() {
                                 <TableCell>Side</TableCell>
                                 <TableCell>Qty</TableCell>
                                 <TableCell>Avg.</TableCell>
-                                <TableCell>Lev.</TableCell>
                                 <TableCell>LTP</TableCell>
                                 <TableCell>P&L</TableCell>
-                                <TableCell>ROI %</TableCell>
+                                <TableCell>TGT</TableCell>
                                 <TableCell>SL</TableCell>
                                 <TableCell>Liq. Price</TableCell>
                             </TableRow>
@@ -39,14 +38,13 @@ function Positions() {
                             {enrichedPositions.map((position, idx) => (
                                 <TableRow key={idx}>
                                     {console.log(position.stopLoss)}
-                                    <TableCell>{position.symbol}</TableCell>
+                                    <TableCell>{`${position.symbol} (${position.leverage}x)`}</TableCell>
                                     <TableCell>{position.side}</TableCell>
                                     <TableCell>{position.quantity}</TableCell>
                                     <TableCell>{Number(Number(position.averagePrice).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(position.leverage).toFixed(1)).toLocaleString()}X</TableCell>
                                     <TableCell>{Number(Number(position.ltp).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell style={{color: position.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(position.pnl).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(position.roi).toFixed(1)).toLocaleString()}%</TableCell>
+                                    <TableCell style={{color: position.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(position.pnl).toFixed(1)).toLocaleString()} ({Number(Number(position.roi).toFixed(1)).toLocaleString()}%)</TableCell>
+                                    <TableCell>{(position.target === 0 ? "N/A" : `${Number(Number(position.target).toFixed(1).toLocaleString())}`)}</TableCell>
                                     <TableCell>{(position.stopLoss == 0 ? "N/A" : `${Number(Number(position.stopLoss).toFixed(1)).toLocaleString()}`)}</TableCell>
                                     <TableCell>{Number(Number(position.liquidationPrice).toFixed(1)).toLocaleString()}</TableCell>
                                 </TableRow>

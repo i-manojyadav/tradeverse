@@ -15,7 +15,7 @@ const orderSchema = new Schema ({
     type: {
         type: String,
         default: "LIMIT",
-        enum: ["LIMIT", "STOP_LOSS"],
+        enum: ["LIMIT", "TARGET", "STOP_LOSS"],
         required: true,
     },
     side: {
@@ -41,6 +41,10 @@ const orderSchema = new Schema ({
     liquidationPrice: {
         type: Number,
         required: true,
+    },
+    target: {
+        type: Number,
+        default: null,
     },
     stopLoss: {
         type: Number,

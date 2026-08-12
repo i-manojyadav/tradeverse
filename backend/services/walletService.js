@@ -17,7 +17,7 @@ const updateWallet = async (order, transaction) => {
         if (order.type === "LIMIT") {
             marginUsed = marginUsed;
 
-        } else if (order.type === "STOP_LOSS") {
+        } else if (order.type === "STOP_LOSS" || order.type === "TARGET") {
 
             const mainOrder = await Order.findOne({ _id: order.parentOrder });
             marginUsed = (mainOrder.price * order.quantity) / order.leverage;

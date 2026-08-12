@@ -34,11 +34,22 @@ function OrderPanel() {
         mode: "",
         quantity: "",
         price: "",
+        target: "",
         stopLoss: "",
         leverage: "1",
     });
+    const [ activeTgt, setActiveTGT] = useState(false);
     const [ activeSL, setActiveSL ] = useState(false);
 
+    /** TARGET Toggle */
+    function tgtToggle() {
+        if (activeTgt === false) {
+            setActiveTGT(true);
+        } else {
+            setActiveTGT(false);
+            orderData.target = "";
+        }
+    }
 
     /** SL Toggle */
     function slToggle() {
@@ -46,7 +57,7 @@ function OrderPanel() {
             setActiveSL(true);
         } else {
             setActiveSL(false);
-            orderData.stopLoss = 0;
+            orderData.stopLoss = "";
         }
     }
 
@@ -73,8 +84,21 @@ function OrderPanel() {
         const liqPriceBuy = Number(orderData.price) * (1 - 1 / Number(orderData.leverage));
         const liqPriceSell = Number(orderData.price) * (1 + 1 / Number(orderData.leverage));
 
+        if (activeTgt === true && orderData.side === "BUY") {
+            if (Number(orderData.target < Number(orderData.price))) {
+                setOrderAlert(true);
+                return;
+            }
+
+        } else if (activeTgt === true && orderAlert.side === "SELL") {
+            if (Number(orderData.target > Number(orderData.price))) {
+                setOrderAlert(true);
+                return;
+            }
+        }
+
         if (activeSL === true && orderData.side === "BUY") {
-            if (Number(orderData.stopLoss) >= Number(orderData.price) || Number(orderData.stopLoss) <= liqPriceBuy ) {
+            if (Number(orderData.stopLoss) >= Number(orderData.price) || Number(orderData.stopLoss) <= liqPriceBuy) {
                 setOrderAlert(true);
                 return;
             }
@@ -113,6 +137,7 @@ function OrderPanel() {
                     mode: "",
                     quantity: "",
                     price: "",
+                    target: "",
                     stopLoss: "",
                 });
             } else {
@@ -143,6 +168,15 @@ function OrderPanel() {
                     <TextField className='input' name='quantity' value={orderData.quantity} onChange={handleChange} type='number' required id="outlined-basic" label="Quantity" variant="outlined" />
                     <TextField className='input' name='price' value={orderData.price} onChange={handleChange} type='number' required id="outlined-basic" label="Price" variant="outlined" />
                 </div>
+                <div className='order-target' style={{ display: orderData.mode === "INVEST" ? "none" : "block"}}>
+                    <p>
+                        <span>Target:</span>
+                        <span><Switch checked={activeTgt} onChange={() => tgtToggle()} /></span>
+                    </p>
+                    {activeTgt && <div>
+                        <TextField className='input' name='target' value={orderData.target} onChange={handleChange} type='number' required id='outlined-basic' label="Target" variant='outlined' />
+                    </div>}
+                </div>
                 <div className='order-StopLoss' style={{ display: orderData.mode === "INVEST" ? "none" : "block"}}>
                     <p>
                         <span>Stop Loss:</span>
@@ -153,7 +187,8 @@ function OrderPanel() {
                     </div>}
                 </div>
                 <div className='order-alert' style={{ display: orderAlert ? "block" : "none"}}>
-                    <p>Stop Loss should be between <b>Entry & Liquidation Price</b></p>
+                    {orderData.target && <p>Target should be <b>{orderData.side === "BUY" ? "Above" : orderData.side === "SELL" ? "Below" : ""}</b> Entry Price</p>}
+                    {orderData.stopLoss && <p>Stop Loss should be between <b>Entry & Liquidation Price</b></p>}
                 </div>
                 { orderData.mode === "TRADE" && <div className='order-leverage'>
                     <Slider name='leverage' onChange={handleChange} min={1} max={100} defaultValue={1} aria-label="Default" valueLabelDisplay="on" />

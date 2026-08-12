@@ -95,6 +95,7 @@
     border-radius: 5px;
 }
 
+.order-target > p,
 .order-StopLoss > p {
     display: flex;
     align-items: center;
@@ -102,6 +103,7 @@
     margin-bottom: 5px;
 }
 
+.order-target .MuiOutlinedInput-notchedOutline,
 .order-StopLoss .MuiOutlinedInput-notchedOutline {
     border-radius: 5px;
 }

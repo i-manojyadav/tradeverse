@@ -28,10 +28,25 @@ router.post("/orders", isSignedIn, async (req, res) => {
             });
             return;
         }
+
+        if (order.target && (order.target < order.price)) {
+            res.status(400).json({
+                message: "Invalid Target Price"
+            });
+            return;
+        }
+
     } else if (order.side === "SELL") {
         if (order.stopLoss && (order.stopLoss <= order.price || order.stopLoss >= liqPriceSell)) {
             res.status(400).json({
                 message: "Invalid Stop Loss Price"
+            });
+            return;
+        }
+
+        if (order.target && (order.target > order.price)) {
+            res.status(400).json({
+                message: "Invalid Target Price"
             });
             return;
         }
@@ -46,10 +61,6 @@ router.post("/orders", isSignedIn, async (req, res) => {
         orders: userOrders,
     });
 });
-
-
-/** ORDER PRICE MATCHING ( PENDING -> EXECUTED ) */
-
 
 
 export default router;

@@ -4,38 +4,37 @@ import Position from "../models/position.js";
 import createTransaction from "./transactionService.js";
 
 
-/** Create Stop Loss Order */
+/** Create Target Order */
 
-const createSLOrder = async (order) => {
+const createTargetOrder = async (order) => {
 
     const tradeSide = order.side === "BUY" ? "SELL" : order.side === "SELL" ? "BUY" : "";
-    const triggerPrice = order.stopLoss ? `${order.stopLoss}` : `${order.liquidationPrice}`;
 
-    const stopLossOrder = new Order({
-        type: "STOP_LOSS",
+    const targetOrder = new Order({
+        type: "TARGET",
         symbol: order.symbol,
         mode: order.mode,
         side: tradeSide,
         quantity: order.quantity,
-        price: triggerPrice,
+        price: order.target,
         leverage: order.leverage,
         liquidationPrice: order.liquidationPrice,
-        stopLoss: order.stopLoss,
+        target: order.target,
         status: "PENDING",
         createdAt: new Date(),
         parentOrder: order._id,
         user: order.user,
     });
 
-    await stopLossOrder.save();
-}
+    await targetOrder.save();
+} 
 
 
 
-/** Handle STOP_LOSS Orders */
+/** Handle TARGET Orders */
 
-const handleStopLoss = async (coins) => {
-    const orders = await Order.find({type: "STOP_LOSS", status: "PENDING"});
+const handleTargetOrders = async (coins) => {
+    const orders = await Order.find({ type: "TARGET", status: "PENDING" });
 
     if (!orders) return;
 
@@ -47,7 +46,7 @@ const handleStopLoss = async (coins) => {
         if (!coin) continue;
 
         if (order.side === "BUY") {
-            if (coin.lastPrice >= order.liquidationPrice || (order.stopLoss && coin.lastPrice >= order.stopLoss)) {
+            if (coin.lastPrice <= order.target) {
                 order.status = "EXECUTED";
                 order.createdAt = new Date();
 
@@ -60,31 +59,30 @@ const handleStopLoss = async (coins) => {
                     if (position) {
                         await Position.deleteOne({ _id: position._id });
 
-                        const tgtOrder = await Order.findOne({ symbol: order.symbol, type: "TARGET" })
-                        tgtOrder.status = "EXECUTED";
-                        await tgtOrder.save();
+                        const slOrder = await Order.findOne({ symbol: order.symbol, type: "STOP_LOSS"});
+                        slOrder.status = "CANCELLED";
+                        await slOrder.save();
                     }
                 }
             }
 
         } else if (order.side === "SELL") {
-            if (coin.lastPrice <= order.liquidationPrice || (order.stopLoss && coin.lastPrice <= order.stopLoss)) {
-                order.status = "CANCELLED";
+            if (coin.lastPrice >= order.target) {
+                order.status = "EXECUTED";
                 order.createdAt = new Date();
 
                 await createTransaction(order);
                 await order.save();
 
                 if (order.mode === "TRADE") {
-
                     const position = await Position.findOne({ user: order.user, symbol: order.symbol });
-                    
+
                     if (position) {
                         await Position.deleteOne({ _id: position._id });
 
-                        const tgtOrder = await Order.findOne({ symbol: order.symbol, type: "TARGET" })
-                        tgtOrder.status = "CANCELLED";
-                        await tgtOrder.save();
+                        const slOrder = await Order.findOne({ symbol: order.symbol, type: "STOP_LOSS"});
+                        slOrder.status = "CANCELLED";
+                        await slOrder.save();
                     }
                 }
             }
@@ -93,4 +91,4 @@ const handleStopLoss = async (coins) => {
 }
 
 
-export { createSLOrder, handleStopLoss };
+export { createTargetOrder, handleTargetOrders };

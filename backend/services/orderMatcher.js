@@ -7,6 +7,7 @@ import Position from "../models/position.js";
 import Transaction from "../models/transaction.js";
 import createTransaction from "./transactionService.js";
 import { createSLOrder, handleStopLoss } from "./stopLossService.js";
+import { createTargetOrder, handleTargetOrders } from "./targetService.js";
 
 
 /** Update Coin Price Live */
@@ -32,6 +33,7 @@ setInterval(fetchData, 5000);
 const orderMatch = async () => {
     const orders = await Order.find({status: "PENDING"});
 
+    await handleTargetOrders(coins);
     await handleStopLoss(coins);
 
     for (const order of orders) {
@@ -41,7 +43,7 @@ const orderMatch = async () => {
 
         if (!coin) continue;
 
-        if (order.type === "STOP_LOSS") {
+        if (order.type === "TARGET" || order.type === "STOP_LOSS") {
             continue;
         }
 
@@ -51,9 +53,14 @@ const orderMatch = async () => {
                 await order.save();
                 createTransaction(order);
 
+                if (order.mode === "TRADE" && order.target !== null) {
+                    await createTargetOrder(order);
+                }
+
                 if (order.mode === "TRADE" && order.leverage > 1) {
                     await createSLOrder(order);
                 }
+
 
                 if (order.mode === "TRADE") {
 
@@ -95,6 +102,7 @@ const orderMatch = async () => {
                             leverage: order.leverage,
                             marginUsed: (order.price * order.quantity) / order.leverage,
                             liquidationPrice: order.liquidationPrice,
+                            target: order.target,
                             stopLoss: order.stopLoss,
                             executedAt: new Date(),
                             user: order.user,
@@ -132,6 +140,10 @@ const orderMatch = async () => {
                 order.status = "EXECUTED";
                 await order.save();
                 createTransaction(order);
+
+                if (order.mode === "TRADE" && order.traget !== null) {
+                    await createTargetOrder(order);
+                }
 
                 if (order.mode === "TRADE" && order.leverage > 1) {
                     await createSLOrder(order);
@@ -178,6 +190,7 @@ const orderMatch = async () => {
                             leverage: order.leverage,
                             marginUsed: (order.price * order.quantity) / order.leverage,
                             liquidationPrice: order.liquidationPrice,
+                            target: order.target,
                             stopLoss: order.stopLoss,
                             executedAt: new Date(),
                             user: order.user,

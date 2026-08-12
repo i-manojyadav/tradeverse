@@ -16,7 +16,7 @@ const createTransaction = async (order) => {
         if (order.type === "LIMIT") {
             amount = amount;
 
-        } else if (order.type === "STOP_LOSS") {
+        } else if (order.type === "STOP_LOSS" || order.type === "TARGET") {
 
             const mainOrder = await Order.findOne({ _id: order.parentOrder });
 

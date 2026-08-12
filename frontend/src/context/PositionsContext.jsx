@@ -49,6 +49,7 @@ export default function PositionsProvider({ children }) {
                     positionValue: Number(coin.lastPrice) * Number(position.quantity),
                     pnl: pnl,
                     roi: (pnl / marginUsed) * 100,
+                    target: Number(position.target),
                     stopLoss: Number(position.stopLoss),
                     liquidationPrice: position.liquidationPrice,
                 }
@@ -68,6 +69,7 @@ export default function PositionsProvider({ children }) {
                     positionValue: Number(coin.lastPrice) * Number(position.quantity),
                     pnl: pnl,
                     roi: (pnl / marginUsed) * 100,
+                    target: Number(position.target),
                     stopLoss: Number(position.stopLoss),
                     liquidationPrice: position.liquidationPrice,
                 }
