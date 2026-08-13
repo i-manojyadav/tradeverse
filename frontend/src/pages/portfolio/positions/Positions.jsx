@@ -3,10 +3,14 @@ import './Positions.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import { PositionsContext } from '../../../context/PositionsContext';
+import MobileTradeItem from '../MobileTradeItem';
 
 function Positions() {
 
     const { enrichedPositions, positionsStats } = useContext(PositionsContext);
+
+    const isMobile = window.innerWidth <= 768;
+    const isDesktop = window.innerWidth > 768;
 
     return(
         <div className='positions'>
@@ -18,7 +22,7 @@ function Positions() {
                 <StatCardMobile invested={positionsStats.marginUsed} current={positionsStats.positionValue} pnl={positionsStats.pnl} roi={positionsStats.roi} isPosition={true} />
             </div>
 
-            <div className='position-items'>
+            {isDesktop && <div className='position-items'>
                 <TableContainer className='MUI-table'>
                     <Table className='positions-table'>
                         <TableHead>
@@ -37,14 +41,13 @@ function Positions() {
                         <TableBody>
                             {enrichedPositions.map((position, idx) => (
                                 <TableRow key={idx}>
-                                    {console.log(position.stopLoss)}
                                     <TableCell>{`${position.symbol} (${position.leverage}x)`}</TableCell>
                                     <TableCell>{position.side}</TableCell>
                                     <TableCell>{position.quantity}</TableCell>
-                                    <TableCell>{Number(Number(position.averagePrice).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(position.ltp).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell style={{color: position.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(position.pnl).toFixed(1)).toLocaleString()} ({Number(Number(position.roi).toFixed(1)).toLocaleString()}%)</TableCell>
-                                    <TableCell>{(position.target === 0 ? "N/A" : `${Number(Number(position.target).toFixed(1).toLocaleString())}`)}</TableCell>
+                                    <TableCell>{Number(Number(position.averagePrice).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(position.ltp).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell style={{color: position.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(position.pnl).toFixed(2)).toLocaleString()} ({Number(Number(position.roi).toFixed(2)).toLocaleString()}%)</TableCell>
+                                    <TableCell>{(position.target === 0 ? "N/A" : `${Number(Number(position.target).toFixed(2).toLocaleString())}`)}</TableCell>
                                     <TableCell>{(position.stopLoss == 0 ? "N/A" : `${Number(Number(position.stopLoss).toFixed(1)).toLocaleString()}`)}</TableCell>
                                     <TableCell>{Number(Number(position.liquidationPrice).toFixed(1)).toLocaleString()}</TableCell>
                                 </TableRow>
@@ -52,7 +55,11 @@ function Positions() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </div>
+            </div>}
+
+            {isMobile && <div>
+                <MobileTradeItem trades={enrichedPositions} />
+            </div>}
         </div>
     )
 }

@@ -3,10 +3,14 @@ import './Holdings.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import { HoldingsContext } from '../../../context/HoldingsContext';
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
+import MobileTradeItem from '../MobileTradeItem';
 
 function Holdings() {
 
     const { enrichedHoldings, holdingsStats } = useContext(HoldingsContext);
+
+    const isMobile = window.innerWidth <= 768;
+    const isDesktop = window.innerWidth > 768;
 
     return (
         <div className='holdings'>
@@ -18,7 +22,7 @@ function Holdings() {
                 <StatCardMobile invested={holdingsStats.invested} current={holdingsStats.currentValue} pnl={holdingsStats.pnl} roi={holdingsStats.roi} isPosition={false} />
             </div>
             
-            <div className='holding-items'>
+            {isDesktop && <div className='holding-items'>
                 <TableContainer className='MUI-table'>
                     <Table className='holdings-table'>
                         <TableHead>
@@ -49,7 +53,11 @@ function Holdings() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </div>
+            </div>}
+
+            {isMobile && <div>
+                <MobileTradeItem trades={enrichedHoldings} />
+            </div>}
         </div>
     )
 }

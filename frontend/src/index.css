@@ -172,6 +172,152 @@ button {
 }
 
 
+/* Mobile Trade, Orders, and Transactions UIs */
+
+.mobile-trading-items {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mti {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 10px;
+  border-radius: 10px;
+  border: 1px solid #1f1f1f;
+  background-color: #111111;
+}
+
+.mti:hover {
+  background-color: #171717;
+}
+
+.mti-left {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.mti-left p:nth-of-type(2) {
+  gap: 5px;
+  display: flex;
+}
+
+.mti-right {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.mti-symbol {
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.mti-price {
+  font-size: 14px;
+}
+
+.mti-side {
+  font-size: 11px;
+}
+
+.mti-title {
+  font-size: 13px;
+  color: #c4c4c4;
+}
+
+.mti-value {
+  font-size: 13px;
+  color: #f1f1f1;
+}
+
+
+/* Trade Overview (POPUP) */
+
+.trade-overview {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: block;
+  position: fixed;
+  z-index: 1000;
+  background-color: #111111;
+  border-top: 1px #232323;
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0 -8px 25px rgba(255, 255, 255, 0.12);
+}
+
+.trade-overview > div {
+  padding: 20px 30px;
+}
+
+.overview-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 15px 15px 0 0;
+  background-color: #000000;
+  border-bottom: 2px solid #232323;
+}
+
+.overview-top p:nth-of-type(1) {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-symbol {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.overview-top i {
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.overview-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.overview-stats > p {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.overview-title {
+  font-size: 14px;
+  color: #c4c4c4;
+}
+
+.overview-value {
+  font-size: 14px;
+  color: #f1f1f1;
+}
+
+.overview-data {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-data p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
 
 @media (max-width: 768px) {
   body {
