@@ -30,11 +30,11 @@ function MobileTradeItem({ trades }) {
                             </p>
                             <p>
                                 <span>
-                                    <span className='mti-title'>Avg.</span> <span className='mti-value'>55</span>
+                                    <span className='mti-title'>Avg.</span> <span className='mti-value'>{Number(Number(trade.averagePrice || trade.averageBuy).toFixed(2)).toLocaleString()}</span>
                                 </span>
                                 ·
                                 <span>
-                                    <span className='mti-title'>Qty.</span> <span className='mti-value'>55</span>
+                                    <span className='mti-title'>Qty.</span> <span className='mti-value'>{Number(Number(trade.quantity).toFixed(2)).toLocaleString()}</span>
                                 </span>
                             </p>
                         </div>
