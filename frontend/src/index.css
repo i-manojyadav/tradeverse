@@ -174,7 +174,8 @@ button {
 
 /* Mobile Trade, Orders, and Transactions UIs */
 
-.mobile-trading-items {
+.mobile-trading-items,
+.mobile-order-items {
   gap: 5px;
   display: flex;
   flex-direction: column;
@@ -236,10 +237,29 @@ button {
   color: #f1f1f1;
 }
 
+.mti-type {
+  font-size: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.mti-status-pending {
+  font-size: 12px;
+  color: #ffff57;
+  text-transform: uppercase;
+}
+
+.mti-status-executed {
+  font-size: 12px;
+  color: #29ff7b;
+  text-transform: uppercase;
+}
+
 
 /* Trade Overview (POPUP) */
 
-.trade-overview {
+.trade-overview,
+.order-overview {
   left: 0;
   bottom: 0;
   width: 100%;
@@ -249,10 +269,11 @@ button {
   background-color: #111111;
   border-top: 1px #232323;
   border-radius: 15px 15px 0 0;
-  box-shadow: 0 -8px 25px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 -10px 15px rgba(23, 23, 23, 0.525);
 }
 
-.trade-overview > div {
+.trade-overview > div,
+.order-overview > div {
   padding: 20px 30px;
 }
 
@@ -261,7 +282,7 @@ button {
   align-items: center;
   justify-content: space-between;
   border-radius: 15px 15px 0 0;
-  background-color: #000000;
+  background-color: #181818;
   border-bottom: 2px solid #232323;
 }
 

@@ -1,9 +1,16 @@
+import MobileOrderItem from './MobileOrderItem';
 import './OrdersTable.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 
 function OrdersTable({ ordersData }) {
+
+    const isMobile = window.innerWidth <= 768;
+    const isDesktop = window.innerWidth > 768;
+
+
     return (
-        <TableContainer className='MUI-table'>
+        <>
+        {isDesktop && <TableContainer className='MUI-table'>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -34,7 +41,12 @@ function OrdersTable({ ordersData }) {
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer>}
+        
+        {isMobile && <div>
+            <MobileOrderItem orders={ordersData} />
+        </div>}
+        </>
     )
 }
 
