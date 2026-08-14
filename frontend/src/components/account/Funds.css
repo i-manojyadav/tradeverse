@@ -1,3 +1,9 @@
+.user-funds {
+    gap: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
 .funds {
     gap: 10px;
     width: 100%;
@@ -12,4 +18,40 @@
 .available-funds {
     font-size: 28px;
     font-weight: 900;
+    color: #ffffff;
+}
+
+.funds-transactions {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.transactions-filter {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.trans-flt-btn {
+    color: #ffffff;
+    font-size: 12px;
+    padding: 7px 15px;
+    border-radius: 5px;
+    background-color: #151515;
+    text-transform: uppercase;
+    border: 1px solid #232323;
+}
+
+.trans-flt-btn-active {
+    color: #ffffff;
+    font-size: 12px;
+    padding: 7px 15px;
+    border-radius: 5px;
+    background-color: #252525;
+    text-transform: uppercase;
+    border: 1px solid #232323;
 }

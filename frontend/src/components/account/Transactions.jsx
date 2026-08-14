@@ -3,9 +3,7 @@ import './Transactions.css';
 import { AuthContext } from '../../context/AuthContext';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 
-function Transactions() {
-
-    const { user } = useContext(AuthContext);
+function Transactions({ transactions }) {
 
     return (
         <div className='transactions'>
@@ -25,12 +23,12 @@ function Transactions() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {user?.transactions.map((transaction) => (
+                        {transactions.map((transaction) => (
                             <TableRow>
                                 <TableCell>{new Date(transaction.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell>{transaction.symbol}</TableCell>
                                 <TableCell>{`${transaction.mode} (${transaction.leverage}X)`}</TableCell>
-                                <TableCell>{transaction.type.replace("_", " ")}</TableCell>
+                                <TableCell>{transaction?.type?.replace("_", " ")}</TableCell>
                                 <TableCell>{transaction.side}</TableCell>
                                 <TableCell>{Number(transaction.quantity).toLocaleString()}</TableCell>
                                 <TableCell>{Number(transaction.averagePrice).toLocaleString()}</TableCell>
