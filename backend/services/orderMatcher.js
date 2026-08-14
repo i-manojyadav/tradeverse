@@ -141,7 +141,7 @@ const orderMatch = async () => {
                 await order.save();
                 createTransaction(order);
 
-                if (order.mode === "TRADE" && order.traget !== null) {
+                if (order.mode === "TRADE" && order.target !== null) {
                     await createTargetOrder(order);
                 }
 
