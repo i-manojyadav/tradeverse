@@ -175,7 +175,8 @@ button {
 /* Mobile Trade, Orders, and Transactions UIs */
 
 .mobile-trading-items,
-.mobile-order-items {
+.mobile-order-items,
+.mobile-transaction-items {
   gap: 5px;
   display: flex;
   flex-direction: column;
@@ -259,7 +260,8 @@ button {
 /* Trade Overview (POPUP) */
 
 .trade-overview,
-.order-overview {
+.order-overview,
+.transaction-overview {
   left: 0;
   bottom: 0;
   width: 100%;
@@ -273,7 +275,8 @@ button {
 }
 
 .trade-overview > div,
-.order-overview > div {
+.order-overview > div,
+.transaction-overview > div {
   padding: 20px 30px;
 }
 
