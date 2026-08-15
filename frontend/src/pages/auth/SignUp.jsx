@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import { Box, TextField } from '@mui/material';
 import { useState } from 'react';
 
+const url = import.meta.env.VITE_API_URL;
+
 function SignUp() {
 
     const [ formData, setFormData ] = useState({
@@ -21,7 +23,7 @@ function SignUp() {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:3000/signup", {
+            const response = await fetch(`${url}/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

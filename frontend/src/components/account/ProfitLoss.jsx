@@ -3,6 +3,8 @@ import './ProfitLoss.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import { useEffect } from 'react';
 
+const url = import.meta.env.VITE_API_URL;
+
 function ProfitLoss() {
 
     const isMobile = window.innerWidth <= 768;
@@ -28,7 +30,7 @@ function ProfitLoss() {
     /** Fetch Profit & Loss Data */
     const getPnL = async () => {
         try {
-            const response = await fetch("http://localhost:3000/profit-loss", {
+            const response = await fetch(`${url}/profit-loss`, {
                 method: "GET",
                 credentials: "include",
             });

@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { WatchlistContext } from "./WatchlistContext";
 
+const url = import.meta.env.VITE_API_URL;
+
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
@@ -9,7 +11,7 @@ export default function AuthProvider({ children }) {
 
     useEffect(() => {
         const isSignedIn = async () => {
-            const response = await fetch("http://localhost:3000/user", {
+            const response = await fetch(`${url}/user`, {
                 credentials: "include",
             });
 

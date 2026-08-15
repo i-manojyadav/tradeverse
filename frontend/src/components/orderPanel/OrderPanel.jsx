@@ -15,6 +15,7 @@ import { OrdersContext } from '../../context/OrdersContext';
 import { PositionsContext } from '../../context/PositionsContext';
 import { HoldingsContext } from '../../context/HoldingsContext';
 
+const url = import.meta.env.VITE_API_URL;
 
 function OrderPanel() {
 
@@ -117,7 +118,7 @@ function OrderPanel() {
         console.log(orderData);
 
         try {
-            const response = await fetch("http://localhost:3000/orders", {
+            const response = await fetch(`${url}/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

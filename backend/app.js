@@ -1,7 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import passport from "passport";
 import localStrategy from "passport-local";
 import passportLocalMongoose from "passport-local-mongoose";
@@ -17,8 +21,23 @@ import orderMatch from "./services/orderMatcher.js";
 
 const app = express();
 
+const databaseURL = process.env.ATLAS_DB_URL;
+
+const store = MongoStore.create({
+    mongoUrl: databaseURL,
+    crypto: {
+        secret: process.env.SESSION_SECRET,
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("error", () => {
+    console.log(error);
+});
+
 const sessionOptions = {
-    secret: "secret",
+    store,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -45,7 +64,6 @@ app.listen(3000, () => {
     console.log("Listening...");
 });
 
-const databaseURL = "mongodb://127.0.0.1:27017/tradeverse";
 
 main()
 .then(() => {

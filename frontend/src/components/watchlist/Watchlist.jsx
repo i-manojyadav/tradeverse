@@ -7,6 +7,8 @@ import { WatchlistContext } from '../../context/WatchlistContext';
 import CryptoData from '../../services/cryptoAPI';
 import { CryptoAPIContext } from '../../context/CryptoAPIContext';
 
+const url = import.meta.env.VITE_API_URL;
+
 function Watchlist() {
 
     const inputRef = useRef();
@@ -63,7 +65,7 @@ function Watchlist() {
         const coinSymbol = symbol.toUpperCase();
 
         try {
-        const response = await fetch(`http://localhost:3000/watchlist/${activeWatchlist._id}/add`, {
+        const response = await fetch(`${url}/watchlist/${activeWatchlist._id}/add`, {
 
             method: "POST",
             headers: {
@@ -123,7 +125,7 @@ function Watchlist() {
         e.preventDefault();
 
         try {
-        const response = await fetch("http://localhost:3000/watchlist/create", {
+        const response = await fetch(`${url}/watchlist/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -152,7 +154,7 @@ function Watchlist() {
         console.log(coin);
 
         try {
-            const response = await fetch(`http://localhost:3000/watchlist/${activeWatchlist._id}/remove`, {
+            const response = await fetch(`${url}/watchlist/${activeWatchlist._id}/remove`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
