@@ -7,7 +7,7 @@ import MobileTradeItem from '../MobileTradeItem';
 
 function Positions() {
 
-    const { enrichedPositions, positionsStats } = useContext(PositionsContext);
+    const { openPositions, positionsStats } = useContext(PositionsContext);
 
     const isMobile = window.innerWidth <= 768;
     const isDesktop = window.innerWidth > 768;
@@ -39,12 +39,12 @@ function Positions() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {enrichedPositions.map((position, idx) => (
+                            {openPositions.map((position, idx) => (
                                 <TableRow key={idx}>
                                     <TableCell>{`${position.symbol} (${position.leverage}x)`}</TableCell>
                                     <TableCell>{position.side}</TableCell>
-                                    <TableCell>{position.quantity}</TableCell>
-                                    <TableCell>{Number(Number(position.averagePrice).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(position.quantity).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(position.entryPrice).toFixed(2)).toLocaleString()}</TableCell>
                                     <TableCell>{Number(Number(position.ltp).toFixed(2)).toLocaleString()}</TableCell>
                                     <TableCell style={{color: position.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(position.pnl).toFixed(2)).toLocaleString()} ({Number(Number(position.roi).toFixed(2)).toLocaleString()}%)</TableCell>
                                     <TableCell>{(position.target === 0 ? "N/A" : `${Number(Number(position.target).toFixed(2).toLocaleString())}`)}</TableCell>
@@ -58,7 +58,7 @@ function Positions() {
             </div>}
 
             {isMobile && <div>
-                <MobileTradeItem trades={enrichedPositions} />
+                <MobileTradeItem trades={openPositions} />
             </div>}
         </div>
     )

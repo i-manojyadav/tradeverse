@@ -20,10 +20,6 @@ const holdingSchema = new Schema ({
         type: Date,
         required: true,
     },
-    updatedAt: {
-        type: Date,
-        required: true,
-    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",

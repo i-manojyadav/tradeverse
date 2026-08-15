@@ -54,12 +54,17 @@ const handleTargetOrders = async (coins) => {
                 await order.save();
 
                 if (order.mode === "TRADE") {
-                    const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
                     if (position) {
-                        await Position.deleteOne({ _id: position._id });
+                        position.exitPrice = order.target;
+                        position.pnl = (position.entryPrice * order.target) * position.quantity;
+                        position.status = "CLOSED";
+                        position.closedAt = new Date();
+                        await position.save();
 
                         const slOrder = await Order.findOne({ symbol: order.symbol, type: "STOP_LOSS"});
+                        if (!slOrder) return;
                         slOrder.status = "CANCELLED";
                         await slOrder.save();
                     }
@@ -75,12 +80,17 @@ const handleTargetOrders = async (coins) => {
                 await order.save();
 
                 if (order.mode === "TRADE") {
-                    const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
                     if (position) {
-                        await Position.deleteOne({ _id: position._id });
+                        position.exitPrice = order.target;
+                        position.pnl = (order.target * position.entryPrice) * position.quantity;
+                        position.status = "CLOSED";
+                        position.closedAt = new Date();
+                        await position.save();
 
                         const slOrder = await Order.findOne({ symbol: order.symbol, type: "STOP_LOSS"});
+                        if (!slOrder) return;
                         slOrder.status = "CANCELLED";
                         await slOrder.save();
                     }

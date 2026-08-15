@@ -30,7 +30,7 @@ function MobileTradeItem({ trades }) {
                             </p>
                             <p>
                                 <span>
-                                    <span className='mti-title'>Avg.</span> <span className='mti-value'>{Number(Number(trade.averagePrice || trade.averageBuy).toFixed(2)).toLocaleString()}</span>
+                                    <span className='mti-title'>Avg.</span> <span className='mti-value'>{Number(Number(trade.entryPrice || trade.averageBuy).toFixed(2)).toLocaleString()}</span>
                                 </span>
                                 ·
                                 <span>
@@ -77,7 +77,7 @@ function MobileTradeItem({ trades }) {
                 <div className='overview-data'>
                     <p>
                         <span className='overview-title'>Entry Price</span>
-                        <span className='overview-value'>{Number(Number(curTrade.averagePrice || curTrade.averageBuy).toFixed(2)).toLocaleString()}</span>
+                        <span className='overview-value'>{Number(Number(curTrade.entryPrice || curTrade.averageBuy).toFixed(2)).toLocaleString()}</span>
                     </p>
                     {curTrade.leverage && <p>
                         <span className='overview-title'>Leverage</span>

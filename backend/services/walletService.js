@@ -11,7 +11,7 @@ const updateWallet = async (order, transaction) => {
     let marginUsed = orderValue / order.leverage;
 
     if (order.mode === "INVEST") {
-        amount = order.price * order.quantity;
+        let amount = order.price * order.quantity;
 
     } else if (order.mode === "TRADE") {
         if (order.type === "LIMIT") {
@@ -64,7 +64,7 @@ const updateWallet = async (order, transaction) => {
                 return;
             }
 
-            if (holding.quantity > order.quantity) {
+            if (holding.quantity < order.quantity) {
                 console.log("Insufficient quantity.");
                 return;
             }

@@ -64,41 +64,26 @@ const orderMatch = async () => {
 
                 if (order.mode === "TRADE") {
 
-                    const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
                     if (position) {
 
                         if (position.side === "BUY") {
                             const newQty = position.quantity + order.quantity;
-                            position.averagePrice = ((position.averagePrice * position.quantity) + (order.price * order.quantity)) / newQty;
+                            position.entryPrice = ((position.entryPrice * position.quantity) + (order.price * order.quantity)) / newQty;
                             position.quantity = newQty;
                             await position.save();
-
                         } else if (position.side === "SELL") {
-                            const newQty = position.quantity - order.quantity;
-
-                            if (newQty > 0) {
-                                position.quantity = newQty;
-                                await position.save();
-
-                            } else if (newQty === 0) {
-                                await Position.deleteOne({ _id: position._id });
-                            } else {
-                                position.side = order.side;
-                                position.quantity = Math.abs(newQty);
-                                position.averagePrice = order.price;
-                                await position.save();
-                            }
+                            console.log("You already have a open position")
                         }
 
                     } else {
 
                         await Position.create({
                             symbol: order.symbol,
-                            mode: order.mode,
                             side: order.side,
                             quantity: order.quantity,
-                            averagePrice: order.price,
+                            entryPrice: order.price,
                             leverage: order.leverage,
                             marginUsed: (order.price * order.quantity) / order.leverage,
                             liquidationPrice: order.liquidationPrice,
@@ -126,7 +111,6 @@ const orderMatch = async () => {
                             quantity: order.quantity,
                             averageBuy: order.price,
                             executedAt: new Date(),
-                            updatedAt: new Date(),
                             user: order.user,
                         });
                     }
@@ -151,42 +135,24 @@ const orderMatch = async () => {
 
                 if (order.mode === "TRADE") {
 
-                    const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
                     if (position) {
 
                         if (position.side === "SELL") {
                             const newQty = position.quantity + order.quantity;
-                            position.averagePrice = ((position.averagePrice * position.quantity) + (order.price * order.quantity)) / newQty;
+                            position.entryPrice = ((position.entryPrice * position.quantity) + (order.price * order.quantity)) / newQty;
                             position.quantity = newQty;
                             await position.save();
-
-                        } else if (position.side === "BUY") {
-                            const newQty = position.quantity - order.quantity;
-                            
-                            if (newQty > 0) {
-                                position.quantity = newQty;
-                                await position.save();
-
-                            } else if (newQty === 0) {
-                                await Position.deleteOne({_id: position._id});
-                            } else {
-                                position.side = order.side;
-                                position.quantity = Math.abs(newQty);
-                                position.averagePrice = order.price;
-
-                                await position.save();
-                            }
                         }
 
                     } else {
 
                         await Position.create({
                             symbol: order.symbol,
-                            mode: order.mode,
                             side: order.side,
                             quantity: order.quantity,
-                            averagePrice: order.price,
+                            entryPrice: order.price,
                             leverage: order.leverage,
                             marginUsed: (order.price * order.quantity) / order.leverage,
                             liquidationPrice: order.liquidationPrice,

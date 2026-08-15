@@ -6,11 +6,6 @@ const positionSchema = new Schema({
         type: String,
         required: true,
     },
-    mode: {
-        type: String,
-        enum: ["TRADE", "INVEST"],
-        required: true,
-    },
     side: {
         type: String,
         enum: ["BUY", "SELL"],
@@ -21,10 +16,14 @@ const positionSchema = new Schema({
         min: 0,
         required: true,
     },
-    averagePrice: {
+    entryPrice: {
         type: Number,
         min: 0,
         required: true,
+    },
+    exitPrice: {
+        type: Number,
+        min: 0,
     },
     leverage: {
         type: Number,
@@ -48,9 +47,22 @@ const positionSchema = new Schema({
         type: Number,
         default: null,
     },
+    pnl: {
+        type: Number,
+        default: null,
+    },
+    status: {
+        type: String,
+        enum: ["OPEN", "CLOSED"],
+        default: "OPEN",
+        required: true,
+    },
     executedAt: {
         type: Date,
         required: true,
+    },
+    closedAt: {
+        type: Date,
     },
     user: {
         type: Schema.Types.ObjectId,

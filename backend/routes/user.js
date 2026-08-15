@@ -23,7 +23,7 @@ router.get("/user", async (req, res) => {
     const userWallet = await Wallet.findOne({user: req.user._id}).select("funds");
     const userOrders = await Order.find({user: req.user._id}).sort({ createdAt: -1 });
     const userHoldings = await Holding.find({user: req.user._id});
-    const userPositions = await Position.find({user: req.user._id});
+    const userPositions = await Position.find({user: req.user._id, status: "OPEN"});
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
     const userTransactions = await Transaction.find({user: req.user._id}).sort({ createdAt: -1 });
 
@@ -84,7 +84,7 @@ router.post("/signin", async (req, res, next) => {
             const userWallet = await Wallet.findOne({user: user._id}).select("funds");
             const userOrders = await Order.find({user: user._id}).sort({ createdAt: -1 });
             const userHoldings = await Holding.find({user: user._id});
-            const userPositions = await Position.find({user: user._id});
+            const userPositions = await Position.find({user: user._id, status: "OPEN"});
             const userWatchlist = await Watchlist.find({user: user._id}).select("title coins _id");
             const userTransactions = await Transaction.find({user: user._id}).sort({ createdAt: -1 });
 
@@ -100,7 +100,7 @@ router.post("/signin", async (req, res, next) => {
                 holdings: userHoldings,
                 positions: userPositions,
                 watchlist: userWatchlist,
-                transactions: userPositions,
+                transactions: userTransactions,
             });
         });
     }) (req, res, next);

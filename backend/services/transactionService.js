@@ -6,7 +6,7 @@ import updateWallet from "./walletService.js";
 
 const createTransaction = async (order) => {
 
-    let amount = (order.price * order.quantity) / order.leverage;
+    let amount = 0;
 
     if (order.mode === "INVEST") {
         amount = order.price * order.quantity;
@@ -14,7 +14,7 @@ const createTransaction = async (order) => {
     } else if (order.mode === "TRADE") {
 
         if (order.type === "LIMIT") {
-            amount = amount;
+            amount = (order.price * order.quantity) / order.leverage;
 
         } else if (order.type === "STOP_LOSS" || order.type === "TARGET") {
 

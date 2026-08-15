@@ -97,6 +97,10 @@ button {
 
 /* MUI Table */
 
+.MUI-table {
+  scrollbar-width: none;
+}
+
 .MUI-table .MuiTable-root {
   border-radius: 5px;
   background-color: #111111;
@@ -124,6 +128,7 @@ button {
 .MUI-table .MuiTableCell-root {
   border: none;
   color: #c4c4c4;
+  white-space: nowrap;
   font-family: "Mulish", sans-serif !important;
 }
 
@@ -176,7 +181,8 @@ button {
 
 .mobile-trading-items,
 .mobile-order-items,
-.mobile-transaction-items {
+.mobile-transaction-items,
+.mobile-pnl-statement {
   gap: 5px;
   display: flex;
   flex-direction: column;
@@ -261,7 +267,8 @@ button {
 
 .trade-overview,
 .order-overview,
-.transaction-overview {
+.transaction-overview,
+.pnl-overview {
   left: 0;
   bottom: 0;
   width: 100%;
@@ -276,7 +283,8 @@ button {
 
 .trade-overview > div,
 .order-overview > div,
-.transaction-overview > div {
+.transaction-overview > div,
+.pnl-overview > div {
   padding: 20px 30px;
 }
 
@@ -339,6 +347,37 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+
+/* Filter */
+.filter {
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.filter-btn {
+  color: #ffffff;
+  font-size: 12px;
+  padding: 7px 15px;
+  border-radius: 5px;
+  background-color: #151515;
+  text-transform: uppercase;
+  border: 1px solid #232323;
+}
+
+.filter-btn-active {
+  color: #ffffff;
+  font-size: 12px;
+  padding: 7px 15px;
+  border-radius: 5px;
+  background-color: #303030;
+  text-transform: uppercase;
+  border: 1px solid #232323;
 }
 
 

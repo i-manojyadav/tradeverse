@@ -11,7 +11,7 @@ export default function PositionsProvider({ children }) {
 
     const [ positions, setPositions ] = useState([]);
     const [ positionsStats, setPositionsStats ] = useState([]);
-    const [ enrichedPositions, setEnrichedPositions ] = useState([]);
+    const [ openPositions, setOpenPositions ] = useState([]);
 
 
     /** Positions Data */
@@ -23,10 +23,10 @@ export default function PositionsProvider({ children }) {
     }, [user]);
 
 
-    /** Updating Position Data */
+    /** Updating Open Position Data */
     useEffect(() => {
 
-        const updatedPositions = positions.map((position) => {
+        const updatedPositions = positions?.map((position) => {
             const coin = coins.find((c) => {
                 return position.symbol === c.symbol;
             });
@@ -35,14 +35,14 @@ export default function PositionsProvider({ children }) {
 
             if (position.side === "BUY") {
 
-                const marginUsed = (Number(position.averagePrice) * Number(position.quantity)) / Number(position.leverage);
-                const pnl = (Number(coin.lastPrice) - Number(position.averagePrice)) * Number(position.quantity);
+                const marginUsed = (Number(position.entryPrice) * Number(position.quantity)) / Number(position.leverage);
+                const pnl = (Number(coin.lastPrice) - Number(position.entryPrice)) * Number(position.quantity);
 
                 return {
                     symbol: position.symbol,
                     side: position.side,
                     quantity: position.quantity,
-                    averagePrice: position.averagePrice,
+                    entryPrice: position.entryPrice,
                     leverage: position.leverage,
                     ltp: coin.lastPrice,
                     marginUsed: marginUsed,
@@ -52,17 +52,18 @@ export default function PositionsProvider({ children }) {
                     target: Number(position.target),
                     stopLoss: Number(position.stopLoss),
                     liquidationPrice: position.liquidationPrice,
+                    status: position.status,
                 }
             } else if (position.side === "SELL") {
 
-                const marginUsed = (Number(position.averagePrice) * Number(position.quantity)) / Number(position.leverage);
-                const pnl = (Number(position.averagePrice) - Number(coin.lastPrice)) * Number(position.quantity);
+                const marginUsed = (Number(position.entryPrice) * Number(position.quantity)) / Number(position.leverage);
+                const pnl = (Number(position.entryPrice) - Number(coin.lastPrice)) * Number(position.quantity);
 
                 return {
                     symbol: position.symbol,
                     side: position.side,
                     quantity: position.quantity,
-                    averagePrice: position.averagePrice,
+                    entryPrice: position.entryPrice,
                     leverage: position.leverage,
                     ltp: coin.lastPrice,
                     marginUsed: marginUsed,
@@ -76,7 +77,7 @@ export default function PositionsProvider({ children }) {
             }
         }).filter(Boolean);
 
-        setEnrichedPositions(updatedPositions);
+        setOpenPositions(updatedPositions);
 
     }, [coins]);
 
@@ -84,15 +85,15 @@ export default function PositionsProvider({ children }) {
     /** Positions Stats */
     useEffect(() => {
 
-        const marginUsed = enrichedPositions.reduce((sum, coin) => {
+        const marginUsed = openPositions.reduce((sum, coin) => {
             return sum + Number(coin.marginUsed);
         }, 0);
 
-        const positionValue = enrichedPositions.reduce((sum, coin) => {
+        const positionValue = openPositions.reduce((sum, coin) => {
             return sum + Number(coin.positionValue);
         }, 0);
 
-        const pnl = enrichedPositions.reduce((sum, coin) => {
+        const pnl = openPositions.reduce((sum, coin) => {
             return sum + Number(coin.pnl);
         }, 0);
 
@@ -105,12 +106,12 @@ export default function PositionsProvider({ children }) {
             roi: roi,
         });
 
-    }, [enrichedPositions]);
+    }, [openPositions]);
 
 
     return (
         <PositionsContext.Provider
-        value={{ enrichedPositions, positionsStats }}
+        value={{ openPositions, positionsStats }}
         >
 
             { children }
