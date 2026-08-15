@@ -44,6 +44,7 @@ const sessionOptions = {
         expires: 7 * 24 * 3600 * 100,
         maxAge: new Date(Date.now() + 7 * 24 * 3600 * 100),
         httpOnly: true,
+        sameSite: "none",
     }
 }
 
