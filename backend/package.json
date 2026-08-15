@@ -1,4 +1,7 @@
 {
+  "script": {
+    "start": "node app.js"
+  },
   "type": "module",
   "dependencies": {
     "connect-mongo": "^6.0.0",
