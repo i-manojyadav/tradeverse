@@ -31,7 +31,7 @@ const store = MongoStore.create({
     touchAfter: 24 * 3600,
 });
 
-store.on("error", () => {
+store.on("error", (error) => {
     console.log(error);
 });
 
@@ -41,7 +41,7 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: new Date(Date.now() + 7 * 24 * 3600 * 100),
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: true,
         httpOnly: true,
         sameSite: "none",
