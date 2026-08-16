@@ -52,6 +52,7 @@ app.use(cors({
     origin: "https://tradeverse-fg4e.onrender.com",
     credentials: true,
 }));
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(session(sessionOptions));
 app.use(passport.initialize());
