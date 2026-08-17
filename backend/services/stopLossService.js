@@ -69,7 +69,7 @@ const handleStopLoss = async (coins) => {
 
                     if (position) {
                         position.exitPrice = tradeExitPrice;
-                        position.pnl = (position.entryPrice * order.target) * position.quantity;
+                        position.pnl = (position.entryPrice - order.tradeExitPrice) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
                         await position.save();
@@ -106,7 +106,7 @@ const handleStopLoss = async (coins) => {
                     
                     if (position) {
                         position.exitPrice = tradeExitPrice;
-                        position.pnl = (order.target * position.entryPrice) * position.quantity;
+                        position.pnl = (tradeExitPrice - position.entryPrice) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
                         await position.save();

@@ -58,7 +58,7 @@ const handleTargetOrders = async (coins) => {
 
                     if (position) {
                         position.exitPrice = order.target;
-                        position.pnl = (position.entryPrice * order.target) * position.quantity;
+                        position.pnl = (position.entryPrice - order.target) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
                         await position.save();
@@ -84,7 +84,7 @@ const handleTargetOrders = async (coins) => {
 
                     if (position) {
                         position.exitPrice = order.target;
-                        position.pnl = (order.target * position.entryPrice) * position.quantity;
+                        position.pnl = (order.target - position.entryPrice) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
                         await position.save();
