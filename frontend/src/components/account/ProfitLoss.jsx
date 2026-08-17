@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './ProfitLoss.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import { useEffect } from 'react';
+import AppAlert from '../ui/AppAlert';
 
 const url = import.meta.env.VITE_API_URL;
 

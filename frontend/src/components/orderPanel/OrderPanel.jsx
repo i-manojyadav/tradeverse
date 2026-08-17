@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { OrdersContext } from '../../context/OrdersContext';
 import { PositionsContext } from '../../context/PositionsContext';
 import { HoldingsContext } from '../../context/HoldingsContext';
+import AppAlert from '../ui/AppAlert';
 
 const url = import.meta.env.VITE_API_URL;
 

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { WatchlistContext } from "./WatchlistContext";
+import AppAlert from '../ui/AppAlert';
 
 const url = import.meta.env.VITE_API_URL;
 

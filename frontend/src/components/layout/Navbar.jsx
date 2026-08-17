@@ -4,6 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { WalletContext } from '../../context/WalletContext';
+import AppAlert from '../ui/AppAlert';
 
 const url = import.meta.env.VITE_API_URL;
 
