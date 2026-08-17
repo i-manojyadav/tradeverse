@@ -11,6 +11,8 @@ function ProfitLoss() {
     const isMobile = window.innerWidth <= 768;
     const isDesktop = window.innerWidth > 768;
 
+    const [ alert, setAlert ] = useState(null);
+
     const [ activeFilter, setActiveFilter ] = useState("ALL");
     const [ pnlData, setPnLData ] = useState([]);
     const [ positionsPnL, setPositionsPnL ] = useState([]);
@@ -39,15 +41,24 @@ function ProfitLoss() {
             const data = await response.json();
 
             if (response.ok) {
-                <AppAlert msg={data.message} severity={"success"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "success"
+                });
                 setPositionsPnL(data.positions);
 
             } else {
-                <AppAlert msg={data.message} severity={"error"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "error"
+                });
             }
 
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
@@ -73,6 +84,7 @@ function ProfitLoss() {
 
     return (
         <div className='profit-loss'>
+            { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div className='filter'>
                 <button className={activeFilter === "ALL" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("ALL")}>All</button>
                 <button className={activeFilter === "POSITIONS" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("POSITIONS")}>Positions</button>

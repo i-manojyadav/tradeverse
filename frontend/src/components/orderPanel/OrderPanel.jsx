@@ -23,6 +23,8 @@ function OrderPanel() {
     const location = useLocation();
     const { symbol } = location.state || {};
 
+    const [ alert, setAlert ] = useState(null);
+
     const { setOrders } = useContext(OrdersContext);
     const { coins } = useContext(CryptoAPIContext);
     const { enrichedPositions } = useContext(PositionsContext);
@@ -116,6 +118,8 @@ function OrderPanel() {
             orderData.leverage = "1";
         }
 
+        if (!orderData.symbol) return;
+
         try {
             const response = await fetch(`${url}/orders`, {
                 method: "POST",
@@ -129,7 +133,10 @@ function OrderPanel() {
             const data = await response.json();
 
             if (response.ok) {
-                <AppAlert msg={data.message} severity={"success"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "success"
+                });
                 setOrders(data.orders);
                 setOrderData({
                     symbol: "",
@@ -141,16 +148,23 @@ function OrderPanel() {
                     stopLoss: "",
                 });
             } else {
-                <AppAlert msg={data.message} severity={"error"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "error"
+                });
             }
 
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
     return (
         <div className='order-panel'>
+            { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <form onSubmit={handleSubmit}>
                 <div className='order-asset'>
                     <p className='order-asset-title'>{coin[0]?.symbol}</p>
