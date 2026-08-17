@@ -16,6 +16,7 @@ export default function AuthProvider({ children }) {
             });
 
             if (response.ok) {
+                <AppAlert msg={data.message} severity={"success"} />
                 const data = await response.json();
                 setUser(data);
             }

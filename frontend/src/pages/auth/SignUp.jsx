@@ -34,7 +34,7 @@ function SignUp() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log("OK Response", data);
+                <AppAlert msg={data.message} severity={"success"} />
 
                 setFormData({
                     name: "",
@@ -43,11 +43,11 @@ function SignUp() {
                     password: "",
                 });
             } else {
-                console.log("Something Wrong");
+                <AppAlert msg={data.message} severity={"error"} />
             }
 
         } catch (err) {
-            console.log("Server Error:", err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 

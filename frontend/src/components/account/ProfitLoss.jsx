@@ -38,15 +38,15 @@ function ProfitLoss() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log(data.message);
+                <AppAlert msg={data.message} severity={"success"} />
                 setPositionsPnL(data.positions);
 
             } else {
-                console.log("Something went wrong");
+                <AppAlert msg={data.message} severity={"error"} />
             }
 
         } catch(err) {
-            console.log(err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 

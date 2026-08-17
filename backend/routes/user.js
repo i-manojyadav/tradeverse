@@ -28,7 +28,7 @@ router.get("/user", async (req, res) => {
     const userTransactions = await Transaction.find({user: req.user._id}).sort({ createdAt: -1 });
 
     res.json({
-        message: "Signed in",
+        message: "Already signed in",
         user: {
             name: req.user.name,
             email: req.user.email,
@@ -60,7 +60,7 @@ router.post("/signup", async (req, res) => {
     await wallet.save();
 
     res.status(201).json({
-        message: "User created",
+        message: "Account created successfully",
     });
 });
 
@@ -74,7 +74,7 @@ router.post("/signin", async (req, res, next) => {
 
         if (!user) {
             return res.json(401).json({
-                message: "Username or password invalid",
+                message: "Invalid username or password",
             });
         }
 
@@ -89,7 +89,7 @@ router.post("/signin", async (req, res, next) => {
             const userTransactions = await Transaction.find({user: user._id}).sort({ createdAt: -1 });
 
             return res.json({
-                message: "User Signed In",
+                message: "Signed in successfully",
                 user: {
                     name: user.name,
                     email: user.email,
@@ -117,7 +117,7 @@ router.post("/signout", isSignedIn, async(req, res, next) => {
     });
 
     res.json({
-        message: "Signed Out Successfully",
+        message: "Signed out successfully",
     });
 });
 

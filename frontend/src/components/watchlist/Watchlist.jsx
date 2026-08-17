@@ -3,9 +3,9 @@ import './Watchlist.css';
 import { Box, TextField } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { WatchlistContext } from '../../context/WatchlistContext';
-
 import CryptoData from '../../services/cryptoAPI';
 import { CryptoAPIContext } from '../../context/CryptoAPIContext';
+import AppAlert from '../ui/AppAlert';
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -78,17 +78,16 @@ function Watchlist() {
         const data = await response.json();
 
         if (response.ok) {
+            <AppAlert msg={data.message} severity={"success"} />
             setWatchlist(data.watchlist);
-            console.log(data.message);
             searchSecToggle();
             inputRef.current.value = "";
         } else {
-            console.log("Something went wrong");
-            console.log(data.message);
+            <AppAlert msg={data.message} severity={"error"} />
         }
 
         } catch(err) {
-            console.log(err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 
@@ -137,21 +136,20 @@ function Watchlist() {
         const data = await response.json();
 
         if (response.ok) {
-            console.log("Watchlist Created");
+            <AppAlert msg={data.message} severity={"success"} />
             setWatchlist(data.watchlist);
             setWatchlistTitle({title: ""});
         } else {
-            console.log(data.message);
+            <AppAlert msg={data.message} severity={"error"} />
         }
 
         } catch(err) {
-            console.log(err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 
     /** Handle Coin Remove */
     const handleCoinRemove = async (coin) => {
-        console.log(coin);
 
         try {
             const response = await fetch(`${url}/watchlist/${activeWatchlist._id}/remove`, {
@@ -167,13 +165,14 @@ function Watchlist() {
 
             if (response.ok) {
                 console.log(data.message);
+                <AppAlert msg={data.message} severity={"success"} />
                 setWatchlist(data.watchlist);
             } else {
-                console.log("Something went wrong");
+                <AppAlert msg={data.message} severity={"error"} />
             }
 
         } catch(err) {
-            console.log(err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 

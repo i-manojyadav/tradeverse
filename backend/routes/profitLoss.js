@@ -12,7 +12,7 @@ router.get("/profit-loss", isSignedIn, async (req, res) => {
     const closedPositions = await Position.find({ user: req.user._id, status: "CLOSED" });
 
     res.status(201).json({
-        message: "Profit & Loss statement fetched",
+        message: "P&L statement fetched",
         positions: closedPositions,
     });
 });

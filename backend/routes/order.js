@@ -24,14 +24,14 @@ router.post("/orders", isSignedIn, async (req, res) => {
     if (order.side === "BUY") {
         if (order.stopLoss && (order.stopLoss >= order.price || order.stopLoss <= liqPriceBuy)) {
             res.status(400).json({
-                message: "Invalid Stop Loss Price"
+                message: "Invalid stop-loss price"
             });
             return;
         }
 
         if (order.target && (order.target < order.price)) {
             res.status(400).json({
-                message: "Invalid Target Price"
+                message: "Invalid target price"
             });
             return;
         }
@@ -39,14 +39,14 @@ router.post("/orders", isSignedIn, async (req, res) => {
     } else if (order.side === "SELL") {
         if (order.stopLoss && (order.stopLoss <= order.price || order.stopLoss >= liqPriceSell)) {
             res.status(400).json({
-                message: "Invalid Stop Loss Price"
+                message: "Invalid stop-loss price"
             });
             return;
         }
 
         if (order.target && (order.target > order.price)) {
             res.status(400).json({
-                message: "Invalid Target Price"
+                message: "Invalid target price"
             });
             return;
         }

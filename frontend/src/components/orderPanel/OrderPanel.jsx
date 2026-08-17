@@ -115,8 +115,6 @@ function OrderPanel() {
             orderData.leverage = "1";
         }
 
-        console.log(orderData);
-
         try {
             const response = await fetch(`${url}/orders`, {
                 method: "POST",
@@ -130,7 +128,7 @@ function OrderPanel() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log(data.message);
+                <AppAlert msg={data.message} severity={"success"} />
                 setOrders(data.orders);
                 setOrderData({
                     symbol: "",
@@ -142,11 +140,11 @@ function OrderPanel() {
                     stopLoss: "",
                 });
             } else {
-                console.log("Something went wrong", response.message);
+                <AppAlert msg={data.message} severity={"error"} />
             }
 
         } catch(err) {
-            console.log(err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 

@@ -12,7 +12,7 @@ router.post("/watchlist/create", isSignedIn, async (req, res) => {
     await newWatchlist.save();
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
     res.status(201).json({
-        message: "Watchlist Created",
+        message: "Watchlist created successfully",
         watchlist: userWatchlist,
     });
 });
@@ -29,7 +29,7 @@ router.post("/watchlist/:id/add", async (req, res) => {
         const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
 
         res.status(400).json({
-            message: "Coin already exists in watchlist.",
+            message: "Coin already in watchlist",
             watchlist: userWatchlist,
         });
 
@@ -39,7 +39,7 @@ router.post("/watchlist/:id/add", async (req, res) => {
         const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
 
         res.status(201).json({
-            message: "Coin added.",
+            message: "Coin added to watchlist",
             watchlist: userWatchlist,
         });
     }
@@ -55,7 +55,7 @@ router.post("/watchlist/:id/remove", async (req, res) => {
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
 
     res.status(200).json({
-        message: "Coin removed",
+        message: "Coin removed from watchlist",
         watchlist: userWatchlist,
     });
 });

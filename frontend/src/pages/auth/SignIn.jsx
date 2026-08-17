@@ -34,15 +34,16 @@ function SignIn() {
             const data = await response.json();
 
             if (response.ok) {
+                <AppAlert msg={data.message} severity={"success"} />
                 setSignInInfo({ username: "", password: ""});
                 setUser(data);
                 navigate("/");
             } else {
-                console.log("Something went wrong");
+                <AppAlert msg={data.message} severity={"error"} />
             }
 
         } catch(err) {
-            console.log("Server Error:", err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 

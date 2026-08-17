@@ -34,12 +34,14 @@ function Navbar() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log(data.message);
+                <AppAlert msg={data.message} severity={"success"} />
+
             } else {
-                console.log("Sign Out Failed");
+                <AppAlert msg={data.message} severity={"error"} />
             }
+            
         } catch(err) {
-            console.log("Server side error", err);
+            <AppAlert msg={err} severity={"error"} />
         }
     }
 
