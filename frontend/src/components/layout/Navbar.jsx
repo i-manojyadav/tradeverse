@@ -13,6 +13,7 @@ function Navbar() {
     const { user } = useContext(AuthContext);
     const { wallet } = useContext(WalletContext);
     
+    const [ alert, setAlert ] = useState(null);
     const [ isActive, setIsActive ] = useState(false);
 
     function handlePopup() {
@@ -35,20 +36,30 @@ function Navbar() {
             const data = await response.json();
 
             if (response.ok) {
-                <AppAlert msg={data.message} severity={"success"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "success"
+                });
 
             } else {
-                <AppAlert msg={data.message} severity={"error"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "error"
+                });
             }
             
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
     return (
         <>
         <div className='navbar'>
+            { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div className='navbar-left'>
                 <p>Tradeverse</p>
             </div>

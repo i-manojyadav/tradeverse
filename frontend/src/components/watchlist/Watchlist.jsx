@@ -13,6 +13,8 @@ function Watchlist() {
 
     const inputRef = useRef();
 
+    const [ alert, setAlert ] = useState(null);
+
     const { watchlist, setWatchlist } = useContext(WatchlistContext);
     const { coins } = useContext(CryptoAPIContext);
 
@@ -78,16 +80,25 @@ function Watchlist() {
         const data = await response.json();
 
         if (response.ok) {
-            <AppAlert msg={data.message} severity={"success"} />
+            setAlert({
+                msg: data.message,
+                severity: "success"
+            });
             setWatchlist(data.watchlist);
             searchSecToggle();
             inputRef.current.value = "";
         } else {
-            <AppAlert msg={data.message} severity={"error"} />
+            setAlert({
+                msg: data.message,
+                severity: "error"
+            });
         }
 
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
@@ -136,15 +147,24 @@ function Watchlist() {
         const data = await response.json();
 
         if (response.ok) {
-            <AppAlert msg={data.message} severity={"success"} />
+            setAlert({
+                msg: data.message,
+                severity: "success"
+            });
             setWatchlist(data.watchlist);
             setWatchlistTitle({title: ""});
         } else {
-            <AppAlert msg={data.message} severity={"error"} />
+            setAlert({
+                msg: data.message,
+                severity: "error"
+            });
         }
 
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
@@ -164,21 +184,31 @@ function Watchlist() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log(data.message);
-                <AppAlert msg={data.message} severity={"success"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "success"
+                });
                 setWatchlist(data.watchlist);
             } else {
-                <AppAlert msg={data.message} severity={"error"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "error"
+                });
             }
 
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
 
     return (
         <div className='watchlist'>
+            { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
+
             <div className='watchlist-search' style={{ display: searchSecActive ? "block" : "none"}}>
                 <TextField className='input' type='search' inputRef={inputRef} name='coin' onChange={handleSearch} id="outlined-basic" label="Search coins..." variant="outlined" />
             </div>

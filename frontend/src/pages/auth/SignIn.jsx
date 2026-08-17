@@ -14,6 +14,8 @@ function SignIn() {
     const navigate = useNavigate();
     const { user, setUser } = useContext(AuthContext);
 
+    const [ alert, setAlert ] = useState(null);
+
     const [ signInInfo, setSignInInfo ] = useState({username: "", password: ""});
 
     function handleChange(e) {
@@ -35,21 +37,31 @@ function SignIn() {
             const data = await response.json();
 
             if (response.ok) {
-                <AppAlert msg={data.message} severity={"success"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "success"
+                });
                 setSignInInfo({ username: "", password: ""});
                 setUser(data);
                 navigate("/");
             } else {
-                <AppAlert msg={data.message} severity={"error"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "error"
+                });
             }
 
         } catch(err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
     return (
         <div className='sign-in'>
+            { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div>
                 <h2>Welcome back</h2>
                 <p>Sign In to your account</p>

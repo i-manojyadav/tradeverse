@@ -9,6 +9,8 @@ const url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
 
+    const [ alert, setAlert ] = useState(null);
+
     const [ formData, setFormData ] = useState({
             name: "",
             email: "",
@@ -35,7 +37,10 @@ function SignUp() {
             const data = await response.json();
 
             if (response.ok) {
-                <AppAlert msg={data.message} severity={"success"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "success"
+                });
 
                 setFormData({
                     name: "",
@@ -44,16 +49,23 @@ function SignUp() {
                     password: "",
                 });
             } else {
-                <AppAlert msg={data.message} severity={"error"} />
+                setAlert({
+                    msg: data.message,
+                    severity: "error"
+                });
             }
 
         } catch (err) {
-            <AppAlert msg={err} severity={"error"} />
+            setAlert({
+                msg: err,
+                severity: "error"
+            });
         }
     }
 
     return (
         <div className='sign-up'>
+            { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div>
                 <h2>Welcome!</h2>
                 <p>Let's create your account</p>

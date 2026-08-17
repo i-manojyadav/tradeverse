@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { WatchlistContext } from "./WatchlistContext";
-import AppAlert from "../components/ui/AppAlert";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -16,10 +15,12 @@ export default function AuthProvider({ children }) {
                 credentials: "include",
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                <AppAlert msg={data.message} severity={"success"} />
-                const data = await response.json();
                 setUser(data);
+            } else {
+                console.log(data.message);
             }
         }
 
