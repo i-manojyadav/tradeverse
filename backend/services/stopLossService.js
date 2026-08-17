@@ -74,7 +74,7 @@ const handleStopLoss = async (coins) => {
                         position.closedAt = new Date();
                         await position.save();
 
-                        const tgtOrder = await Order.findOne({ symbol: order.symbol, type: "TARGET" });
+                        const tgtOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "TARGET" });
                         if (!tgtOrder) return;
                         tgtOrder.status = "CANCELLED";
                         await tgtOrder.save();
@@ -111,7 +111,7 @@ const handleStopLoss = async (coins) => {
                         position.closedAt = new Date();
                         await position.save();
 
-                        const tgtOrder = await Order.findOne({ symbol: order.symbol, type: "TARGET" });
+                        const tgtOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "TARGET" });
                         if (!tgtOrder) return;
                         tgtOrder.status = "CANCELLED";
                         await tgtOrder.save();
