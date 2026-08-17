@@ -32,7 +32,7 @@ router.get("/user", async (req, res) => {
         user: {
             name: req.user.name,
             email: req.user.email,
-            username: req.user.email,
+            username: req.user.username,
         },
         wallet: userWallet,
         orders: userOrders,
