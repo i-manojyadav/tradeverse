@@ -5,6 +5,8 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { WalletContext } from '../../context/WalletContext';
 
+const url = import.meta.env.VITE_API_URL;
+
 function Navbar() {
 
     const { user } = useContext(AuthContext);
@@ -24,7 +26,7 @@ function Navbar() {
 
     async function handleSignOut() {
         try {
-            const response = await fetch("http://localhost:3000/signout", {
+            const response = await fetch(`${url}/signout`, {
                 method: "POST",
                 credentials: "include",
             });
