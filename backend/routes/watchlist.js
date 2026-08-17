@@ -1,64 +1,17 @@
 import express from "express";
-import User from "../models/user.js";
-import Watchlist from "../models/watchlist.js";
-import { isSignedIn } from "../middleware.js";
+import { isSignedIn, wrapAsync } from "../middleware.js";
+import { addCoin, createWatchlist, removeCoin } from "../controllers/watchlist.js";
 
 const router = express.Router();
 
 // Create Watchlist
-router.post("/watchlist/create", isSignedIn, async (req, res) => {
-    const newWatchlist = new Watchlist(req.body);
-    newWatchlist.user = req.user._id;
-    await newWatchlist.save();
-    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
-    res.status(201).json({
-        message: "Watchlist created successfully",
-        watchlist: userWatchlist,
-    });
-});
-
+router.post("/watchlist/create", isSignedIn, wrapAsync());
 
 // Add Coin
-router.post("/watchlist/:id/add", async (req, res) => {
-    const { id } = req.params;
-    const { coinSymbol } = req.body;
-
-    const watchlist = await Watchlist.findOne({ _id: id, "coins.symbol": coinSymbol});
-
-    if (watchlist) {
-        const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
-
-        res.status(400).json({
-            message: "Coin already in watchlist",
-            watchlist: userWatchlist,
-        });
-
-    } else {
-        const curWatchlist = await Watchlist.findByIdAndUpdate(id, { $addToSet: { coins: { symbol: coinSymbol }}});
-        await curWatchlist.save();
-        const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
-
-        res.status(201).json({
-            message: "Coin added to watchlist",
-            watchlist: userWatchlist,
-        });
-    }
-});
-
+router.post("/watchlist/:id/add", isSignedIn, wrapAsync(addCoin));
 
 // Remove Coin
-router.post("/watchlist/:id/remove", async (req, res) => {
-    const { id } = req.params;
-    const { coin } = req.body;
-
-    await Watchlist.findByIdAndUpdate(id, {$pull: {coins: {symbol: coin}}});
-    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
-
-    res.status(200).json({
-        message: "Coin removed from watchlist",
-        watchlist: userWatchlist,
-    });
-});
+router.post("/watchlist/:id/remove", isSignedIn, wrapAsync(removeCoin));
 
 
 export default router;

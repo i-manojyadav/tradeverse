@@ -3,20 +3,13 @@ import mongoose from "mongoose";
 import passport from "passport";
 import Holding from "../models/holding.js";
 import Position from "../models/position.js";
-import { isSignedIn } from "../middleware.js";
-import e from "express";
+import { isSignedIn, wrapAsync } from "../middleware.js";
+import { getPnL } from "../controllers/profitLoss.js";
 
 const router = express.Router();
 
-router.get("/profit-loss", isSignedIn, async (req, res) => {
-    const closedPositions = await Position.find({ user: req.user._id, status: "CLOSED" });
-
-    res.status(201).json({
-        message: "P&L statement fetched",
-        positions: closedPositions,
-    });
-});
-
+/** Profit & Loss */
+router.get("/profit-loss", isSignedIn, wrapAsync(getPnL));
 
 
 export default router;

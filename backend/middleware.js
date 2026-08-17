@@ -1,3 +1,4 @@
+/** Is User SignedIn */
 const isSignedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({
@@ -8,5 +9,12 @@ const isSignedIn = (req, res, next) => {
     next();
 }
 
+/** wrapASync */
+const wrapAsync = (fn) => {
+    return (req, res, next) => {
+        fn(req, res, next).catch(next);
+    };
+};
 
-export { isSignedIn };
+
+export { isSignedIn, wrapAsync };

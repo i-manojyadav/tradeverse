@@ -10,7 +10,7 @@ const url = import.meta.env.VITE_API_URL;
 
 function Navbar() {
 
-    const { user } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
     const { wallet } = useContext(WalletContext);
     
     const [ alert, setAlert ] = useState(null);
@@ -36,6 +36,7 @@ function Navbar() {
             const data = await response.json();
 
             if (response.ok) {
+                setUser(null);
                 setAlert({
                     msg: data.message,
                     severity: "success"

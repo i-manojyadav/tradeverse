@@ -1,0 +1,114 @@
+import express from "express";
+import passport from "passport";
+import User from "../models/user.js";
+import Wallet from "../models/wallet.js";
+import Order from "../models/order.js";
+import Holding from "../models/holding.js";
+import Position from "../models/position.js";
+import Watchlist from "../models/watchlist.js";
+import Transaction from "../models/transaction.js";
+
+
+
+/** Is User Signed In */
+export const isSignIn = async (req, res) => {
+    if (!req.user) {
+        return res.status(404).json({
+            user: null,
+        });
+    }
+
+    const userWallet = await Wallet.findOne({user: req.user._id}).select("funds");
+    const userOrders = await Order.find({user: req.user._id}).sort({ createdAt: -1 });
+    const userHoldings = await Holding.find({user: req.user._id});
+    const userPositions = await Position.find({user: req.user._id, status: "OPEN"});
+    const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
+    const userTransactions = await Transaction.find({user: req.user._id}).sort({ createdAt: -1 });
+
+    res.json({
+        message: "Already signed in",
+        user: {
+            name: req.user.name,
+            email: req.user.email,
+            username: req.user.username,
+        },
+        wallet: userWallet,
+        orders: userOrders,
+        holdings: userHoldings,
+        positions: userPositions,
+        watchlist: userWatchlist,
+        transactions: userTransactions,
+    });
+}
+
+/** Sign Up */
+export const signUp = async (req, res) => {
+    const { name, email, username, password } = req.body;
+
+    const newUser = new User({ name, email, username, password });
+    let registeredUser = await User.register(newUser, password);
+
+    // Create Wallet
+
+    const wallet = new Wallet({
+        user: registeredUser._id
+    });
+
+    await wallet.save();
+
+    res.status(201).json({
+        message: "Account created successfully",
+    });
+}
+
+/** Sign In */
+export const signIn = async (req, res, next) => {
+
+    passport.authenticate("local", (err, user, info) => {
+        if (err) return next(err);
+
+        if (!user) {
+            return res.json(401).json({
+                message: "Invalid username or password",
+            });
+        }
+
+        req.logIn(user, async (err) => {
+            if(err) return next(err);
+
+            const userWallet = await Wallet.findOne({user: user._id}).select("funds");
+            const userOrders = await Order.find({user: user._id}).sort({ createdAt: -1 });
+            const userHoldings = await Holding.find({user: user._id});
+            const userPositions = await Position.find({user: user._id, status: "OPEN"});
+            const userWatchlist = await Watchlist.find({user: user._id}).select("title coins _id");
+            const userTransactions = await Transaction.find({user: user._id}).sort({ createdAt: -1 });
+
+            return res.json({
+                message: "Signed in successfully",
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    username: user.username,
+                },
+                wallet: userWallet,
+                orders: userOrders,
+                holdings: userHoldings,
+                positions: userPositions,
+                watchlist: userWatchlist,
+                transactions: userTransactions,
+            });
+        });
+    }) (req, res, next);
+}
+
+export const signOut = async(req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+    });
+
+    res.json({
+        message: "Signed out successfully",
+    });
+}
