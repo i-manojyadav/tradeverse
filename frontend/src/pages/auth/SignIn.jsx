@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, TextField } from '@mui/material';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import AppAlert from '../ui/AppAlert';
+import AppAlert from '../../components/ui/AppAlert';
 
 const url = import.meta.env.VITE_API_URL;
 
