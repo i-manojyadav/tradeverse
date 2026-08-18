@@ -26,7 +26,7 @@ export default function CryptoAPIProvider({ children }) {
 
         return () => clearInterval(interval);
 
-    }, []);
+    }, [user]);
 
     return (
         <CryptoAPIContext.Provider
