@@ -113,11 +113,11 @@ function ProfitLoss() {
                                     <TableCell>{trade.symbol}</TableCell>
                                     <TableCell>{trade.leverage === undefined ? "INVEST" : `TRADE (${trade.leverage}x)`}</TableCell>
                                     <TableCell>{trade.side}</TableCell>
-                                    <TableCell>{trade.entryPrice}</TableCell>
-                                    <TableCell>{trade.exitPrice}</TableCell>
-                                    <TableCell>{trade.quantity}</TableCell>
-                                    <TableCell>{trade.pnl}</TableCell>
-                                    <TableCell>{trade?.roi}</TableCell>
+                                    <TableCell>{Number(Number(trade.entryPrice).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(trade.exitPrice).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(trade.quantity).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(trade.pnl).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(((Number(trade.pnl) / (Number(trade.entryPrice) * Number(trade.quantity))) * 100).toFixed(2)).toLocaleString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -148,10 +148,10 @@ function ProfitLoss() {
                         </div>
                         <div className='mti-right'>
                             <p className='mti-price'>
-                                <span style={{color: trade.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(trade.pnl).toFixed(2)).toLocaleString()}</span>
+                                <span style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(trade.pnl).toFixed(2)).toLocaleString()}</span>
                             </p>
                             <p>
-                                <span className='mti-value' style={{color: trade.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(trade.roi).toFixed(2)).toLocaleString()}%</span>
+                                <span className='mti-value' style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number((Number(trade.pnl) / (Number(trade.entryPrice) * Number(trade.quantity))) * 100).toFixed(2)).toLocaleString()}%</span>
                             </p>
                         </div>
                     </div>
