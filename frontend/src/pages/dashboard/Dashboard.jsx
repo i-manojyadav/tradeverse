@@ -5,6 +5,7 @@ import { AuthContext } from '../../context/AuthContext';
 import OrderPanel from '../../components/orderPanel/OrderPanel';
 import { HoldingsContext } from '../../context/HoldingsContext';
 import { CryptoAPIContext } from '../../context/CryptoAPIContext';
+import SignInPrompt from '../../components/emptyStates/SignInPrompt';
 
 function Dashboard() {
 
@@ -29,7 +30,8 @@ function Dashboard() {
 
 
     return (
-        <div className='dashboard'>
+        <>
+        {user && <div className='dashboard'>
             <div className='dashbaord-greet'>
                 <p>Hi, {user?.user?.name || "User"}</p>
             </div>
@@ -55,7 +57,9 @@ function Dashboard() {
                 >
                 </BarChart>
             </div>
-        </div>
+        </div>}
+        {!user && <SignInPrompt />}
+        </>
     )
 }
 

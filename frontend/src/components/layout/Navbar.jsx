@@ -74,10 +74,10 @@ function Navbar() {
                     <NavLink onClick={handlePopup} className='sub-nav-link' ><i class="fa-solid fa-circle-user"></i> <span>Account</span></NavLink>
                     <div style={{ display: isActive ? "inline-block" : "none"}} >
                         <div className='ac-popup'>
-                            <NavLink onClick={handlePopup} to='/account' className='sub-nav-link'>Account</NavLink>
-                            <NavLink onClick={handlePopup} to='/signin' className='sub-nav-link'>Sign In</NavLink>
-                            <NavLink onClick={handlePopup} to='/signup' className='sub-nav-link'>Sign Up</NavLink>
-                            <NavLink onClick={handleSignOut} className='sub-nav-link'>Sign Out</NavLink>
+                            {user && <NavLink onClick={handlePopup} to='/account' className='sub-nav-link'>Account</NavLink>}
+                            {!user && <NavLink onClick={handlePopup} to='/signin' className='sub-nav-link'>Sign In</NavLink>}
+                            {!user && <NavLink onClick={handlePopup} to='/signup' className='sub-nav-link'>Sign Up</NavLink>}
+                            {user && <NavLink onClick={handleSignOut} className='sub-nav-link'>Sign Out</NavLink>}
                         </div>
                     </div>
                 </div>

@@ -3,13 +3,19 @@ import './Account.css';
 import Profile from '../../components/account/Profile';
 import Funds from '../../components/account/Funds';
 import ProfitLoss from '../../components/account/ProfitLoss';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import SignInPrompt from '../../components/emptyStates/SignInPrompt';
 
 function Account() {
+
+    const { user } = useContext(AuthContext);
 
     const [ activeTab, setActiveTab ] = useState("profile");
 
     return (
-        <div className='account'>
+        <>
+        {user && <div className='account'>
             <h2>Account</h2>
             <div className='tabs'>
                 <button onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active-tab-btn" : ""}>Profile</button>
@@ -21,7 +27,9 @@ function Account() {
                 { activeTab === "funds" && <Funds /> }
                 { activeTab === "profitLoss" && <ProfitLoss /> }
             </div>
-        </div>
+        </div>}
+        { !user && <SignInPrompt /> }
+        </>
     )
 }
 

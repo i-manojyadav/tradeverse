@@ -24,8 +24,8 @@ import Portfolio from './pages/portfolio/Portfolio';
 function App() {
   
   return (
-    <CryptoAPIProvider>
     <AuthProvider>
+    <CryptoAPIProvider>
     <WalletProvider>
     <OrdersProvider>
     <HoldingsProvider>
@@ -52,8 +52,8 @@ function App() {
     </HoldingsProvider>
     </OrdersProvider>
     </WalletProvider>
-    </AuthProvider>
     </CryptoAPIProvider>
+    </AuthProvider>
   )
 }
 

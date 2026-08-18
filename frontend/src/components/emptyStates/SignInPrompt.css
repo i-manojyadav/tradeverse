@@ -1,0 +1,43 @@
+.sign-in-prompt {
+    text-align: center;
+    border-radius: 10px;
+    padding: 25px 20px;
+    background-color: #111111;
+    border: 1px solid #232323;
+}
+
+.sip-title {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sip-title > i {
+    color: #ffffff;
+    font-size: 50px;
+    margin: 15px 0;
+}
+
+.sip-action {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.sip-btn {
+    color: #c4c4c4;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    background-color: #252525;
+    border: 1px solid #232323;
+}
+
+.sip-btn:hover {
+    color: #000000;
+    background-color: #c4c4c4;
+}
+

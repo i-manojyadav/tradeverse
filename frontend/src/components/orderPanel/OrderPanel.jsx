@@ -15,6 +15,8 @@ import { OrdersContext } from '../../context/OrdersContext';
 import { PositionsContext } from '../../context/PositionsContext';
 import { HoldingsContext } from '../../context/HoldingsContext';
 import AppAlert from '../ui/AppAlert';
+import { AuthContext } from '../../context/AuthContext';
+import SignInPrompt from '../emptyStates/SignInPrompt';
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -25,6 +27,7 @@ function OrderPanel() {
 
     const [ alert, setAlert ] = useState(null);
 
+    const { user } = useContext(AuthContext);
     const { setOrders } = useContext(OrdersContext);
     const { coins } = useContext(CryptoAPIContext);
     const { enrichedPositions } = useContext(PositionsContext);
@@ -163,7 +166,8 @@ function OrderPanel() {
     }
 
     return (
-        <div className='order-panel'>
+        <>
+        {user && <div className='order-panel'>
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <form onSubmit={handleSubmit}>
                 <div className='order-asset'>
@@ -225,7 +229,9 @@ function OrderPanel() {
                     <Button type='submit' style={{ display: (orderData.mode === "" || orderData.side === "")  ? "none" : ""}} variant="contained" color={orderData.side === "BUY" ? "success" : orderData.side === "SELL" ? "error" : "success"}>{`${orderData.side} ${coin[0]?.symbol}`}</Button>
                 </div>
             </form>
-        </div>
+        </div>}
+        {!user && <SignInPrompt /> }
+        </>
     )
 }
 

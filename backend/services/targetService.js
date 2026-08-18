@@ -61,12 +61,13 @@ const handleTargetOrders = async (coins) => {
                         position.pnl = (position.entryPrice - order.target) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
-                        await position.save();
 
                         const slOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "STOP_LOSS"});
                         if (!slOrder) return;
                         slOrder.status = "CANCELLED";
                         await slOrder.save();
+
+                        await position.save();
                     }
                 }
             }
@@ -87,12 +88,13 @@ const handleTargetOrders = async (coins) => {
                         position.pnl = (order.target - position.entryPrice) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
-                        await position.save();
 
                         const slOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "STOP_LOSS"});
                         if (!slOrder) return;
                         slOrder.status = "CANCELLED";
                         await slOrder.save();
+
+                        await position.save();
                     }
                 }
             }
