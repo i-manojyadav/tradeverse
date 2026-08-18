@@ -117,7 +117,7 @@ function ProfitLoss() {
                                     <TableCell>{Number(Number(trade.exitPrice).toFixed(2)).toLocaleString()}</TableCell>
                                     <TableCell>{Number(Number(trade.quantity).toFixed(2)).toLocaleString()}</TableCell>
                                     <TableCell style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(trade.pnl).toFixed(2)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(((Number(trade.pnl) / (Number(trade.entryPrice) * Number(trade.quantity))) * 100).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(((Number(trade.pnl) / (Number(trade.entryPrice) * Number(trade.quantity))) * 100 * Number(trade.leverage)).toFixed(2)).toLocaleString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -151,7 +151,7 @@ function ProfitLoss() {
                                 <span style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(trade.pnl).toFixed(2)).toLocaleString()}</span>
                             </p>
                             <p>
-                                <span className='mti-value' style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number((Number(trade.pnl) / (Number(trade.entryPrice) * Number(trade.quantity))) * 100).toFixed(2)).toLocaleString()}%</span>
+                                <span className='mti-value' style={{color: Number(trade.pnl) >= 0 ? "#008000" : "#ff0000"}}>{Number(Number((Number(trade.pnl) / (Number(trade.entryPrice) * Number(trade.quantity))) * 100 * Number(trade.leverage)).toFixed(2)).toLocaleString()}%</span>
                             </p>
                         </div>
                     </div>
