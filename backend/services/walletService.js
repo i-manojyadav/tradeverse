@@ -37,7 +37,7 @@ const updateWallet = async (order, transaction) => {
 
     if (order.mode === "TRADE") {
 
-        const position = await Position.findOne({ user: order.user, symbol: order.symbol });
+        const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
         if (!position || position.side === order.side) {
             wallet.funds -= marginUsed;
