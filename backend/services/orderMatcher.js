@@ -16,6 +16,7 @@ let coins = [];
 const fetchData = async () => {
     try {
         const data = await CryptoData();
+        if (!Array.isArray(data)) return;
         coins = data;
         orderMatch();
     } catch (err) {
