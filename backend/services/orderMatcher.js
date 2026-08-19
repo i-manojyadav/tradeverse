@@ -24,7 +24,7 @@ const fetchData = async () => {
             return;
         }
 
-        if (!Array.isArray(USDTcoins)) {
+        if (!Array.isArray(cryptoCoins)) {
             setTimeout(fetchData, 5000);
             return;
         }
