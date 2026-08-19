@@ -13,7 +13,9 @@ const userSchema = new Schema({
     },
 });
 
-userSchema.plugin(passportLocalMongoose.default);
+userSchema.plugin(passportLocalMongoose.default, {
+    usernameLowerCase: true
+});
 
 const User = mongoose.model("User", userSchema);
 
