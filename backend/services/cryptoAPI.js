@@ -2,6 +2,7 @@ const URL = "https://api.binance.com/api/v3/ticker/24hr";
 
 const CryptoData = async () => {
     const response = await fetch(URL);
+    console.log("Crypto API Status:", response.status);
     const data = await response.json();
     if (!Array.isArray(data)) return;
     const USDTCoins = data?.filter((coin) => {
