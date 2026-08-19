@@ -8,7 +8,14 @@ const CryptoData = async () => {
     console.log("Crypto API Status:", response.status);
 
     const data = await response.json();
-    if (!Array.isArray(data)) return;
+
+    if (!Array.isArray(data)) {
+        return {
+            cryptoCoins: null,
+            status: response.status,
+            retryAfter,
+        }
+    }
 
     const USDTCoins = data?.filter((coin) => {
         return coin.symbol.endsWith("USDT");
@@ -17,7 +24,7 @@ const CryptoData = async () => {
     return {
         cryptoCoins: USDTCoins,
         status: response.status,
-        retryTime: retryAfter,
+        retryAfter,
     }
 }
 

@@ -19,23 +19,24 @@ const fetchData = async () => {
 
         if (status === 418) {
             const waitTime = Number(retryAfter) * 1000;
+            console.log("Waiting:", waitTime, "ms");
 
             setTimeout(fetchData, waitTime);
             return;
         }
 
         if (!Array.isArray(cryptoCoins)) {
-            setTimeout(fetchData, 5000);
+            setTimeout(fetchData, 10000);
             return;
         }
 
         coins = cryptoCoins;
-        setTimeout(fetchData, 5000);
+        setTimeout(fetchData, 10000);
         orderMatch();
 
     } catch (err) {
         console.log(err);
-        setTimeout(fetchData, 5000);
+        setTimeout(fetchData, 10000);
     }
 }
 
