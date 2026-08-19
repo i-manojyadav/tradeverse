@@ -15,18 +15,31 @@ import { createTargetOrder, handleTargetOrders } from "./targetService.js";
 let coins = [];
 const fetchData = async () => {
     try {
-        const data = await CryptoData();
-        if (!Array.isArray(data)) return;
-        coins = data;
+        const { cryptoCoins, status, retryAfter } = await CryptoData();
+
+        if (status === 418) {
+            const waitTime = Number(retryAfter) * 1000;
+
+            setTimeout(fetchData, waitTime);
+            return;
+        }
+
+        if (!Array.isArray(USDTcoins)) {
+            setTimeout(fetchData, 5000);
+            return;
+        }
+
+        coins = cryptoCoins;
+        setTimeout(fetchData, 5000);
         orderMatch();
+
     } catch (err) {
         console.log(err);
+        setTimeout(fetchData, 5000);
     }
 }
 
 fetchData();
-
-setInterval(fetchData, 5000);
 
 
 /** Order Matching ( PENDING -> EXECUTION )  */
