@@ -50,8 +50,19 @@ const sessionOptions = {
     }
 }
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://tradeverse-fg4e.onrender.com",
+]
+
 app.use(cors({
-    origin: "http://localhost:5173" || "https://tradeverse-fg4e.onrender.com",
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true,
 }));
 app.set("trust proxy", 1);
@@ -67,7 +78,13 @@ passport.deserializeUser(User.deserializeUser());
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173" || "https://tradeverse-fg4e.onrender.com",
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     },
 });
