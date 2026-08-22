@@ -9,11 +9,11 @@ import createTransaction from "./transactionService.js";
 import { createSLOrder, handleStopLoss } from "./stopLossService.js";
 import { createTargetOrder, handleTargetOrders } from "./targetService.js";
 
-
 /** Update Coin Price Live */
 
-let coins = [];
-const fetchData = async () => {
+//let coins = [];
+
+/*const fetchData = async () => {
     try {
         const { cryptoCoins, status, retryAfter } = await CryptoData();
 
@@ -40,33 +40,35 @@ const fetchData = async () => {
     }
 }
 
-fetchData();
+fetchData();*/
+
+
 
 
 /** Order Matching ( PENDING -> EXECUTION )  */
 
-const orderMatch = async () => {
-    const orders = await Order.find({status: "PENDING"});
+const orderMatch = async (coins) => {
+
+    const orders = await Order.find({status: "PENDING", type: "LIMIT"});
 
     await handleTargetOrders(coins);
     await handleStopLoss(coins);
 
     for (const order of orders) {
+
         const coin = coins.find((c) => {
             return c.symbol.toUpperCase() === order.symbol.toUpperCase();
         });
 
+        
         if (!coin) continue;
-
-        if (order.type === "TARGET" || order.type === "STOP_LOSS") {
-            continue;
-        }
 
         if (order.side === "BUY") {
             if (order.price >= coin.askPrice) {
                 order.status = "EXECUTED";
+
                 await order.save();
-                createTransaction(order);
+                await createTransaction(order);
 
                 if (order.mode === "TRADE" && order.target !== null) {
                     await createTargetOrder(order);
@@ -137,8 +139,9 @@ const orderMatch = async () => {
 
             if (order.price <= coin.bidPrice) {
                 order.status = "EXECUTED";
+                
                 await order.save();
-                createTransaction(order);
+                await createTransaction(order);
 
                 if (order.mode === "TRADE" && order.target !== null) {
                     await createTargetOrder(order);

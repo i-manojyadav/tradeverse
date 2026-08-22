@@ -33,7 +33,7 @@ const createTransaction = async (order) => {
         }
     }
 
-    const transaction = await new Transaction ({
+    const transaction = new Transaction ({
         symbol: order.symbol,
         mode: order.mode,
         type: order.type,

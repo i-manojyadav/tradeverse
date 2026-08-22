@@ -10,14 +10,16 @@ import passport from "passport";
 import localStrategy from "passport-local";
 import passportLocalMongoose from "passport-local-mongoose";
 
+import http from "node:http";
+import { Server } from "socket.io";
+import { setupSocket } from "./sockets/socket.js";
+
 import User from "./models/user.js";
 
 import userRoute from "./routes/user.js";
 import watchlistRoute from "./routes/watchlist.js";
 import orderRoute from "./routes/order.js";
 import profitLossRoute from './routes/profitLoss.js';
-
-import orderMatch from "./services/orderMatcher.js";
 
 const app = express();
 
@@ -49,7 +51,7 @@ const sessionOptions = {
 }
 
 app.use(cors({
-    origin: "https://tradeverse-fg4e.onrender.com",
+    origin: "http://localhost:5173" || "https://tradeverse-fg4e.onrender.com",
     credentials: true,
 }));
 app.set("trust proxy", 1);
@@ -61,9 +63,19 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+/** Socket.io Setup */
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173" || "https://tradeverse-fg4e.onrender.com",
+        credentials: true,
+    },
+});
+
+
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, "0.0.0.0", () => {
     console.log("Listening...");
 });
 
@@ -87,4 +99,6 @@ app.use("/", userRoute);
 app.use("/", watchlistRoute);
 app.use("/", orderRoute);
 app.use("/", profitLossRoute);
-orderMatch();
+
+
+setupSocket(io);

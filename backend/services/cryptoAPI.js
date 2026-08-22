@@ -1,7 +1,7 @@
 const URL = process.env.CRYPTO_API_URL;
 
 const CryptoData = async () => {
-    const response = await fetch(URL);
+    const response = await fetch("https://api.binance.com/api/v3/ticker/24hr");
     
     const retryAfter = response.headers.get("Retry-After");
 

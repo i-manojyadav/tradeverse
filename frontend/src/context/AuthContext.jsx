@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { WatchlistContext } from "./WatchlistContext";
+import { io } from "socket.io-client";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -26,6 +26,23 @@ export default function AuthProvider({ children }) {
 
         isSignedIn();
     }, []);
+
+
+    // Create Web Socket Connection
+    useEffect(() => {
+        if (!user) return;
+
+        const socket = io(`${url}`);
+
+        socket.on("connect", () => {
+            console.log("Socket connected");
+        });
+
+        return () => {
+            socket.disconnect();
+        }
+
+    }, [user]);
 
     return (
         <AuthContext.Provider
