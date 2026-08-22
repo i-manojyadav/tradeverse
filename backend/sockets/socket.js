@@ -33,8 +33,6 @@ export function setupSocket(io) {
 let streams = "";
 async function streamSymbols() {
 
-    if (!streams) return;
-
     const watchlists = await Watchlist.find({}, {"coins.symbol": 1, _id:0});
     const watchlistSymbols = watchlists.flatMap((watchlist) => {
         return watchlist.coins.map(coin => coin.symbol)
@@ -89,8 +87,6 @@ async function filterCoins(coin) {
                     isMatching = false;
                 }
             }
-
-            await orderMatch(cryptoCoins);
 
             return;
         }
