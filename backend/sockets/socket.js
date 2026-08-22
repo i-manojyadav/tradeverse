@@ -33,6 +33,8 @@ export function setupSocket(io) {
 let streams = "";
 async function streamSymbols() {
 
+    if (!streams) return;
+
     const watchlists = await Watchlist.find({}, {"coins.symbol": 1, _id:0});
     const watchlistSymbols = watchlists.flatMap((watchlist) => {
         return watchlist.coins.map(coin => coin.symbol)
@@ -49,7 +51,7 @@ async function streamSymbols() {
     });
 
     const positions = await Position.find({}, {"symbol": 1, _id:0});
-    const positionSymbols = holdings.flatMap((position) => {
+    const positionSymbols = positions.flatMap((position) => {
         return position.symbol;
     });
 
@@ -66,6 +68,7 @@ async function streamSymbols() {
 }
 
 let cryptoCoins = [];
+let isMatching = false;
 
 /** Structure Web Socket Data */
 async function filterCoins(coin) {
@@ -77,7 +80,18 @@ async function filterCoins(coin) {
             crypto.priceChange = coin.priceChange;
             crypto.priceChangePercentage = coin.priceChangePercentage;
 
+            /*if (!isMatching) {
+                isMatching = true;
+
+                try {
+                    await orderMatch(cryptoCoins);
+                } finally {
+                    isMatching = false;
+                }
+            }*/
+
             await orderMatch(cryptoCoins);
+
             return;
         }
     }

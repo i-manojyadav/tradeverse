@@ -7,6 +7,8 @@ export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
 
+    console.log("Auth Context Rendered");
+
     const [ user, setUser ] = useState(null);
 
     useEffect(() => {
@@ -30,7 +32,7 @@ export default function AuthProvider({ children }) {
 
     // Create Web Socket Connection
     useEffect(() => {
-        if (!user) return;
+        if (!user?.user?.username) return;
 
         const socket = io(`${url}`);
 
@@ -42,7 +44,7 @@ export default function AuthProvider({ children }) {
             socket.disconnect();
         }
 
-    }, [user]);
+    }, [user?.user?.username]);
 
     return (
         <AuthContext.Provider
