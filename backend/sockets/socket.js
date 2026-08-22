@@ -80,7 +80,7 @@ async function filterCoins(coin) {
             crypto.priceChange = coin.priceChange;
             crypto.priceChangePercentage = coin.priceChangePercentage;
 
-            /*if (!isMatching) {
+            if (!isMatching) {
                 isMatching = true;
 
                 try {
@@ -88,7 +88,7 @@ async function filterCoins(coin) {
                 } finally {
                     isMatching = false;
                 }
-            }*/
+            }
 
             await orderMatch(cryptoCoins);
 
