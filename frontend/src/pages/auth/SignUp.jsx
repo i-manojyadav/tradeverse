@@ -4,11 +4,13 @@ import Button from '@mui/material/Button';
 import { Box, TextField } from '@mui/material';
 import { useState } from 'react';
 import AppAlert from '../../components/ui/AppAlert';
+import { useNavigate } from 'react-router-dom';
 
 const url = import.meta.env.VITE_API_URL;
 
 function SignUp() {
 
+    const navigate = useNavigate();
     const [ alert, setAlert ] = useState(null);
 
     const [ formData, setFormData ] = useState({
@@ -48,6 +50,7 @@ function SignUp() {
                     username: "",
                     password: "",
                 });
+                navigate("/signin");
             } else {
                 setAlert({
                     msg: data.message,
