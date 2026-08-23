@@ -4,16 +4,20 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { HoldingsContext } from '../../../context/HoldingsContext';
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import MobileTradeItem from '../MobileTradeItem';
+import NoTradingActivity from '../../../components/emptyStates/NoTradingActivity';
 
 function Holdings() {
 
     const { enrichedHoldings, holdingsStats } = useContext(HoldingsContext);
 
+    console.log(enrichedHoldings);
+
     const isMobile = window.innerWidth <= 768;
     const isDesktop = window.innerWidth > 768;
 
     return (
-        <div className='holdings'>
+        <>
+        {enrichedHoldings.length > 0 && <div className='holdings'>
             <div className='stats'>
                 <StatCard title={"Invested"} value={holdingsStats.invested} subTitle={"Capital deployed"} />
                 <StatCard title={"Current"} value={holdingsStats.currentValue} subTitle={"Current value"} />
@@ -58,7 +62,9 @@ function Holdings() {
             {isMobile && <div>
                 <MobileTradeItem trades={enrichedHoldings} />
             </div>}
-        </div>
+        </div>}
+        {enrichedHoldings.length === 0 && <NoTradingActivity />}
+        </>
     )
 }
 

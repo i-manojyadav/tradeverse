@@ -35,7 +35,7 @@ function Dashboard() {
             <div className='dashbaord-greet'>
                 <p>Hi, {user?.user?.name || "User"}</p>
             </div>
-            <div className='dashboard-holdings'>
+            {enrichedHoldings.length > 0 && <div className='dashboard-holdings'>
                 <h3>Holdings</h3>
                 <BarChart
                     className='dashboard-chart'
@@ -56,7 +56,7 @@ function Dashboard() {
                     height={300}
                 >
                 </BarChart>
-            </div>
+            </div>}
         </div>}
         {!user && <SignInPrompt />}
         </>

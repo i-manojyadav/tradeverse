@@ -1,0 +1,16 @@
+.no-trading-activity {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 25px 20px;
+    background-color: #111111;
+    border: 1px solid #232323;
+}
+
+.no-trading-activity > i {
+    color: #ffffff;
+    font-size: 25px;
+    margin: 15px 0;
+}

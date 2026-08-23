@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import { PositionsContext } from '../../../context/PositionsContext';
 import MobileTradeItem from '../MobileTradeItem';
+import NoTradingActivity from '../../../components/emptyStates/NoTradingActivity';
 
 function Positions() {
 
@@ -12,8 +13,9 @@ function Positions() {
     const isMobile = window.innerWidth <= 768;
     const isDesktop = window.innerWidth > 768;
 
-    return(
-        <div className='positions'>
+    return (
+        <>
+        {openPositions.length > 0 && <div className='positions'>
             <div className='stats'>
                 <StatCard title={"Margin Used"} value={positionsStats.marginUsed} subTitle={"Capital Deployed"} />
                 <StatCard title={"Position Value"} value={positionsStats.positionValue} subTitle={"Current Exposure"} />
@@ -60,7 +62,9 @@ function Positions() {
             {isMobile && <div>
                 <MobileTradeItem trades={openPositions} />
             </div>}
-        </div>
+        </div>}
+        {openPositions.length === 0 && <NoTradingActivity />}
+        </>
     )
 }
 

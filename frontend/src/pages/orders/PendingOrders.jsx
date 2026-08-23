@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import './PendingOrders.css'
 import { OrdersContext } from '../../context/OrdersContext';
 import OrdersTable from './OrdersTable';
+import NoTradingActivity from '../../components/emptyStates/NoTradingActivity';
 
 function PendingOrders() {
 
@@ -22,7 +23,8 @@ function PendingOrders() {
 
     return (
         <div className='pending-orders'>
-            { pendingOrders.length && <OrdersTable ordersData={pendingOrders} /> }
+            {pendingOrders.length > 0 && <OrdersTable ordersData={pendingOrders} />}
+            {pendingOrders.length === 0 && <NoTradingActivity />}
         </div>
     )
 }
