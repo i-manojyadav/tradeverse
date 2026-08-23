@@ -66,9 +66,7 @@ export default function HoldingsProvider({ children }) {
             return sum + Number(coin.pnl);
         }, 0);
 
-        const roi = enrichedHoldings.reduce((sum, coin) => {
-            return sum + Number(coin.roi);
-        }, 0);
+        const roi = (pnl / invested) * 100;
 
         setHoldingsStats({
             invested: invested,
@@ -77,7 +75,7 @@ export default function HoldingsProvider({ children }) {
             roi: roi,
         });
 
-    }, [coins]);
+    }, [enrichedHoldings]);
 
 
     return (
