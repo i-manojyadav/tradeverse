@@ -5,7 +5,7 @@ import { addCoin, createWatchlist, removeCoin } from "../controllers/watchlist.j
 const router = express.Router();
 
 // Create Watchlist
-router.post("/watchlist/create", isSignedIn, wrapAsync());
+router.post("/watchlist/create", isSignedIn, wrapAsync(createWatchlist));
 
 // Add Coin
 router.post("/watchlist/:id/add", isSignedIn, wrapAsync(addCoin));
