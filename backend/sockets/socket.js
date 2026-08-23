@@ -105,11 +105,16 @@ export async function getCryptoData() {
     cryptoSocket = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
 
     cryptoSocket.onopen = () => {
-        console.log("Socket connected");
+        console.log("External WebSocket Connected");
     }
 
     cryptoSocket.onmessage = async (event) => {
         const data = JSON.parse(event.data);
+
+        if (!event.data) {
+            console.log("No data received");
+            return;
+        }
 
         let coin = {
             symbol: data.data.s,
@@ -124,7 +129,11 @@ export async function getCryptoData() {
     }
 
     cryptoSocket.onclose = () => {
-        console.log("Socket Disconnected");
+        console.log("External WebSocket Disconnected");
         cryptoSocket = null;
+    }
+
+    cryptoSocket.onerror = (error) => {
+        console.log("External WebSocket Error:", error);
     }
 }
