@@ -10,7 +10,7 @@ function Profile() {
         <div className='profile'>
             <p><span>Name:</span> <span className='user-name'>{user?.user?.name}</span></p>
             <p><span>Email:</span> <span className='user-email'>{user?.user?.email}</span></p>
-            <p><span>Username:</span> <span className='user-username'>{user?.user?.username}</span></p>
+            <p><span>Username:</span> <span className='user-username'>@{user?.user?.username}</span></p>
         </div>
     )
 }

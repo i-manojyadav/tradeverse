@@ -2,6 +2,46 @@
     width: 100%;
 }
 
+.account-user {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.account-user div:nth-of-type(1) {
+    padding: 20px;
+    text-align: center;
+    border-radius: 100px;
+    background-color: #4bffc61b;
+}
+
+.account-user div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.account-user div:nth-of-type(2) p:nth-of-type(1) {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+}
+
+.account-user div:nth-of-type(2) p:nth-of-type(2) {
+    font-size: 14px;
+    letter-spacing: 0.15em;
+}
+
+.account-user i {
+    height: 20px;
+    width: 20px;
+    color: #00ffae;
+    font-size: 20px;
+    border-radius: 100%;
+}
+
 .account h2 {
     margin-bottom: 15px;
 }

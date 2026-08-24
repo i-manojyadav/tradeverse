@@ -17,6 +17,15 @@ function Account() {
         <>
         {user && <div className='account'>
             <h2>Account</h2>
+            <div className='account-user'>
+                <div>
+                    <i className="fa-regular fa-user"></i>
+                </div>
+                <div>
+                    <p>{user?.user?.name}</p>
+                    <p>@{user?.user?.username}</p>
+                </div>
+            </div>
             <div className='tabs'>
                 <button onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active-tab-btn" : ""}>Profile</button>
                 <button onClick={() => setActiveTab("funds")} className={activeTab === "funds" ? "active-tab-btn" : ""}>Funds</button>

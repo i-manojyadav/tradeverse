@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './Transactions.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
+import NoTradingActivity from '../emptyStates/NoTradingActivity';
 
 function Transactions({ transactions }) {
 
@@ -24,7 +25,7 @@ function Transactions({ transactions }) {
 
     return (
         <>
-        {isDesktop && <div className='transactions'>
+        {(transactions.length > 0 && isDesktop) && <div className='transactions'>
             <TableContainer className='MUI-table'>
                 <Table>
                     <TableHead>
@@ -59,7 +60,7 @@ function Transactions({ transactions }) {
             </TableContainer>
         </div>}
 
-        {isMobile && <div className='mobile-transaction-items'>
+        {(transactions.length > 0 && isMobile) && <div className='mobile-transaction-items'>
             {transactions.map((txn, idx) => (
                 <div className='mti' key={idx} onClick={() => handlePopup(txn)}>
                     <div className='mti-left'>
@@ -88,7 +89,7 @@ function Transactions({ transactions }) {
             ))}
         </div>}
 
-        {(isActive && isMobile) &&<div className='transaction-overview'>
+        {(transactions.length > 0 && isActive && isMobile) && <div className='transaction-overview'>
             <div className='overview-top'>
                 <p>
                     <span className='overview-symbol'>{curTxn.symbol}</span>
@@ -121,6 +122,8 @@ function Transactions({ transactions }) {
                 </p>}
             </div>
         </div>}
+
+        {transactions.length === 0 && <NoTradingActivity />}
         </>
     )
 }

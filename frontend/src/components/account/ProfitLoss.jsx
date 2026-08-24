@@ -3,6 +3,7 @@ import './ProfitLoss.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import { useEffect } from 'react';
 import AppAlert from '../ui/AppAlert';
+import NoTradingActivity from '../emptyStates/NoTradingActivity';
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -83,7 +84,8 @@ function ProfitLoss() {
 
 
     return (
-        <div className='profit-loss'>
+        <>
+        {pnlData.length > 0 && <div className='profit-loss'>
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div className='filter'>
                 <button className={activeFilter === "ALL" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("ALL")}>All</button>
@@ -195,7 +197,9 @@ function ProfitLoss() {
                     </p>
                 </div>
             </div>}
-        </div>
+        </div>}
+        {pnlData.length === 0 && <NoTradingActivity />}
+        </>
     )
 }
 
