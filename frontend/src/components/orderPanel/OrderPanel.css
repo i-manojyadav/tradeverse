@@ -1,55 +1,74 @@
 .order-panel {
     padding: 0;
+    width: 60%;
+    margin: 0 auto;
     border-radius: 10px;
     border: 1px solid #232323;
     background-color: #111111;
 }
 
 .order-panel form {
-    gap: 15px;
+    gap: 10px;
     display: flex;
     flex-direction: column;
 }
 
 .order-panel form > div {
-    padding: 0 25px;
+    padding: 0 20px;
 }
 
 .order-asset {
-    padding: 20px 25px !important;
-    border-radius: 10px 10px 0 0;
-    background-color: #000000;
-}
-
-.order-asset-title {
-    font-size: 22px;
-    font-weight: 800;
-}
-
-.order-asset-price {
-    font-size: 15px;
-}
-
-.order-type {
-    gap: 10px;
     display: flex;
-    width: fit-content;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px !important;
+    border-radius: 10px 10px 0 0;
+    background-color: #080808;
+    border-bottom: 2px solid #232323;
 }
 
-.order-type > button {
-    color: #6b6b70;
-    padding: 10px 20px;
+.order-symbol-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.018em;
+}
+
+.order-symbol-price {
+    font-size: 13px;
+    color: #c4c4c4;
+}
+
+.order-mode {
+    display: flex;
+    align-items: center;
     border-radius: 5px;
-    letter-spacing: 0.18em;
+    background-color: #151515;
     border: 1px solid #232323;
-    background-color: #111111;
-    text-transform: uppercase;
 }
 
-.active-order-type {
-    color: #c4c4c4 !important;
-    border: 1px solid #6b6b70 !important;
-    background-color: #151515 !important;
+.order-mode > button {
+    color: #c4c4c4;
+    font-size: 12px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background-color: #151515;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: none;
+}
+
+.order-mode button:nth-of-type(1) {
+    border-radius: 5px 0 0 5px;
+}
+
+.order-mode button:nth-of-type(2) {
+    border-radius: 0 5px 5px 0;
+}
+
+.order-mode-active {
+    color: #ffffff !important;
+    background-color: #303030 !important;
 }
 
 .trade-side {
@@ -59,19 +78,20 @@
 
 .trade-side > button {
     color: #c4c4c4;
-    padding: 15px 30px;
+    padding: 10px 20px;
     text-transform: uppercase;
     letter-spacing: 0.18em;
     background-color: #111111;
     border: 1px solid #232323;
+    letter-spacing: 0.15em;
 }
 
 .trade-side > button:nth-of-type(1) {
-    border-radius: 100px 0px 0px 100px;
+    border-radius: 10px 0px 0px 10px;
 }
 
 .trade-side > button:nth-of-type(2) {
-    border-radius: 0px 100px 100px 0px;
+    border-radius: 0px 10px 10px 0px;
 }
 
 .trade-buy-btn {
@@ -108,10 +128,45 @@
     border-radius: 5px;
 }
 
-.order-leverage {
-    margin-top: 20px;
+.leverage-slider {
+    color: #ffffff !important;
+}
+
+.leverage-slider .MuiSlider-valueLabel {
+    font-size: 12px !important;
+    color: #ffffff !important;
+    background-color: #22c55e;
+}
+
+.order-alert > p {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    padding: 10px !important;
+    color: #c4c4c4 !important;
+    border-radius: 5px !important;
+    background-color: #ef44441f !important;
+    border: 1px solid #ef444466 !important;
+    border-left: 4px solid #ef444466 !important;
+}
+
+.order-alert > p b {
+    font-weight: 400 !important;
+    text-decoration: underline !important;
+}
+
+.order-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .order-btn {
     padding: 15px 25px !important;
+}
+
+
+@media(max-width: 768px) {
+    .order-panel {
+        width: 100%;
+    }
 }

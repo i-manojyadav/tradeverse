@@ -171,12 +171,14 @@ function OrderPanel() {
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <form onSubmit={handleSubmit}>
                 <div className='order-asset'>
-                    <p className='order-asset-title'>{coin[0]?.symbol}</p>
-                    <p className='order-asset-price'>{Number(Number(coin[0]?.lastPrice).toFixed(1)).toLocaleString()}</p>
-                </div>
-                <div className='order-type'>
-                    <button type='button' onClick={() => { setOrderData({ ...orderData, mode: "TRADE" }) }} className={orderData.mode === "TRADE" ? "active-order-type" : ""}>Trade</button>
-                    <button type='button' onClick={() => { setOrderData({ ...orderData, mode: "INVEST"}) }}className={orderData.mode === "INVEST" ? "active-order-type" : ""}>Invest</button>
+                    <div className='order-symbol'>
+                        <p className='order-symbol-title'>{coin[0]?.symbol}</p>
+                        <p className='order-symbol-price'>{Number(Number(coin[0]?.lastPrice).toFixed(3)).toLocaleString()}</p>
+                    </div>
+                    <div className='order-mode'>
+                        <button type='button' onClick={() => { setOrderData({ ...orderData, mode: "TRADE" }) }} className={orderData.mode === "TRADE" ? "order-mode-active" : ""}>Trade</button>
+                        <button type='button' onClick={() => { setOrderData({ ...orderData, mode: "INVEST"}) }}className={orderData.mode === "INVEST" ? "order-mode-active" : ""}>Invest</button>
+                    </div>
                 </div>
                 <div className='trade-side'>
                     <button type='button' onClick={() => setOrderData({ ...orderData, side: "BUY"})} className={orderData.side === "BUY" ? "trade-buy-btn" : ""}>Buy</button>
@@ -188,7 +190,7 @@ function OrderPanel() {
                 </div>
                 <div className='order-target' style={{ display: orderData.mode === "INVEST" ? "none" : "block"}}>
                     <p>
-                        <span>Target:</span>
+                        <span>Target</span>
                         <span><Switch checked={activeTgt} onChange={() => tgtToggle()} /></span>
                     </p>
                     {activeTgt && <div>
@@ -197,7 +199,7 @@ function OrderPanel() {
                 </div>
                 <div className='order-StopLoss' style={{ display: orderData.mode === "INVEST" ? "none" : "block"}}>
                     <p>
-                        <span>Stop Loss:</span>
+                        <span>Stop Loss</span>
                         <span><Switch checked={activeSL} onChange={() => slToggle()} /></span>
                     </p>
                     {activeSL && <div>
@@ -209,16 +211,17 @@ function OrderPanel() {
                     {orderData.stopLoss && <p>Stop Loss should be between <b>Entry & Liquidation Price</b></p>}
                 </div>
                 { orderData.mode === "TRADE" && <div className='order-leverage'>
-                    <Slider name='leverage' onChange={handleChange} min={1} max={100} defaultValue={1} aria-label="Default" valueLabelDisplay="on" />
+                    <Slider className='leverage-slider' name='leverage' onChange={handleChange} min={1} max={100} defaultValue={1} aria-label="Default" valueLabelDisplay="on" />
                 </div> }
                 <div className='order-info'>
                     <p>
-                        <span>Margin Required: </span>
-                        <span>{Number(((Number(orderData.quantity) * Number(orderData.price)) / Number(orderData.leverage)).toFixed(1)).toLocaleString() || 0}</span>
+                        <span>Margin: </span>
+                        {orderData.mode === "TRADE" && <span>{Number(((Number(orderData.quantity) * Number(orderData.price)) / Number(orderData.leverage)).toFixed(1)).toLocaleString() || 0}</span>}
+                        {orderData.mode === "INVEST" && <span>{Number((Number(orderData.quantity) * Number(orderData.price)).toFixed(1)).toLocaleString() || 0}</span>}
                     </p>
 
                     { orderData.mode === "TRADE" && <p>
-                        <span>Liquidation Price: </span>
+                        <span>Liq. Price: </span>
                         <span>
                             {orderData.side === "BUY" ? `${Number(Number(Number(orderData.price) * (1 - 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` :
                             orderData.side === "SELL" ? `${Number(Number(Number(orderData.price) * (1 + 1 / Number(orderData.leverage))).toFixed(1)).toLocaleString()}` : "0"}
