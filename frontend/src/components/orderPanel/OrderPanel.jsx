@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Slider from '@mui/material/Slider';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { CryptoAPIContext } from '../../context/CryptoAPIContext';
 import { useEffect } from 'react';
@@ -17,12 +17,14 @@ import { HoldingsContext } from '../../context/HoldingsContext';
 import AppAlert from '../ui/AppAlert';
 import { AuthContext } from '../../context/AuthContext';
 import SignInPrompt from '../emptyStates/SignInPrompt';
+import { useNavigate } from 'react-router-dom';
 
 const url = import.meta.env.VITE_API_URL;
 
 function OrderPanel() {
 
     const location = useLocation();
+    const navigate = useNavigate()
     const { symbol } = location.state || {};
 
     const [ alert, setAlert ] = useState(null);
@@ -150,6 +152,7 @@ function OrderPanel() {
                     target: "",
                     stopLoss: "",
                 });
+                navigate("/orders");
             } else {
                 setAlert({
                     msg: data.message,
