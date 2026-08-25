@@ -5,34 +5,34 @@ I built Tradeverse, a full-stack cryptocurrency trading and portfolio management
 ## Features
 
 ### Watchlist
-• Create and manage multiple watchlists
-• Search and add crypto coins
-• Remove coins from watchlists
-• View live prices and charts
+- Create and manage multiple watchlists
+- Search and add crypto coins
+- Remove coins from watchlists
+- View live prices and charts
 
 ### Trading & Orders
-• Place BUY/SELL orders
-• Pending, Executed & Cancelled order management
-• Target & Stop-Loss orders
-• Up to 100x leverage
-• Liquidation price calculation
-• Real-time order matching using WebSocket
-• OCO (One-Cancels-the-Other)
+- Place BUY/SELL orders
+- Pending, Executed & Cancelled order management
+- Target & Stop-Loss orders
+- Up to 100x leverage
+- Liquidation price calculation
+- Real-time order matching using WebSocket
+- OCO (One-Cancels-the-Other)
 
 ### Wallet & Transactions
-• Automatic wallet debit/credit based on order execution
-• Complete transaction history
-• Account-level transaction tracking
+- Automatic wallet debit/credit based on order execution
+- Complete transaction history
+- Account-level transaction tracking
 
 ### Holdings and Positions
-• Track long-term holdings and leveraged positions
-• Average entry price and current value
-• Live P&L and ROI calculations
+- Track long-term holdings and leveraged positions
+- Average entry price and current value
+- Live P&L and ROI calculations
 
 ### Authentication
-• Sign Up / Sign In
-• Session-based authentication
-• Protected user-specific routes and data
+- Sign Up / Sign In
+- Session-based authentication
+- Protected user-specific routes and data
 
 ## Tech Stack
 
@@ -50,9 +50,11 @@ I built Tradeverse, a full-stack cryptocurrency trading and portfolio management
 - Mongoose
 
 ## Future Improvements
-- Price alerts
-- Two-factor authentication
 - Exit Trade
+- Price alerts
+- Notification
+- AI integration
+- Real-time price updates
 - Update Stop-Loss and Target Price
 
 ## License
