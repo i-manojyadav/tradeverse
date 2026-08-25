@@ -72,13 +72,12 @@ const handleStopLoss = async (coins) => {
                         position.pnl = (position.entryPrice - tradeExitPrice) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
+                        await position.save();
 
                         const tgtOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "TARGET" });
                         if (!tgtOrder) return;
                         tgtOrder.status = "CANCELLED";
                         await tgtOrder.save();
-
-                        await position.save();
                     }
                 }
             }
@@ -110,13 +109,12 @@ const handleStopLoss = async (coins) => {
                         position.pnl = (tradeExitPrice - position.entryPrice) * position.quantity;
                         position.status = "CLOSED";
                         position.closedAt = new Date();
+                        await position.save();
 
                         const tgtOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "TARGET" });
                         if (!tgtOrder) return;
                         tgtOrder.status = "CANCELLED";
                         await tgtOrder.save();
-
-                        await position.save();
                     }
                 }
             }
