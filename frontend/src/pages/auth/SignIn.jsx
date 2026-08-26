@@ -49,6 +49,8 @@ function SignIn() {
                     msg: data.message,
                     severity: "error"
                 });
+                setSignInInfo({ username: "", password: ""});
+                navigate("/signin");
             }
 
         } catch(err) {
