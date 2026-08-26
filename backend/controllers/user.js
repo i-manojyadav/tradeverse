@@ -68,7 +68,7 @@ export const signIn = async (req, res, next) => {
         if (err) return next(err);
 
         if (!user) {
-            return res.json(401).json({
+            return res.status(401).json({
                 message: "Invalid username or password",
             });
         }
@@ -83,7 +83,7 @@ export const signIn = async (req, res, next) => {
             const userWatchlist = await Watchlist.find({user: user._id}).select("title coins _id");
             const userTransactions = await Transaction.find({user: user._id}).sort({ createdAt: -1 });
 
-            return res.json({
+            return res.status(200).json({
                 message: "Signed in successfully",
                 user: {
                     name: user.name,
@@ -108,7 +108,7 @@ export const signOut = async(req, res, next) => {
         }
     });
 
-    res.json({
+    res.status(200).json({
         message: "Signed out successfully",
     });
 }
