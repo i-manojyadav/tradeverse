@@ -64,7 +64,7 @@ const orderMatch = async (coins) => {
         if (!coin) continue;
 
         if (order.side === "BUY") {
-            if (order.price >= coin.askPrice) {
+            if (Number(order.price) >= Number(coin.askPrice)) {
                 order.status = "EXECUTED";
 
                 await order.save();
@@ -90,6 +90,7 @@ const orderMatch = async (coins) => {
                             position.entryPrice = ((position.entryPrice * position.quantity) + (order.price * order.quantity)) / newQty;
                             position.quantity = newQty;
                             await position.save();
+
                         } else if (position.side === "SELL") {
                             console.log("You already have a open position")
                         }
@@ -113,11 +114,12 @@ const orderMatch = async (coins) => {
 
                 } else if (order.mode === "INVEST") {
 
-                    const holding = await Holding.findOne({ user: order.user, symbol: order.symbol});
+                    const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol});
 
                     if (holding) {
                         const newQty = holding.quantity + order.quantity;
                         holding.averageBuy = ((holding.averageBuy * holding.quantity) + (order.price * order.quantity)) / newQty;
+                        holding.totalQuantity += order.quantity;
                         holding.quantity = newQty;
                         await holding.save();
 
@@ -125,7 +127,9 @@ const orderMatch = async (coins) => {
 
                         await Holding.create({
                             symbol: order.symbol,
+                            totalQuantity: order.quantity,
                             quantity: order.quantity,
+                            totalSoldQty: order.quantity,
                             averageBuy: order.price,
                             executedAt: new Date(),
                             user: order.user,
@@ -137,7 +141,7 @@ const orderMatch = async (coins) => {
 
         } else if (order.side === "SELL") {
 
-            if (order.price <= coin.bidPrice) {
+            if (Number(order.price) <= Number(coin.bidPrice)) {
                 order.status = "EXECUTED";
                 
                 await order.save();
@@ -183,22 +187,38 @@ const orderMatch = async (coins) => {
 
                 } else if (order.mode === "INVEST") {
 
-                    const holding = await Holding.findOne({ user: order.user, symbol: order.symbol });
+                    const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
                     if (holding) {
 
                         const newQty = holding.quantity - order.quantity;
 
-                        if (newQty > 0) {
-                            holding.quantity = newQty;
-                            await holding.save();
+                        let newExitPrice = order.price;
 
-                        } else if (newQty === 0) {
-                            await Holding.deleteOne({_id: holding._id});
-
-                        } else {
+                        if (newQty < 0) {
                             console.log("Insufficient Holding Quantity");
+                            return;
                         }
+
+                        if (holding.totalSoldQty > 0) {
+                            const newTotalSoldQty = holding.totalSoldQty + order.quantity;
+                            newExitPrice = ((holding.exitPrice * holding.totalSoldQty) + (order.price * order.quantity)) / newTotalSoldQty;
+                        }
+
+                        holding.quantity = newQty;
+                        holding.totalSoldQty += order.quantity;
+                        holding.exitPrice = newExitPrice;
+                        holding.pnl += (order.price - holding.averageBuy) * order.quantity;
+
+                        if (newQty === 0) {
+                            holding.status = "CLOSED",
+                            holding.closedAt = new Date();
+                        }
+
+                        await holding.save();
+
+                    } else {
+                        console.log("You don't have the asset to sell.");
                     }
                 }
             }

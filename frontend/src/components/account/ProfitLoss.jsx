@@ -16,6 +16,8 @@ function ProfitLoss() {
 
     const [ activeFilter, setActiveFilter ] = useState("ALL");
     const [ pnlData, setPnLData ] = useState([]);
+
+    const [ holdingsPnL, setHoldingsPnL ] = useState([]);
     const [ positionsPnL, setPositionsPnL ] = useState([]);
 
     const [ isActive, setIsActive ] = useState(false);
@@ -46,6 +48,7 @@ function ProfitLoss() {
                     msg: data.message,
                     severity: "success"
                 });
+                setHoldingsPnL(data.holdings);
                 setPositionsPnL(data.positions);
 
             } else {
@@ -70,16 +73,45 @@ function ProfitLoss() {
 
     /** Handle Profit & Loss Filter */
     useEffect(() => {
-        if (!positionsPnL) return;
+        if (!holdingsPnL || !positionsPnL) return;
 
-        if (activeFilter === "ALL") {
-            setPnLData([...positionsPnL]);
+        function updatedData(trades) {
+            const updatedPnLData = trades.map((trade) => {
 
-        } else if (activeFilter === "POSITIONS") {
-            setPnLData(positionsPnL);
+                const entryPrice = Number(trade.entryPrice ?? trade.averageBuy);
+                const quantity = Number(trade.quantity ?? trade.totalQuantity);
+                const leverage = Number(trade.leverage ?? 1);
+                const pnl = Number(trade.pnl ?? 0);
+
+                return {
+                    symbol: trade.symbol,
+                    side: trade.side || "BUY",
+                    mode: trade.mode || "INVEST",
+                    leverage,
+                    entryPrice,
+                    exitPrice: trade.exitPrice,
+                    quantity,
+                    pnl,
+                    roi: (pnl / (entryPrice * quantity)) * 100 * leverage,
+                    executedAt: trade.executedAt,
+                    closedAt: trade.closedAt,
+                }
+            });
+
+            setPnLData(updatedPnLData);
         }
 
-    }, [activeFilter, positionsPnL]);
+        if (activeFilter === "ALL") {
+            updatedData([...holdingsPnL, ...positionsPnL]);
+
+        } else if (activeFilter === "HOLDINGS") {
+            updatedData(holdingsPnL);
+
+        } else if (activeFilter === "POSITIONS") {
+            updatedData(positionsPnL);
+        }
+
+    }, [activeFilter, holdingsPnL, positionsPnL]);
 
 
 
@@ -89,6 +121,7 @@ function ProfitLoss() {
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div className='filter'>
                 <button className={activeFilter === "ALL" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("ALL")}>All</button>
+                <button className={activeFilter === "HOLDINGS" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("HOLDINGS")}>Holdings</button>
                 <button className={activeFilter === "POSITIONS" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("POSITIONS")}>Positions</button>
             </div>
 
@@ -113,7 +146,7 @@ function ProfitLoss() {
                                 <TableRow key={idx}>
                                     <TableCell>{new Date(trade.executedAt).toLocaleDateString()}</TableCell>
                                     <TableCell>{trade.symbol}</TableCell>
-                                    <TableCell>{trade.leverage === undefined ? "INVEST" : `TRADE (${trade.leverage}x)`}</TableCell>
+                                    <TableCell>{`${trade.mode} (${trade.leverage}x)`}</TableCell>
                                     <TableCell>{trade.side}</TableCell>
                                     <TableCell>{Number(Number(trade.entryPrice).toFixed(2)).toLocaleString()}</TableCell>
                                     <TableCell>{Number(Number(trade.exitPrice).toFixed(2)).toLocaleString()}</TableCell>
@@ -183,17 +216,17 @@ function ProfitLoss() {
                         <span className='overview-title'>Quantity</span>
                         <span className='overview-value'>{Number(Number(curTrade.quantity).toFixed(2)).toLocaleString()}</span>
                     </p>
-                    <p>
+                    {curTrade.mode === "INVEST" && <p>
                         <span className='overview-title'>Leverage</span>
                         <span className='overview-value'>{curTrade.leverage}x</span>
-                    </p>
+                    </p>}
                     <p>
                         <span className='overview-title'>Executed At</span>
-                        <span className='overview-value'>{new Date(curTrade.executedAt).toLocaleDateString()}</span>
+                        <span className='overview-value'>{new Date(curTrade.executedAt).toLocaleString()}</span>
                     </p>
                     <p>
                         <span className='overview-title'>Closed At</span>
-                        <span className='overview-value'>{new Date(curTrade.closedAt).toLocaleDateString()}</span>
+                        <span className='overview-value'>{new Date(curTrade.closedAt).toLocaleString()}</span>
                     </p>
                 </div>
             </div>}
