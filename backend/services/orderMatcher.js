@@ -129,7 +129,6 @@ const orderMatch = async (coins) => {
                             symbol: order.symbol,
                             totalQuantity: order.quantity,
                             quantity: order.quantity,
-                            totalSoldQty: order.quantity,
                             averageBuy: order.price,
                             executedAt: new Date(),
                             user: order.user,
