@@ -73,7 +73,7 @@ function ProfitLoss() {
 
     /** Handle Profit & Loss Filter */
     useEffect(() => {
-        if (!holdingsPnL || !positionsPnL) return;
+        if (!holdingsPnL.length && !positionsPnL.length) return;
 
         function updatedData(trades) {
             const updatedPnLData = trades.map((trade) => {
@@ -117,7 +117,7 @@ function ProfitLoss() {
 
     return (
         <>
-        {pnlData.length > 0 && <div className='profit-loss'>
+        <div className='profit-loss'>
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
             <div className='filter'>
                 <button className={activeFilter === "ALL" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("ALL")}>All</button>
@@ -125,7 +125,7 @@ function ProfitLoss() {
                 <button className={activeFilter === "POSITIONS" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("POSITIONS")}>Positions</button>
             </div>
 
-            {isDesktop && <div className='pnl-statement'>
+            {pnlData.length > 0 && isDesktop && <div className='pnl-statement'>
                 <TableContainer className='MUI-table'>
                     <Table>
                         <TableHead>
@@ -160,7 +160,7 @@ function ProfitLoss() {
                 </TableContainer>
             </div>}
 
-            {isMobile && <div className='mobile-pnl-statement'>
+            {pnlData.length > 0 && isMobile && <div className='mobile-pnl-statement'>
                 {pnlData.map((trade, idx) => (
                     <div className='mti' key={idx} onClick={() => handlePopup(trade)}>
                         <div className='mti-left'>
@@ -230,7 +230,7 @@ function ProfitLoss() {
                     </p>
                 </div>
             </div>}
-        </div>}
+        </div>
         {pnlData.length === 0 && <NoTradingActivity />}
         </>
     )
