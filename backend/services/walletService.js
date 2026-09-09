@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Wallet from "../models/wallet.js";
 import Holding from "../models/holding.js";
 import Position from "../models/position.js";
@@ -8,30 +7,7 @@ import Order from "../models/order.js";
 const updateWallet = async (order, transaction) => {
 
     let orderValue = order.price * order.quantity;
-    let marginUsed = orderValue / order.leverage;
-
-    if (order.mode === "INVEST") {
-        let amount = order.price * order.quantity;
-
-    } else if (order.mode === "TRADE") {
-        if (order.type === "LIMIT") {
-            marginUsed = marginUsed;
-
-        } else if (order.type === "STOP_LOSS" || order.type === "TARGET") {
-
-            const mainOrder = await Order.findOne({ _id: order.parentOrder });
-            marginUsed = (mainOrder.price * order.quantity) / order.leverage;
-
-            if (mainOrder.side === "BUY" && order.side === "SELL") {
-                let pnl = (order.price - mainOrder.price) * order.quantity;
-                marginUsed += pnl;
-
-            } else if (mainOrder.side === "SELL" && order.side === "BUY") {
-                let pnl = (mainOrder.price - order.price) * order.quantity;
-                marginUsed += pnl;
-            }
-        }
-    }
+    let marginUsed = await calculateMargin(order);
 
     const wallet = await Wallet.findOne({ user: order.user });
 
@@ -48,17 +24,16 @@ const updateWallet = async (order, transaction) => {
             transaction.walletEffect = "CREDIT";
         }
 
-        await wallet.save();
-
     } else if (order.mode === "INVEST") {
 
-        const holding = await Holding.findOne({ user: order.user, symbol: order.symbol });
+        const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
         
         if (order.side === "BUY") {
             wallet.funds -= orderValue;
             transaction.walletEffect = "DEBIT";
 
         } else if (order.side === "SELL") {
+
             if (!holding) {
                 console.log("Can not sell. No holding found");
                 return;
@@ -72,9 +47,42 @@ const updateWallet = async (order, transaction) => {
             wallet.funds += orderValue;
             transaction.walletEffect = "CREDIT";
         }
-
-        await wallet.save();
     }
+
+    await wallet.save();
+}
+
+
+const calculateMargin = async (order) => {
+
+    if (order.mode === "INVEST") return;
+
+    let orderValue = Number(order.price) * Number(order.quantity);
+    let marginUsed = orderValue / Number(order.leverage);
+
+    if (order.mode === "TRADE") {
+
+        if (order.type === "LIMIT") {
+            marginUsed = marginUsed;
+
+        } else if (order.type === "STOP_LOSS" || order.type === "TARGET") {
+
+            const mainOrder = await Order.findOne({ _id: order.parentOrder });
+            marginUsed = (Number(mainOrder.price) * Number(order.quantity)) / Number(order.leverage);
+
+            if (mainOrder.side === "BUY" && order.side === "SELL") {
+                let pnl = (Number(order.price) - Number(mainOrder.price)) * Number(order.quantity);
+                marginUsed += pnl;
+
+            } else if (mainOrder.side === "SELL" && order.side === "BUY") {
+                let pnl = (Number(mainOrder.price) - Number(order.price)) * Number(order.quantity);
+                marginUsed += pnl;
+            }
+        }
+    }
+
+    return marginUsed;
+
 }
 
 

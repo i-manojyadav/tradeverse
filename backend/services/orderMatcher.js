@@ -1,229 +1,258 @@
 import CryptoData from "./cryptoAPI.js";
-import mongoose from "mongoose";
-import Wallet from "../models/wallet.js";
 import Order from "../models/order.js";
 import Holding from "../models/holding.js";
 import Position from "../models/position.js";
-import Transaction from "../models/transaction.js";
 import createTransaction from "./transactionService.js";
 import { createSLOrder, handleStopLoss } from "./stopLossService.js";
 import { createTargetOrder, handleTargetOrders } from "./targetService.js";
 
-/** Update Coin Price Live */
-
-//let coins = [];
-
-/*const fetchData = async () => {
-    try {
-        const { cryptoCoins, status, retryAfter } = await CryptoData();
-
-        if (status === 418) {
-            const waitTime = Number(retryAfter) * 1000;
-            console.log("Waiting:", waitTime, "ms");
-
-            setTimeout(fetchData, waitTime);
-            return;
-        }
-
-        if (!Array.isArray(cryptoCoins)) {
-            setTimeout(fetchData, 10000);
-            return;
-        }
-
-        coins = cryptoCoins;
-        setTimeout(fetchData, 10000);
-        orderMatch();
-
-    } catch (err) {
-        console.log(err);
-        setTimeout(fetchData, 10000);
-    }
-}
-
-fetchData();*/
 
 
-
-
-/** Order Matching ( PENDING -> EXECUTION )  */
-
+// Order Matching
 const orderMatch = async (coins) => {
-
-    const orders = await Order.find({status: "PENDING", type: "LIMIT"});
 
     await handleTargetOrders(coins);
     await handleStopLoss(coins);
 
+    const orders = await Order.find({ status: "PENDING", type: "LIMIT" });
+
+    if (orders.length === 0) return;
+
     for (const order of orders) {
+        await processOrder(order, coins);
+    }
 
-        const coin = coins.find((c) => {
-            return c.symbol.toUpperCase() === order.symbol.toUpperCase();
-        });
-
-        
-        if (!coin) continue;
-
-        if (order.side === "BUY") {
-            if (Number(order.price) >= Number(coin.askPrice)) {
-                order.status = "EXECUTED";
-
-                await order.save();
-                await createTransaction(order);
-
-                if (order.mode === "TRADE" && order.target !== null) {
-                    await createTargetOrder(order);
-                }
-
-                if (order.mode === "TRADE" && order.leverage > 1) {
-                    await createSLOrder(order);
-                }
+}
 
 
-                if (order.mode === "TRADE") {
 
-                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
+// Process Order
+const processOrder = async (order, coins) => {
+    const coin = coins.find((c) => {
+        return c.symbol.toUpperCase() === order.symbol.toUpperCase();
+    });
 
-                    if (position) {
+    if (!coin) return;
 
-                        if (position.side === "BUY") {
-                            const newQty = position.quantity + order.quantity;
-                            position.entryPrice = ((position.entryPrice * position.quantity) + (order.price * order.quantity)) / newQty;
-                            position.quantity = newQty;
-                            await position.save();
+    if (!isPriceMatched(order, coin)) return;
 
-                        } else if (position.side === "SELL") {
-                            console.log("You already have a open position")
-                        }
+    const isValid = await validateOrder(order);
 
-                    } else {
+    if (!isValid) {
+        return;
+    }
 
-                        await Position.create({
-                            symbol: order.symbol,
-                            side: order.side,
-                            quantity: order.quantity,
-                            entryPrice: order.price,
-                            leverage: order.leverage,
-                            marginUsed: (order.price * order.quantity) / order.leverage,
-                            liquidationPrice: order.liquidationPrice,
-                            target: order.target,
-                            stopLoss: order.stopLoss,
-                            executedAt: new Date(),
-                            user: order.user,
-                        });
-                    }
+    await executeOrder(order);
+}
 
-                } else if (order.mode === "INVEST") {
+// Price Matching
+const isPriceMatched = (order, coin) => {
+    if (order.side === "BUY") {
+        return Number(order.price) >= Number(coin.askPrice);
+    }
 
-                    const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol});
+    if (order.side === "SELL") {
+        return Number(order.price) <= Number(coin.bidPrice);
+    }
 
-                    if (holding) {
-                        const newQty = holding.quantity + order.quantity;
-                        holding.averageBuy = ((holding.averageBuy * holding.quantity) + (order.price * order.quantity)) / newQty;
-                        holding.totalQuantity += order.quantity;
-                        holding.quantity = newQty;
-                        await holding.save();
+    return false;
+}
 
-                    } else {
+// Validate Order
+const validateOrder = async (order) => {
 
-                        await Holding.create({
-                            symbol: order.symbol,
-                            totalQuantity: order.quantity,
-                            quantity: order.quantity,
-                            averageBuy: order.price,
-                            executedAt: new Date(),
-                            user: order.user,
-                        });
-                    }
-                }
-            }
+    if (order.mode === "TRADE") {
+        const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
+        if (!position) {
+            return true;
+        }
 
-        } else if (order.side === "SELL") {
+        if (position.side === order.side) {
+            return true;
+        }
 
-            if (Number(order.price) <= Number(coin.bidPrice)) {
-                order.status = "EXECUTED";
-                
-                await order.save();
-                await createTransaction(order);
+        console.log(`Can't execute ${order.side} order. Existing position is open`);
 
-                if (order.mode === "TRADE" && order.target !== null) {
-                    await createTargetOrder(order);
-                }
+        return false;
+    }
+    
 
-                if (order.mode === "TRADE" && order.leverage > 1) {
-                    await createSLOrder(order);
-                }
+    if (order.mode === "INVEST" && order.side === "SELL") {
+        const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
-                if (order.mode === "TRADE") {
+        if (!holding) {
+            console.log(`Can't see ${order.symbol}. Holding not found.`);
 
-                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
+            return false;
+        }
 
-                    if (position) {
+        if (Number(holding.quantity) < Number(order.quantity)) {
+            console.log(`Insuffcient holding quantity.`);
 
-                        if (position.side === "SELL") {
-                            const newQty = position.quantity + order.quantity;
-                            position.entryPrice = ((position.entryPrice * position.quantity) + (order.price * order.quantity)) / newQty;
-                            position.quantity = newQty;
-                            await position.save();
-                        }
-
-                    } else {
-
-                        await Position.create({
-                            symbol: order.symbol,
-                            side: order.side,
-                            quantity: order.quantity,
-                            entryPrice: order.price,
-                            leverage: order.leverage,
-                            marginUsed: (order.price * order.quantity) / order.leverage,
-                            liquidationPrice: order.liquidationPrice,
-                            target: order.target,
-                            stopLoss: order.stopLoss,
-                            executedAt: new Date(),
-                            user: order.user,
-                        });
-                    }
-
-                } else if (order.mode === "INVEST") {
-
-                    const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
-
-                    if (holding) {
-
-                        const newQty = holding.quantity - order.quantity;
-
-                        let newExitPrice = order.price;
-
-                        if (newQty < 0) {
-                            console.log("Insufficient Holding Quantity");
-                            return;
-                        }
-
-                        if (holding.totalSoldQty > 0) {
-                            const newTotalSoldQty = holding.totalSoldQty + order.quantity;
-                            newExitPrice = ((holding.exitPrice * holding.totalSoldQty) + (order.price * order.quantity)) / newTotalSoldQty;
-                        }
-
-                        holding.quantity = newQty;
-                        holding.totalSoldQty += order.quantity;
-                        holding.exitPrice = newExitPrice;
-                        holding.pnl += (order.price - holding.averageBuy) * order.quantity;
-
-                        if (newQty === 0) {
-                            holding.status = "CLOSED",
-                            holding.closedAt = new Date();
-                        }
-
-                        await holding.save();
-
-                    } else {
-                        console.log("You don't have the asset to sell.");
-                    }
-                }
-            }
+            return false;
         }
     }
 
+    return true;
+}
+
+// Execute Order
+const executeOrder = async (order) => {
+    order.status = "EXECUTED";
+    await order.save();
+
+    await createTransaction(order);
+
+    // Create target order
+    if (order.mode === "TRADE" && order.target !== null) {
+        await createTargetOrder(order);
+    }
+
+    // Create stop-loss order
+    if (order.mode === "TRADE" && Number(order.leverage) > 1) {
+        await createSLOrder(order);
+    }
+
+    // Update portfolio
+    if (order.mode === "TRADE") {
+        await updatePosition(order);
+
+    } else if (order.mode === "INVEST") {
+        await updateHolding(order);
+    }
+}
+
+// Handle Position
+const updatePosition = async (order) => {
+    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
+
+    if (!position) {
+        await Position.create({
+            symbol: order.symbol,
+            side: order.side,
+            quantity: order.quantity,
+            entryPrice: order.price,
+            leverage: order.leverage,
+            marginUsed: (order.price * order.quantity) / order.leverage,
+            liquidationPrice: order.liquidationPrice,
+            target: order.target,
+            stopLoss: order.stopLoss,
+            executedAt: new Date(),
+            user: order.user,
+        });
+
+        return;
+    }
+
+    if (position.side !== order.side) {
+        console.log(`Can't add ${order.side} order to ${position.side} position.`);
+
+        return;
+    }
+
+    const newQty = Number(position.quantity) + Number(order.quantity);
+    const newEntryPrice = (Number(position.entryPrice) * Number(position.quantity) + Number(order.price) * Number(order.quantity)) / newQty;
+
+    position.entryPrice = newEntryPrice;
+    position.quantity = newQty;
+
+    await position.save();
+}
+
+// Handle Holding
+const updateHolding = async (order) => {
+    
+    if (order.side === "BUY") {
+        await handleHoldingBuy(order);
+        return;
+    }
+
+    if (order.side === "SELL") {
+        await handleHoldingSell(order);
+        return;
+    }
+
+    console.log(`Invalid order side: ${order.side}`);
+};
+
+// Handle Holding BUY
+const handleHoldingBuy = async (order) => {
+
+    const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
+
+    if (!holding) {
+        await Holding.create({
+            symbol: order.symbol,
+            totalQuantity: order.quantity,
+            quantity: order.quantity,
+            averageBuy: order.price,
+            executedAt: new Date(),
+            user: order.user,
+        });
+
+        return;
+    }
+
+
+    // Update existing holding
+    const oldQuantity = Number(holding.quantity);
+    const orderQuantity = Number(order.quantity);
+
+    const newQty = oldQuantity + orderQuantity;
+
+    const newAverageBuy = (Number(holding.averageBuy) * oldQuantity + Number(order.price) * order.quantity) / newQty;
+
+    holding.averageBuy = newAverageBuy;
+    holding.totalQuantity = Number(holding.totalQuantity || 0) + orderQuantity;
+    holding.quantity = newQty;
+
+    await holding.save();
+}
+
+// Handle Holding SELL
+const handleHoldingSell = async (order) => {
+
+    const holding = await Holding.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
+
+    if (!holding) {
+        console.log(`You don't have ${order.symbol} to sell.`);
+        return;
+    }
+
+    const holdingQuantity = Number(holding.quantity || 0);
+    const orderQuantity = Number(order.quantity || 0);
+
+    if (orderQuantity > holdingQuantity) {
+        console.log(`Insufficient ${order.symbol} quantity.`);
+        return;
+    }
+
+    const newQty = holdingQuantity - orderQuantity;
+
+    const totalSoldQty = Number(holding.totalSoldQty || 0);
+    const previousExitPrice = Number(holding.exitPrice || 0);
+
+    let newExitPrice = Number(order.price);
+
+    if (totalSoldQty > 0) {
+        const newTotalSoldQty = totalSoldQty + orderQuantity;
+        newExitPrice = (previousExitPrice * totalSoldQty + Number(order.price) * orderQuantity) / newTotalSoldQty;
+    }
+
+    const orderPnL = (Number(order.price) - Number(holding.averageBuy) * orderQuantity);
+
+    holding.quantity = newQty;
+    holding.totalSoldQty = totalSoldQty + orderQuantity;
+    holding.exitPrice = newExitPrice;
+    holding.pnl = Number(holding.pnl || 0) + orderPnL;
+
+    if (newQty === 0) {
+        holding.status = "CLOSED";
+        Holding.closedAt = new Date();
+    }
+
+    await holding.save();
 }
 
 
