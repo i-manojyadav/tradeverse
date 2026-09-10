@@ -4,8 +4,7 @@ import Position from "../models/position.js";
 import createTransaction from "./transactionService.js";
 
 
-/** Create Stop Loss Order */
-
+// Create Stop Loss Order
 const createSLOrder = async (order) => {
 
     const tradeSide = order.side === "BUY" ? "SELL" : order.side === "SELL" ? "BUY" : "";
@@ -35,91 +34,103 @@ const createSLOrder = async (order) => {
 /** Handle STOP_LOSS Orders */
 
 const handleStopLoss = async (coins) => {
-    const orders = await Order.find({type: "STOP_LOSS", status: "PENDING"});
+    const orders = await Order.find({ type: "STOP_LOSS", status: "PENDING" });
 
-    if (!orders) return;
+    if (orders.length === 0) return;
 
     for (const order of orders) {
-        const coin = coins.find((c) => {
-            return c.symbol.toUpperCase() === order.symbol.toUpperCase();
-        });
-
-        if (!coin) continue;
-
-        if (order.side === "BUY") {
-            if (coin.lastPrice >= order.liquidationPrice || (order.stopLoss && coin.lastPrice >= order.stopLoss)) {
-                order.status = "EXECUTED";
-                order.createdAt = new Date();
-
-                let tradeExitPrice = 0;
-                if (coin.lastPrice >= order.liquidationPrice) {
-                    tradeExitPrice = order.liquidationPrice;
-
-                } else if (order.stopLoss) {
-                    if (coin.lastPrice >= order.stopLoss) {
-                        tradeExitPrice = order.stopLoss;
-                    }
-                }
-
-                await createTransaction(order);
-                await order.save();
-
-                if (order.mode === "TRADE") {
-                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
-
-                    if (position) {
-                        position.exitPrice = tradeExitPrice;
-                        position.pnl = (position.entryPrice - tradeExitPrice) * position.quantity;
-                        position.status = "CLOSED";
-                        position.closedAt = new Date();
-                        await position.save();
-
-                        const tgtOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "TARGET" });
-                        if (!tgtOrder) return;
-                        tgtOrder.status = "CANCELLED";
-                        await tgtOrder.save();
-                    }
-                }
-            }
-
-        } else if (order.side === "SELL") {
-            if (coin.lastPrice <= order.liquidationPrice || (order.stopLoss && coin.lastPrice <= order.stopLoss)) {
-                order.status = "EXECUTED";
-                order.createdAt = new Date();
-
-                let tradeExitPrice = 0;
-                if (coin.lastPrice <= order.liquidationPrice) {
-                    tradeExitPrice = order.liquidationPrice;
-
-                } else if (order.stopLoss) {
-                    if (coin.lastPrice <= order.stopLoss) {
-                        tradeExitPrice = order.stopLoss;
-                    }
-                }
-
-                await createTransaction(order);
-                await order.save();
-
-                if (order.mode === "TRADE") {
-
-                    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
-                    
-                    if (position) {
-                        position.exitPrice = tradeExitPrice;
-                        position.pnl = (tradeExitPrice - position.entryPrice) * position.quantity;
-                        position.status = "CLOSED";
-                        position.closedAt = new Date();
-                        await position.save();
-
-                        const tgtOrder = await Order.findOne({ status: "PENDING", symbol: order.symbol, type: "TARGET" });
-                        if (!tgtOrder) return;
-                        tgtOrder.status = "CANCELLED";
-                        await tgtOrder.save();
-                    }
-                }
-            }
-        }
+        await processOrder(order, coins);
     }
+}
+
+
+// Process Order
+const processOrder = async (order, coins) => {
+    const coin = coins.find((c) => {
+        return c.symbol?.toUpperCase() === order.symbol?.toUpperCase();
+    });
+
+    if (!coin) return;
+
+    if (!isPriceMatched(order, coin)) return;
+
+    await executeOrder(order, coin);
+}
+
+// Price Matching
+const isPriceMatched = (order, coin) => {
+    const price = Number(coin.lastPrice);
+    const liquidationPrice = Number(order.liquidationPrice);
+    const stopLoss = Number(order.stopLoss);
+
+    if (order.side === "BUY") {
+        return price >= liquidationPrice || (stopLoss > 0 && price >= stopLoss);
+    }
+
+    if (order.side === "SELL") {
+        return price <= liquidationPrice || (stopLoss > 0 && price <= stopLoss);
+    }
+
+    return false;
+}
+
+
+// Execute Order
+const executeOrder = async (order, coin) => {
+    const price = Number(coin.lastPrice);
+    const liquidationPrice = Number(order.liquidationPrice);
+    const stopLoss = Number(order.stopLoss);
+
+    let tradeExitPrice = 0;
+
+    if (order.side === "BUY") {
+        tradeExitPrice = price >= liquidationPrice ? liquidationPrice : stopLoss;
+    }
+
+    if (order.side === "SELL") {
+        tradeExitPrice = price <= liquidationPrice ? liquidationPrice : stopLoss;
+    }
+
+    const executed = await executePosition(order, tradeExitPrice);
+    if (!executed) return;
+
+    await createTransaction(order);
+    order.status = "EXECUTED";
+    order.createdAt = new Date();
+
+    await cancelTargetOrder(order);
+    await order.save();
+}
+
+// Execute Position
+const executePosition = async(order, tradeExitPrice) => {
+    const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
+
+    if (!position) return false;
+
+    position.exitPrice = tradeExitPrice;
+
+    if (position.side === "BUY") {
+        position.pnl = (tradeExitPrice - Number(position.entryPrice)) * Number(position.quantity);
+
+    } else if (position.side === "SELL") {
+        position.pnl = (Number(position.entryPrice) - tradeExitPrice) * position.quantity;
+    }
+
+    position.status = "CLOSED";
+    position.closedAt = new Date();
+
+    await position.save();
+    return true;
+}
+
+
+// Cancel Target Order
+const cancelTargetOrder = async(order) => {
+    const targetOrder = await Order.findOne({ status: "PENDING", user: order.user, type: "TARGET", parentOrder: order.parentOrder });
+    if (!targetOrder) return;
+    targetOrder.status = "CANCELLED";
+    await targetOrder.save();
 }
 
 
