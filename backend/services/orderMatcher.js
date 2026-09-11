@@ -1,4 +1,3 @@
-import CryptoData from "./cryptoAPI.js";
 import Order from "../models/order.js";
 import Holding from "../models/holding.js";
 import Position from "../models/position.js";
@@ -105,10 +104,9 @@ const validateOrder = async (order) => {
 
 // Execute Order
 const executeOrder = async (order) => {
-    order.status = "EXECUTED";
-    await order.save();
 
-    await createTransaction(order);
+    const isCreated = await createTransaction(order);
+    if (!isCreated) return;
 
     // Create target order
     if (order.mode === "TRADE" && order.target !== null) {
@@ -127,6 +125,9 @@ const executeOrder = async (order) => {
     } else if (order.mode === "INVEST") {
         await updateHolding(order);
     }
+
+    order.status = "EXECUTED";
+    await order.save();
 }
 
 // Handle Position
@@ -257,7 +258,7 @@ const handleHoldingSell = async (order) => {
         newExitPrice = (previousExitPrice * totalSoldQty + Number(order.price) * orderQuantity) / newTotalSoldQty;
     }
 
-    const orderPnL = (Number(order.price) - Number(holding.averageBuy) * orderQuantity);
+    const orderPnL = (Number(order.price) - Number(holding.averageBuy)) * orderQuantity;
 
     holding.quantity = newQty;
     holding.totalSoldQty = totalSoldQty + orderQuantity;

@@ -7,7 +7,7 @@ import Order from "../models/order.js";
 const updateWallet = async (order, transaction) => {
 
     let orderValue = order.price * order.quantity;
-    let marginUsed = await calculateMargin(order);
+    let walletAmount = await calculateMargin(order);
 
     const wallet = await Wallet.findOne({ user: order.user });
 
@@ -16,11 +16,11 @@ const updateWallet = async (order, transaction) => {
         const position = await Position.findOne({ status: "OPEN", user: order.user, symbol: order.symbol });
 
         if (!position || position.side === order.side) {
-            wallet.funds -= marginUsed;
+            wallet.funds -= walletAmount;
             transaction.walletEffect = "DEBIT";
             
         } else {
-            wallet.funds += marginUsed;
+            wallet.funds += walletAmount;
             transaction.walletEffect = "CREDIT";
         }
 
@@ -33,16 +33,7 @@ const updateWallet = async (order, transaction) => {
             transaction.walletEffect = "DEBIT";
 
         } else if (order.side === "SELL") {
-
-            if (!holding) {
-                console.log("Can not sell. No holding found");
-                return;
-            }
-
-            if (holding.quantity < order.quantity) {
-                console.log("Insufficient quantity.");
-                return;
-            }
+            if(!holding) return false;
 
             wallet.funds += orderValue;
             transaction.walletEffect = "CREDIT";
@@ -50,6 +41,7 @@ const updateWallet = async (order, transaction) => {
     }
 
     await wallet.save();
+    return true;
 }
 
 

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Order from "../models/order.js";
 import Transaction from "../models/transaction.js";
 import updateWallet from "./walletService.js";
@@ -46,8 +45,11 @@ const createTransaction = async (order) => {
         user: order.user,
     });
 
-    await updateWallet(order, transaction);
+    const isWalletUpdated = await updateWallet(order, transaction);
+    if (!isWalletUpdated) return;
+
     await transaction.save();
+    return true;
 }
 
 

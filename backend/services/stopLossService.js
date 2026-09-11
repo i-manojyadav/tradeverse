@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Order from "../models/order.js";
 import Position from "../models/position.js";
 import createTransaction from "./transactionService.js";
@@ -91,10 +90,12 @@ const executeOrder = async (order, coin) => {
         tradeExitPrice = price <= liquidationPrice ? liquidationPrice : stopLoss;
     }
 
+    const isCreated = await createTransaction(order);
+    if (!isCreated) return;
+
     const executed = await executePosition(order, tradeExitPrice);
     if (!executed) return;
 
-    await createTransaction(order);
     order.status = "EXECUTED";
     order.createdAt = new Date();
 
