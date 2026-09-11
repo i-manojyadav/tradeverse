@@ -84,11 +84,17 @@ const validateOrder = async (order) => {
         if (!holding) {
             console.log(`Can't see ${order.symbol}. Holding not found.`);
 
+            order.status = "CANCELLED";
+            await order.save();
+
             return false;
         }
 
         if (Number(holding.quantity) < Number(order.quantity)) {
             console.log(`Insuffcient holding quantity.`);
+
+            order.status = "CANCELLED";
+            await order.save();
 
             return false;
         }
@@ -147,6 +153,9 @@ const updatePosition = async (order) => {
 
     if (position.side !== order.side) {
         console.log(`Can't add ${order.side} order to ${position.side} position.`);
+
+        order.status = "CANCELLED";
+        await order.save();
 
         return;
     }
@@ -217,6 +226,10 @@ const handleHoldingSell = async (order) => {
 
     if (!holding) {
         console.log(`You don't have ${order.symbol} to sell.`);
+
+        order.status = "CANCELLED";
+        await order.save();
+
         return;
     }
 
@@ -225,6 +238,10 @@ const handleHoldingSell = async (order) => {
 
     if (orderQuantity > holdingQuantity) {
         console.log(`Insufficient ${order.symbol} quantity.`);
+
+        order.status = "CANCELLED";
+        await order.save();
+        
         return;
     }
 
