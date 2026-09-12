@@ -244,7 +244,7 @@ function Watchlist() {
                     { watchlistCoins && watchlistCoins.map((coin) => (
                         <div>
                             <p className='watchlist-price'>
-                                <span style={{ color: "#ffffff"}}>{coin.symbol}</span>
+                                <span>{coin.symbol}</span>
                                 <span>
                                     <span style={{ color: "#c4c4c4"}}>{Number(Number(coin.lastPrice).toFixed(2)).toLocaleString()}</span>
                                     <span style={{ color: coin.priceChange > 0 ? "#008000" : "#ff0000"}}>{Number(Number(coin.priceChangePercent).toFixed(2)).toLocaleString()}%</span>

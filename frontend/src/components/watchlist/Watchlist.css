@@ -12,11 +12,11 @@
 .add-symbol-btn {
     display: block;
     margin: 10px auto;
-    color: #6b6b70;
-    padding: 10px 25px;
+    color: #c4c4c4;
+    padding: 8px 20px;
     border-radius: 100px;
     border: 2px solid #232323;
-    background-color: transparent;
+    background-color: #202020;
 }
 
 .add-symbol-btn:hover {
@@ -92,8 +92,8 @@
 }
 
 .watchlist-nav button {
-    font-size: 14px;
-    color: #ffffff;
+    font-size: 13px;
+    color: #c4c4c4;
     padding: 8px 15px;
     white-space: nowrap;
     border-radius: 100px;
@@ -112,8 +112,8 @@
 }
 
 .user-watchlist {
-    font-size: 14px;
-    color: #696969;
+    font-size: 13px;
+    color: #c4c4c4;
     padding: 8px 15px;
     white-space: nowrap;
     border-radius: 100px;
@@ -121,18 +121,18 @@
 }
 
 .current-watchlist {
-    font-size: 14px;
-    color: #ffffff;
+    font-size: 13px;
+    color: #c4c4c4;
     padding: 8px 15px;
     white-space: nowrap;
     border-radius: 100px;
-    border: 2px solid #232323;
+    border: 2px solid #059669;
     background-color: #059669;
 }
 
 .watchlist-items > div {
     display: flex;
-    padding: 12px 10px;
+    padding: 10px 10px;
     align-items: center;
     margin-bottom: 5px;
     justify-content: space-between;
@@ -145,13 +145,17 @@
 }
 
 .watchlist-price > span:nth-of-type(1) {
-    font-size: 15px;
+    font-size: 14px;
+    color: #f0f0f0;
 }
 
 .watchlist-price > span:nth-of-type(2) {
     gap: 10px;
-    font-size: 13px;
     display: flex;
+}
+
+.watchlist-price > span:nth-of-type(2) > span {
+    font-size: 13px;
 }
 
 .watchlist-action {
