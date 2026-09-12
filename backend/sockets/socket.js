@@ -68,7 +68,7 @@ async function streamSymbols() {
 let cryptoCoins = [];
 let isMatching = false;
 
-/** Structure Web Socket Data */
+// Structure Web Socket Data
 async function filterCoins(coin) {
 
     for (const crypto of cryptoCoins) {
@@ -77,6 +77,8 @@ async function filterCoins(coin) {
             crypto.lastPrice = coin.lastPrice;
             crypto.priceChange = coin.priceChange;
             crypto.priceChangePercentage = coin.priceChangePercentage;
+            crypto.askPrice = coin.askPrice;
+            crypto.bidPrice = coin.bidPrice;
 
             if (!isMatching) {
                 isMatching = true;
@@ -95,7 +97,7 @@ async function filterCoins(coin) {
     cryptoCoins.push(coin);
 }
 
-
+// Get Crypto Data
 export async function getCryptoData() {
 
     if (cryptoSocket) return;
