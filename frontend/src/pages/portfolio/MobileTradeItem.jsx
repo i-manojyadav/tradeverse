@@ -62,11 +62,11 @@ function MobileTradeItem({ trades }) {
                 </div>
                 <div className='overview-stats'>
                     <p>
-                        <span className='overview-title'>Invested</span>
+                        <span className='overview-title'>{curTrade.liquidationPrice ? "Margin Used" : "Invested"}</span>
                         <span className='overview-value'>{Number(Number(curTrade.marginUsed || curTrade.invested).toFixed(2)).toLocaleString()}</span>
                     </p>
                     <p>
-                        <span className='overview-title'>Current</span>
+                        <span className='overview-title'>{curTrade.liquidationPrice ? "Position Value" : "Current"}</span>
                         <span className='overview-value'>{Number(Number(curTrade.positionValue || curTrade.currentValue).toFixed(2)).toLocaleString()}</span>
                     </p>
                     <p>
@@ -83,14 +83,14 @@ function MobileTradeItem({ trades }) {
                         <span className='overview-title'>Leverage</span>
                         <span className='overview-value'>{Number(Number(curTrade.leverage).toFixed(2)).toLocaleString()}x</span>
                     </p>}
-                    <p>
+                    {curTrade.target && <p>
                         <span className='overview-title'>Target</span>
                         <span className='overview-value'>{Number(curTrade.target) === 0 ? "N/A" : Number(Number(curTrade.target).toFixed(2)).toLocaleString()}</span>
-                    </p>
-                    <p>
+                    </p>}
+                    {curTrade.stopLoss && <p>
                         <span className='overview-title'>Stop Loss</span>
                         <span className='overview-value'>{Number(curTrade.stopLoss) === 0 ? "N/A" : Number(Number(curTrade.stopLoss).toFixed(2)).toLocaleString()}</span>
-                    </p>
+                    </p>}
                     {curTrade.liquidationPrice && <p>
                         <span className='overview-title'>Liquidation Price</span>
                         <span className='overview-value'>{Number(Number(curTrade.liquidationPrice).toFixed(2)).toLocaleString()}</span>
