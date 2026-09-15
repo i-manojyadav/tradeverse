@@ -49,6 +49,7 @@ function MobileOrderItem({ orders }) {
                 ))}
             </div>
 
+            {isActive && <div className='overlay' onClick={() => handlePopup()}></div>}
             {isActive && <div className='order-overview'>
                 <div className='overview-top'>
                     <p>
@@ -61,21 +62,21 @@ function MobileOrderItem({ orders }) {
                 </div>
                 <div className='overview-data'>
                     <p>
-                        <span className='overview-title'>Time</span>
-                        <span className='overview-value'>{new Date(curOrder.createdAt).toLocaleDateString()}</span>
-                    </p>
-                    <p>
                         <span className='overview-title'>Mode</span>
                         <span className='overview-value'>{curOrder.mode}</span>
                     </p>
-                    {curOrder.leverage && <p>
+                    {curOrder.leverage > 0 && <p>
                         <span className='overview-title'>Leverage</span>
                         <span className='overview-value'>{curOrder.leverage}x</span>
                     </p>}
-                    {curOrder.liquidationPrice && <p>
+                    {curOrder.liquidationPrice > 0 && <p>
                         <span className='overview-title'>LiquidationPrice</span>
                         <span className='overview-value'>{Number(Number(curOrder.liquidationPrice).toFixed(2)).toLocaleString()}</span>
                     </p>}
+                    <p>
+                        <span className='overview-title'>Executed At</span>
+                        <span className='overview-value'>{new Date(curOrder.createdAt).toLocaleString()}</span>
+                    </p>
                 </div>
             </div>}
         </div>

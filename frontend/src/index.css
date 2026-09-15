@@ -265,6 +265,15 @@ button {
 
 /* Trade Overview (POPUP) */
 
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+  z-index: 999 !important;
+  padding: 0 !important;
+}
+
 .trade-overview,
 .order-overview,
 .transaction-overview,
@@ -275,10 +284,9 @@ button {
   display: block;
   position: fixed;
   z-index: 1000;
-  background-color: #111111;
+  background-color: #000000;
   border-top: 1px #232323;
   border-radius: 15px 15px 0 0;
-  box-shadow: 0 -10px 15px rgba(23, 23, 23, 0.525);
 }
 
 .trade-overview > div,
@@ -293,7 +301,8 @@ button {
   align-items: center;
   justify-content: space-between;
   border-radius: 15px 15px 0 0;
-  background-color: #181818;
+  background-color: #111111;
+  border-top: 2px solid #232323;
   border-bottom: 2px solid #232323;
 }
 

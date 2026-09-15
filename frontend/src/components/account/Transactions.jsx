@@ -89,6 +89,7 @@ function Transactions({ transactions }) {
             ))}
         </div>}
 
+        {(transactions.length > 0 && isActive && isMobile) && <div className='overlay' onClick={() => handlePopup()}></div>}
         {(transactions.length > 0 && isActive && isMobile) && <div className='transaction-overview'>
             <div className='overview-top'>
                 <p>

@@ -50,6 +50,7 @@ function MobileTradeItem({ trades }) {
                 ))}
             </div>
             
+            {isActive && <div className='overlay' onClick={() => handlePopup()}></div>}
             {isActive && <div className='trade-overview'>
                 <div className='overview-top'>
                     <p>
@@ -83,11 +84,11 @@ function MobileTradeItem({ trades }) {
                         <span className='overview-title'>Leverage</span>
                         <span className='overview-value'>{Number(Number(curTrade.leverage).toFixed(2)).toLocaleString()}x</span>
                     </p>}
-                    {curTrade.target && <p>
+                    {curTrade.target > 0 && <p>
                         <span className='overview-title'>Target</span>
                         <span className='overview-value'>{Number(curTrade.target) === 0 ? "N/A" : Number(Number(curTrade.target).toFixed(2)).toLocaleString()}</span>
                     </p>}
-                    {curTrade.stopLoss && <p>
+                    {curTrade.stopLoss > 0 && <p>
                         <span className='overview-title'>Stop Loss</span>
                         <span className='overview-value'>{Number(curTrade.stopLoss) === 0 ? "N/A" : Number(Number(curTrade.stopLoss).toFixed(2)).toLocaleString()}</span>
                     </p>}

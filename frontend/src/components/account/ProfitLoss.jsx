@@ -193,6 +193,7 @@ function ProfitLoss() {
                 ))}
             </div>}
 
+            {(isActive && isMobile) && <div className='overlay' onClick={() => handlePopup()}></div>}
             {(isActive && isMobile) && <div className='pnl-overview'>
                 <div className='overview-top'>
                     <p>
