@@ -46,12 +46,12 @@ function Transactions({ transactions }) {
                             <TableRow>
                                 <TableCell>{new Date(transaction.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell>{transaction.symbol}</TableCell>
-                                <TableCell>{`${transaction.mode} (${transaction.leverage}X)`}</TableCell>
+                                <TableCell>{`${transaction.mode} (${transaction.leverage}x)`}</TableCell>
                                 <TableCell>{transaction?.type?.replace("_", " ")}</TableCell>
                                 <TableCell>{transaction.side}</TableCell>
                                 <TableCell>{Number(transaction.quantity).toLocaleString()}</TableCell>
                                 <TableCell>{Number(transaction.averagePrice).toLocaleString()}</TableCell>
-                                <TableCell>{Number(transaction.amount).toLocaleString()}</TableCell>
+                                <TableCell style={{ color: transaction.walletEffect === "CREDIT" ? "#008000" : "#FF0000"}} >{Number(transaction.amount).toLocaleString()}</TableCell>
                                 <TableCell>{transaction.walletEffect}</TableCell>
                             </TableRow>
                         ))}
@@ -101,16 +101,12 @@ function Transactions({ transactions }) {
             </div>
             <div className='overview-data'>
                 <p>
-                    <span className='overview-title'>Date</span>
-                    <span className='overview-value'>{new Date(curTxn.createdAt).toLocaleDateString()}</span>
-                </p>
-                <p>
                     <span className='overview-title'>Mode</span>
                     <span className='overview-value'>{curTxn.mode}</span>
                 </p>
                 {curTxn.type && <p>
                     <span className='overview-title'>Type</span>
-                    <span className='overview-value'>{curTxn.type}</span>
+                    <span className='overview-value'>{curTxn.type?.replace("_", " ")}</span>
                 </p>}
                 <p>
                     <span className='overview-title'>Side</span>
@@ -120,6 +116,10 @@ function Transactions({ transactions }) {
                     <span className='overview-title'>Leverage</span>
                     <span className='overview-value'>{curTxn.leverage}x</span>
                 </p>}
+                <p>
+                    <span className='overview-title'>Created At</span>
+                    <span className='overview-value'>{new Date(curTxn.createdAt).toLocaleString()}</span>
+                </p>
             </div>
         </div>}
 
