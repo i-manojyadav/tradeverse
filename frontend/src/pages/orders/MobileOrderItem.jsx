@@ -42,7 +42,7 @@ function MobileOrderItem({ orders }) {
                                 <span className='mti-type'>{order.type.replace("_", " ")}</span>
                             </p>
                             <p>
-                                <span className={order.status === "PENDING" ? "mti-status-pending" : "mti-status-executed"}>{order.status}</span>
+                                <span className={order.status === "PENDING" ? "mti-status-pending" : order.status === "EXECUTED" ? "mti-status-executed" : "mti-status-cancelled"}>{order.status}</span>
                             </p>
                         </div>
                     </div>

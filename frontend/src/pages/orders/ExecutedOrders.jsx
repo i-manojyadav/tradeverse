@@ -14,7 +14,7 @@ function ExecutedOrders() {
         if (!orders) return;
 
         const exeOrders = orders.filter((order) => {
-            return order.status === "EXECUTED";
+            return order.status !== "PENDING";
         });
 
         setExecutedOrders(exeOrders);

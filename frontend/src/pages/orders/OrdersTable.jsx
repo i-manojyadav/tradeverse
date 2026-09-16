@@ -35,8 +35,8 @@ function OrdersTable({ ordersData }) {
                             <TableCell>{order.side}</TableCell>
                             <TableCell>{order.quantity}</TableCell>
                             <TableCell>{Number(Number(order.price).toFixed(2)).toLocaleString()}</TableCell>
-                            <TableCell>{order.leverage}X</TableCell>
-                            <TableCell>{order.status}</TableCell>
+                            <TableCell>{order.leverage}x</TableCell>
+                            <TableCell style={{ color: order.status === "PENDING" ? "#ffffaa" : order.status === "EXECUTED" ? "#9dffb7" : "#ff8f8f"}}>{order.status}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

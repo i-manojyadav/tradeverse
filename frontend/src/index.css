@@ -262,6 +262,12 @@ button {
   text-transform: uppercase;
 }
 
+.mti-status-cancelled {
+  font-size: 12px;
+  color: #ff2929;
+  text-transform: uppercase;
+}
+
 
 /* Trade Overview (POPUP) */
 
