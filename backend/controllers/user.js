@@ -18,8 +18,16 @@ export const isSignIn = async (req, res) => {
         });
     }
 
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
     const userWallet = await Wallet.findOne({user: req.user._id}).select("funds");
-    const userOrders = await Order.find({user: req.user._id}).sort({ createdAt: -1 });
+    const pendingOrders = await Order.find({user: req.user._id, status: "PENDING"}).sort({ createdAt: -1 });
+    const executedOrders = await Order.find({user: req.user._id, status: {$in: ["EXECUTED", "CANCELLED"]}, createdAt: {$gte: startOfDay, $lt: endOfDay}});
+    const userOrders = [...pendingOrders, ...executedOrders];
     const userHoldings = await Holding.find({user: req.user._id, status: "OPEN"});
     const userPositions = await Position.find({user: req.user._id, status: "OPEN"});
     const userWatchlist = await Watchlist.find({user: req.user._id}).select("title coins _id");
@@ -76,8 +84,16 @@ export const signIn = async (req, res, next) => {
         req.logIn(user, async (err) => {
             if(err) return next(err);
 
+            const startOfDay = new Date();
+            startOfDay.setHours(0, 0, 0, 0);
+
+            const endOfDay = new Date();
+            endOfDay.setHours(23, 59, 59, 999);
+
             const userWallet = await Wallet.findOne({user: user._id}).select("funds");
-            const userOrders = await Order.find({user: user._id}).sort({ createdAt: -1 });
+            const pendingOrders = await Order.find({user: user._id, status: "PENDING"}).sort({ createdAt: -1 });
+            const executedOrders = await Order.find({user: user._id, status: {$in: ["EXECUTED", "CANCELLED"]}, createdAt: {$gte: startOfDay, $lt: endOfDay} });
+            const userOrders = [...pendingOrders, ...executedOrders];
             const userHoldings = await Holding.find({user: user._id, status: "OPEN"});
             const userPositions = await Position.find({user: user._id, status: "OPEN"});
             const userWatchlist = await Watchlist.find({user: user._id}).select("title coins _id");
