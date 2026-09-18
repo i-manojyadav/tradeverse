@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import './ExecutedOrders.css';
 import OrdersTable from './OrdersTable';
 import { OrdersContext } from '../../context/OrdersContext';
-import EmptyState from '../../components/emptyStates/emptyState';
+import EmptyState from '../../components/emptyStates/EmptyState';
 
 function ExecutedOrders() {
 

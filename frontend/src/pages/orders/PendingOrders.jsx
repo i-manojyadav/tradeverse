@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import './PendingOrders.css'
 import { OrdersContext } from '../../context/OrdersContext';
 import OrdersTable from './OrdersTable';
-import EmptyState from '../../components/emptyStates/emptyState';
+import EmptyState from '../../components/emptyStates/EmptyState';
 
 function PendingOrders() {
 

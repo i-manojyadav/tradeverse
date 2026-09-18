@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Transactions.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
-import EmptyState from '../emptyStates/emptyState';
+import EmptyState from '../emptyStates/EmptyState';
 
 function Transactions({ transactions }) {
 

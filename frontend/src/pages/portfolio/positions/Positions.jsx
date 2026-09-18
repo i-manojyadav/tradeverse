@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import { PositionsContext } from '../../../context/PositionsContext';
 import MobileTradeItem from '../MobileTradeItem';
-import EmptyState from '../../../components/emptyStates/emptyState';
+import EmptyState from '../../../components/emptyStates/EmptyState';
 
 function Positions() {
 
