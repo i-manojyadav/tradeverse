@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { HoldingsContext } from '../../../context/HoldingsContext';
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import MobileTradeItem from '../MobileTradeItem';
-import NoTradingActivity from '../../../components/emptyStates/NoTradingActivity';
+import EmptyState from '../../../components/emptyStates/emptyState';
 
 function Holdings() {
 
@@ -63,7 +63,7 @@ function Holdings() {
                 <MobileTradeItem trades={enrichedHoldings} />
             </div>}
         </div>}
-        {enrichedHoldings.length === 0 && <NoTradingActivity />}
+        {enrichedHoldings.length === 0 && <EmptyState title={"No holdings"} />}
         </>
     )
 }

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import './ExecutedOrders.css';
 import OrdersTable from './OrdersTable';
 import { OrdersContext } from '../../context/OrdersContext';
-import NoTradingActivity from '../../components/emptyStates/NoTradingActivity';
+import EmptyState from '../../components/emptyStates/emptyState';
 
 function ExecutedOrders() {
 
@@ -24,7 +24,7 @@ function ExecutedOrders() {
     return (
         <div>
             {executedOrders.length > 0 && <OrdersTable ordersData={executedOrders} />}
-            {executedOrders.length === 0 && <NoTradingActivity />}
+            {executedOrders.length === 0 && <EmptyState title={"No executed orders"} />}
         </div>
     )
 }

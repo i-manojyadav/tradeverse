@@ -3,7 +3,7 @@ import './ProfitLoss.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
 import { useEffect } from 'react';
 import AppAlert from '../ui/AppAlert';
-import NoTradingActivity from '../emptyStates/NoTradingActivity';
+import EmptyState from '../emptyStates/emptyState';
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -232,7 +232,7 @@ function ProfitLoss() {
                 </div>
             </div>}
         </div>
-        {pnlData.length === 0 && <NoTradingActivity />}
+        {pnlData.length === 0 && <EmptyState title={"No trading activity"} />}
         </>
     )
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Transactions.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, } from "@mui/material";
-import NoTradingActivity from '../emptyStates/NoTradingActivity';
+import EmptyState from '../emptyStates/emptyState';
 
 function Transactions({ transactions }) {
 
@@ -124,7 +124,7 @@ function Transactions({ transactions }) {
             </div>
         </div>}
 
-        {transactions.length === 0 && <NoTradingActivity />}
+        {transactions.length === 0 && <EmptyState title={"No transactions"} />}
         </>
     )
 }

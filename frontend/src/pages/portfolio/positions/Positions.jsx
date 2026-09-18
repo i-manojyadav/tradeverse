@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import { PositionsContext } from '../../../context/PositionsContext';
 import MobileTradeItem from '../MobileTradeItem';
-import NoTradingActivity from '../../../components/emptyStates/NoTradingActivity';
+import EmptyState from '../../../components/emptyStates/emptyState';
 
 function Positions() {
 
@@ -63,7 +63,7 @@ function Positions() {
                 <MobileTradeItem trades={openPositions} />
             </div>}
         </div>}
-        {openPositions.length === 0 && <NoTradingActivity />}
+        {openPositions.length === 0 && <EmptyState title={"No positions"} />}
         </>
     )
 }
