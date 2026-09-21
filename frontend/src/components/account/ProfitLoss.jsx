@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { useEffect } from 'react';
 import AppAlert from '../ui/AppAlert';
 import EmptyState from '../emptyStates/EmptyState';
+import { StatCard, StatCardMobile } from '../ui/StatCard';
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -19,6 +20,7 @@ function ProfitLoss() {
 
     const [ holdingsPnL, setHoldingsPnL ] = useState([]);
     const [ positionsPnL, setPositionsPnL ] = useState([]);
+    const [ pnlStats, setPnLStats ] = useState([]);
 
     const [ isActive, setIsActive ] = useState(false);
     const [ curTrade, setCurTrade ] = useState([]);
@@ -79,8 +81,10 @@ function ProfitLoss() {
             const updatedPnLData = trades.map((trade) => {
 
                 const entryPrice = Number(trade.entryPrice ?? trade.averageBuy);
+                const exitPrice = Number(trade.exitPrice);
                 const quantity = Number(trade.quantity ?? trade.totalQuantity);
                 const leverage = Number(trade.leverage ?? 1);
+                const capital = trade.mode !== undefined ? Number(trade.marginUsed) : (entryPrice * quantity);
                 const pnl = Number(trade.pnl ?? 0);
 
                 return {
@@ -89,8 +93,9 @@ function ProfitLoss() {
                     mode: trade.mode || "INVEST",
                     leverage,
                     entryPrice,
-                    exitPrice: trade.exitPrice,
+                    exitPrice: exitPrice,
                     quantity,
+                    capital,
                     pnl,
                     roi: (pnl / (entryPrice * quantity)) * 100 * leverage,
                     executedAt: trade.executedAt,
@@ -115,10 +120,48 @@ function ProfitLoss() {
 
 
 
+    useEffect(() => {
+        if (activeFilter === "ALL") return;
+
+        const capital = pnlData.reduce((sum, trade) => {
+            return sum + Number(trade.capital);
+        }, 0);
+
+        const pnl = pnlData.reduce((sum, trade) => {
+            console.log(trade.pnl)
+            return sum + Number(trade.pnl);
+        }, 0);
+
+        const current = capital + pnl;
+
+        const roi = (pnl / capital) * 100;
+
+        setPnLStats({capital: capital, current: current, pnl: pnl, roi: roi});
+
+    }, [activeFilter, pnlData]);
+
     return (
         <>
         <div className='profit-loss'>
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
+            {activeFilter !== "ALL" && <div className='stats'>
+                <StatCard 
+                title={activeFilter === "HOLDINGS" ? "Invested" : "Margin Used"}
+                value={pnlStats.capital}
+                subTitle={activeFilter === "HOLDINGS" ? "Capital deployed" : "Capital exposure"}
+                />
+
+                <StatCard 
+                title={activeFilter === "HOLDINGS" ? "Current" : "Position Value"}
+                value={pnlStats.current}
+                subTitle={"Current Value"}
+                />
+
+                <StatCard title={"Profit & Loss"} value={pnlStats.pnl} subTitle={"Unrealized P&L"} isPnL={true} roi={pnlStats.roi} />
+
+                <StatCardMobile invested={pnlStats.capital} current={pnlStats.current} pnl={pnlStats.pnl} roi={pnlStats.roi} isPosition={activeFilter === "POSITIONS" ? true : false}  />
+            </div>}
+
             <div className='filter'>
                 <button className={activeFilter === "ALL" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("ALL")}>All</button>
                 <button className={activeFilter === "HOLDINGS" ? "filter-btn-active" : "filter-btn"} onClick={() => setActiveFilter("HOLDINGS")}>Holdings</button>
