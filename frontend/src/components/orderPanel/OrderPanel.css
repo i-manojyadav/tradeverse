@@ -138,30 +138,21 @@
     background-color: #22c55e;
 }
 
-.order-alert > p {
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    padding: 10px !important;
-    color: #c4c4c4 !important;
-    border-radius: 5px !important;
-    background-color: #ef44441f !important;
-    border: 1px solid #ef444466 !important;
-    border-left: 4px solid #ef444466 !important;
-}
-
-.order-alert > p b {
-    font-weight: 400 !important;
-    text-decoration: underline !important;
+.order-btn {
+    padding: 5px 25px !important;
 }
 
 .order-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 1px solid #232323;
+    padding: 10px 25px !important;
 }
 
-.order-btn {
-    padding: 15px 25px !important;
+.order-info span {
+    font-size: 12px;
+    white-space: nowrap;
 }
 
 

@@ -4,7 +4,8 @@ import { Schema } from "mongoose";
 const walletSchema = new Schema({
     funds: {
         type: Number,
-        default: 10000000,
+        min: 0,
+        default: 1000000,
         required: true,
     },
     user: {
