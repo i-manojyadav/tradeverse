@@ -84,7 +84,7 @@ function ProfitLoss() {
                 const exitPrice = Number(trade.exitPrice);
                 const quantity = Number(trade.quantity ?? trade.totalQuantity);
                 const leverage = Number(trade.leverage ?? 1);
-                const capital = trade.mode !== undefined ? Number(trade.marginUsed) : (entryPrice * quantity);
+                const capital = Number(trade.leverage) >= 1 ? Number(trade.marginUsed) : (entryPrice * quantity);
                 const pnl = Number(trade.pnl ?? 0);
 
                 return {
@@ -120,6 +120,7 @@ function ProfitLoss() {
 
 
 
+    // Profit & Loss stats
     useEffect(() => {
         if (activeFilter === "ALL") return;
 
@@ -144,7 +145,7 @@ function ProfitLoss() {
         <>
         <div className='profit-loss'>
             { alert && <AppAlert msg={alert.msg} severity={alert.severity} /> }
-            {activeFilter !== "ALL" && <div className='stats'>
+            {activeFilter !== "ALL" && pnlData.length > 0 && <div className='stats'>
                 <StatCard 
                 title={activeFilter === "HOLDINGS" ? "Invested" : "Margin Used"}
                 value={pnlStats.capital}
