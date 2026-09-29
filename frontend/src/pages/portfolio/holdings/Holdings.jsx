@@ -5,12 +5,11 @@ import { HoldingsContext } from '../../../context/HoldingsContext';
 import { StatCard, StatCardMobile } from '../../../components/ui/StatCard';
 import MobileTradeItem from '../MobileTradeItem';
 import EmptyState from '../../../components/emptyStates/EmptyState';
+import { NavLink } from 'react-router-dom';
 
 function Holdings() {
 
     const { enrichedHoldings, holdingsStats } = useContext(HoldingsContext);
-
-    console.log(enrichedHoldings);
 
     const isMobile = window.innerWidth <= 768;
     const isDesktop = window.innerWidth > 768;
@@ -39,6 +38,7 @@ function Holdings() {
                                 <TableCell>Current</TableCell>
                                 <TableCell>P&L</TableCell>
                                 <TableCell>ROI (%)</TableCell>
+                                <TableCell><i className="fa-solid fa-ellipsis-vertical"></i></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -46,12 +46,16 @@ function Holdings() {
                                 <TableRow key={idx}>
                                     <TableCell>{holding.symbol}</TableCell>
                                     <TableCell>{holding.quantity}</TableCell>
-                                    <TableCell>{Number(Number(holding.averageBuy).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(holding.ltp).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(holding.invested).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(holding.currentValue).toFixed(1)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(holding.averageBuy).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(holding.ltp).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(holding.invested).toFixed(2)).toLocaleString()}</TableCell>
+                                    <TableCell>{Number(Number(holding.currentValue).toFixed(2)).toLocaleString()}</TableCell>
                                     <TableCell style={{color: holding.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(holding.pnl).toFixed(1)).toLocaleString()}</TableCell>
-                                    <TableCell>{Number(Number(holding.roi).toFixed(1)).toLocaleString()}%</TableCell>
+                                    <TableCell>{Number(Number(holding.roi).toFixed(2)).toLocaleString()}%</TableCell>
+                                    <TableCell className='action'>
+                                        <NavLink to='/order' state={{ symbol: holding.symbol, mode: "INVEST", side: "BUY" }}><i className="fa-solid fa-plus" title="Add"></i></NavLink>
+                                        <NavLink to='/order' state={{ symbol: holding.symbol, mode: "INVEST", side: "SELL", quantity: holding.quantity }}><i className="fa-solid fa-right-from-bracket" title="Exit"></i></NavLink>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

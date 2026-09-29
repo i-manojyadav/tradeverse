@@ -19,7 +19,7 @@ function OrderPanel() {
 
     const location = useLocation();
     const navigate = useNavigate()
-    const { symbol } = location.state || {};
+    const { symbol, mode, side, quantity } = location.state || {};
 
     const [ alert, setAlert ] = useState(null);
 
@@ -40,6 +40,15 @@ function OrderPanel() {
     });
     const [ activeTgt, setActiveTGT] = useState(false);
     const [ activeSL, setActiveSL ] = useState(false);
+
+    // Set MODE and SIDE
+    useState(() => {
+        if (!mode && !side) return;
+
+        setOrderData((prev) => {
+            return {...prev, mode: mode, side: side, quantity: quantity}
+        });
+    }, [mode, side]);
 
     /** TARGET Toggle */
     function tgtToggle() {

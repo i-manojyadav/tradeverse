@@ -4,3 +4,13 @@
     display: flex;
     flex-direction: column;
 }
+
+.action {
+    gap: 15px !important;
+    display: flex !important;
+}
+
+.action i {
+    cursor: pointer;
+    color: #c4c4c4;
+}

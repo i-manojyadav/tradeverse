@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './MobileTradeItem.css';
 import { useMediaQuery } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 function MobileTradeItem({ trades }) {
 
@@ -75,6 +76,10 @@ function MobileTradeItem({ trades }) {
                         <span className='overview-value' style={{color: curTrade.pnl >= 0 ? "#008000" : "#ff0000"}}>{Number(Number(curTrade.pnl).toFixed(2)).toLocaleString()}</span>
                     </p>
                 </div>
+                {!curTrade.leverage && <div className='overview-actions'>
+                    <NavLink className='action-btn' to='/order' state={{ symbol: curTrade.symbol, mode: "INVEST", side: "BUY" }}>Add <i className="fa-solid fa-plus"></i></NavLink>
+                    <NavLink className='action-btn' to='/order' state={{ symbol: curTrade.symbol, mode: "INVEST", side: "SELL", quantity: curTrade.quantity }}>Exit <i className="fa-solid fa-right-from-bracket"></i></NavLink>
+                </div>}
                 <div className='overview-data'>
                     <p>
                         <span className='overview-title'>Entry Price</span>
