@@ -26,7 +26,7 @@ export const isSignIn = async (req, res) => {
 
     const userWallet = await Wallet.findOne({user: req.user._id}).select("funds");
     const pendingOrders = await Order.find({user: req.user._id, status: "PENDING"}).sort({ createdAt: -1 });
-    const executedOrders = await Order.find({user: req.user._id, status: {$in: ["EXECUTED", "CANCELLED"]}, createdAt: {$gte: startOfDay, $lt: endOfDay}});
+    const executedOrders = await Order.find({user: req.user._id, status: {$in: ["EXECUTED", "CANCELLED"]}, createdAt: {$gte: startOfDay, $lt: endOfDay}}).sort({ createdAt: -1 });
     const userOrders = [...pendingOrders, ...executedOrders];
     const userHoldings = await Holding.find({user: req.user._id, status: "OPEN"});
     const userPositions = await Position.find({user: req.user._id, status: "OPEN"});
@@ -92,7 +92,7 @@ export const signIn = async (req, res, next) => {
 
             const userWallet = await Wallet.findOne({user: user._id}).select("funds");
             const pendingOrders = await Order.find({user: user._id, status: "PENDING"}).sort({ createdAt: -1 });
-            const executedOrders = await Order.find({user: user._id, status: {$in: ["EXECUTED", "CANCELLED"]}, createdAt: {$gte: startOfDay, $lt: endOfDay} });
+            const executedOrders = await Order.find({user: user._id, status: {$in: ["EXECUTED", "CANCELLED"]}, createdAt: {$gte: startOfDay, $lt: endOfDay}}).sort({ createdAt: -1 });
             const userOrders = [...pendingOrders, ...executedOrders];
             const userHoldings = await Holding.find({user: user._id, status: "OPEN"});
             const userPositions = await Position.find({user: user._id, status: "OPEN"});
